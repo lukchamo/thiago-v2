@@ -116,7 +116,7 @@ junto a los ingenieros tradicionales de CooWeb y absorbieron su know-how.
 | Perfil AI Native dedicado · AI Product Engineer 1,5 a 2,5 años · **recomendado** | 3.200 (desde 4.700 con Technical Lead) |
 | Perfil dedicado con experiencia · Full-stack 4 a 5 años | 4.200 (desde 5.700 con Technical Lead) |
 | MVP funcional en 3 semanas · 2 a 3 perfiles AI Native + tokens de IA, un objetivo clave | Precio cerrado por objetivo |
-| Technical Lead · Luis, part-time, en cualquier modalidad | desde 1.500 |
+| Technical Lead o CTO fractional · Luis, part-time, en cualquier modalidad; bolsas de 16, 32 o 64 h/mes | desde 1.500 (se ajusta a la necesidad y al nivel de responsabilidad) |
 
 El MVP arranca con documentación exhaustiva y roadmap, deja la base lista (manuales, CI/CD, seguridad,
 videos, harness de IA), entrega un release que resuelve el primer dolor clave y quien construyó la base
