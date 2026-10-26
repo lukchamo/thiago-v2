@@ -1,0 +1,6 @@
+video/salida/tmp/
+video/salida/fotos/
+video/audio/*.wav
+video/produccion/palabras-crudo.json
+node_modules/
+video/salida/*-borrador.mp4

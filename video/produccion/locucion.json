@@ -1,0 +1,163 @@
+{
+  "voz": {
+    "nombre": "Chaer - Locutor Latino Dominicano",
+    "voice_id": "6yJbRCDgjQDmHJ6NrRYG",
+    "modelo": "eleven_v4"
+  },
+  "segmentos": [
+    {
+      "id": "v01",
+      "escena": "intro",
+      "gap": 0.9,
+      "tts": "[warmly] Thiago… esto es lo que entendimos de la propuesta de /tɾaiv/ para Farmaconal Quirúrgica. [short pause] Y preferimos mostrártelo.",
+      "texto": "Thiago… esto es lo que entendimos de la propuesta de Thraive para Farmaconal Quirúrgica. Y preferimos mostrártelo."
+    },
+    {
+      "id": "v02",
+      "escena": "contexto",
+      "gap": 0.6,
+      "tts": "Farmaconal lleva más de cincuenta años llevando implantes a los quirófanos dominicanos: unos 725 expedientes quirúrgicos cada mes.",
+      "texto": "Farmaconal lleva más de cincuenta años llevando implantes a los quirófanos dominicanos: unos 725 expedientes quirúrgicos cada mes."
+    },
+    {
+      "id": "v03",
+      "escena": "roto",
+      "gap": 0.35,
+      "tts": "[serious] Pero hoy… cada caso viaja ROTO.",
+      "texto": "Pero hoy… cada caso viaja roto."
+    },
+    {
+      "id": "v04",
+      "escena": "roto",
+      "gap": 0.35,
+      "tts": "[serious] La asignación es una foto de la pizarra en un grupo de WhatsApp. En el quirófano, el técnico escribe a mano hasta 70 líneas… [sighs] y persigue al cirujano por una firma.",
+      "texto": "La asignación es una foto de la pizarra en un grupo de WhatsApp. En el quirófano, el técnico escribe a mano hasta 70 líneas… y persigue al cirujano por una firma."
+    },
+    {
+      "id": "v05",
+      "escena": "roto",
+      "gap": 0.35,
+      "tts": "El mismo dato se teclea CUATRO veces. Y el error aparece días después, en recepción… cuando ya es un problema de facturación.",
+      "texto": "El mismo dato se teclea cuatro veces. Y el error aparece días después, en recepción… cuando ya es un problema de facturación."
+    },
+    {
+      "id": "v06",
+      "escena": "roto",
+      "gap": 0.9,
+      "tts": "[dramatically] De la cotización al cobro: entre 60 y 90 días.",
+      "texto": "De la cotización al cobro: entre 60 y 90 días."
+    },
+    {
+      "id": "v07",
+      "escena": "propuesta",
+      "gap": 0.6,
+      "tts": "[confident] La propuesta de /tɾaiv/ no reemplaza a SAP Business One. Pone encima una capa operativa donde el caso quirúrgico es el centro: un solo hilo, de la orden al cobro.",
+      "texto": "La propuesta de Thraive no reemplaza a SAP Business One. Pone encima una capa operativa donde el caso quirúrgico es el centro: un solo hilo, de la orden al cobro."
+    },
+    {
+      "id": "v07b",
+      "escena": "isometrico",
+      "gap": 1.0,
+      "tts": "[serious] Así se ve el ciclo completo. Hoy, entre las ocho estaciones, el dato salta de una foto a un WhatsApp… y de ahí, al papel.",
+      "texto": "Así se ve el ciclo completo. Hoy, entre las ocho estaciones, el dato salta de una foto a un WhatsApp… y de ahí, al papel."
+    },
+    {
+      "id": "v07c",
+      "escena": "isometrico",
+      "gap": 0.9,
+      "tts": "[confident] Con la plataforma, el kit viaja en el camión… y el dato viaja por el hilo, con el caso en el centro. Cada etapa deja su evidencia: quién, cuándo y dónde.",
+      "texto": "Con la plataforma, el kit viaja en el camión… y el dato viaja por el hilo, con el caso en el centro. Cada etapa deja su evidencia: quién, cuándo y dónde."
+    },
+    {
+      "id": "v08",
+      "escena": "fase1",
+      "gap": 0.35,
+      "tts": "La fase uno va al corazón de la operación: conduce, quirófano, conciliación y factura.",
+      "texto": "La fase uno va al corazón de la operación: conduce, quirófano, conciliación y factura."
+    },
+    {
+      "id": "v09",
+      "escena": "fase1",
+      "gap": 0.8,
+      "tts": "El catálogo sin códigos de barra es el gran bloqueante… [confident] pero la ola uno NO depende de él.",
+      "texto": "El catálogo sin códigos de barra es el gran bloqueante… pero la ola uno no depende de él."
+    },
+    {
+      "id": "v09b",
+      "escena": "plataforma",
+      "gap": 0.8,
+      "tts": "[confident] Y no es solo una app. Es una plataforma web para coordinación, preparación, recepción y facturación… con su versión móvil para el técnico y el chofer. El mismo caso, en cada pantalla.",
+      "texto": "Y no es solo una app. Es una plataforma web para coordinación, preparación, recepción y facturación… con su versión móvil para el técnico y el chofer. El mismo caso, en cada pantalla."
+    },
+    {
+      "id": "v10",
+      "escena": "torre",
+      "gap": 0.6,
+      "tts": "Coordinación lo ve todo en una torre de control: la agenda, las firmas pendientes, la consignación por centro y las indicaciones por vencer.",
+      "texto": "Coordinación lo ve todo en una torre de control: la agenda, las firmas pendientes, la consignación por centro y las indicaciones por vencer."
+    },
+    {
+      "id": "v11",
+      "escena": "app",
+      "gap": 0.3,
+      "tts": "En el quirófano, el técnico ya no escribe: selecciona. Funciona sin señal. Y donde no hay código de barras… la cámara lee la etiqueta: referencia, lote y vencimiento.",
+      "texto": "En el quirófano, el técnico ya no escribe: selecciona. Funciona sin señal. Y donde no hay código de barras… la cámara lee la etiqueta: referencia, lote y vencimiento."
+    },
+    {
+      "id": "v12",
+      "escena": "app",
+      "gap": 0.7,
+      "tts": "[excited] ¿Lote vencido? ¿Un ítem fuera del conduce? El error se detiene ahí mismo.",
+      "texto": "¿Lote vencido? ¿Un ítem fuera del conduce? El error se detiene ahí mismo."
+    },
+    {
+      "id": "v13",
+      "escena": "conciliacion",
+      "gap": 0.3,
+      "tts": "Recepción escanea lo que vuelve y valida; ya no calcula. Consumo y devolución entran a SAP en un solo envío, sin tocar sus tablas.",
+      "texto": "Recepción escanea lo que vuelve y valida; ya no calcula. Consumo y devolución entran a SAP en un solo envío, sin tocar sus tablas."
+    },
+    {
+      "id": "v14",
+      "escena": "conciliacion",
+      "gap": 0.8,
+      "tts": "Y el expediente para la aseguradora se arma solo, con semáforo de completitud.",
+      "texto": "Y el expediente para la aseguradora se arma solo, con semáforo de completitud."
+    },
+    {
+      "id": "v15",
+      "escena": "impacto",
+      "gap": 0.8,
+      "tts": "[confident] 70 líneas a mano… a cero. Cuatro capturas… a una. Y la meta: 30 % menos de ciclo de cobro.",
+      "texto": "70 líneas a mano… a cero. Cuatro capturas… a una. Y la meta: 30 % menos de ciclo de cobro."
+    },
+    {
+      "id": "v16",
+      "escena": "olas",
+      "gap": 0.9,
+      "tts": "Todo en tres olas: primero, el hilo y la app. Después, SAP y la conciliación. Y al final, una inteligencia artificial que aprende del consumo real.",
+      "texto": "Todo en tres olas: primero, el hilo y la app. Después, SAP y la conciliación. Y al final, una inteligencia artificial que aprende del consumo real."
+    },
+    {
+      "id": "v16b",
+      "escena": "oferta",
+      "gap": 0.6,
+      "tts": "[confident] ¿Cómo lo construimos? Con células de trabajo de /koˈweb/: planeación cerrada e hitos claros de facturación, por tiempo, por resultado, o ambos. Cierres en poco tiempo… con la ventaja de poder escalar.",
+      "texto": "¿Cómo lo construimos? Con células de trabajo de CooWeb: planeación cerrada e hitos claros de facturación, por tiempo, por resultado, o ambos. Cierres en poco tiempo… con la ventaja de poder escalar."
+    },
+    {
+      "id": "v16c",
+      "escena": "oferta",
+      "gap": 1.0,
+      "tts": "O, si lo prefieren, el desarrollo completo, con una fase de soporte y mantenimiento, y una bolsa de horas evolutivas.",
+      "texto": "O, si lo prefieren, el desarrollo completo, con una fase de soporte y mantenimiento, y una bolsa de horas evolutivas."
+    },
+    {
+      "id": "v17",
+      "escena": "cierre",
+      "gap": 2.6,
+      "tts": "[warmly] Esta es una prueba de concepto de /koˈweb/. [short pause] Thiago… ¿lo construimos juntos?",
+      "texto": "Esta es una prueba de concepto de CooWeb. Thiago… ¿lo construimos juntos?"
+    }
+  ]
+}

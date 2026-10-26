@@ -1,0 +1,252 @@
+1
+00:00:01,420 --> 00:00:04,120
+Thiago… esto es lo que entendimos de la propuesta
+
+2
+00:00:04,140 --> 00:00:06,450
+de Thraive para Farmaconal Quirúrgica.
+
+3
+00:00:06,720 --> 00:00:08,450
+Y preferimos mostrártelo.
+
+4
+00:00:09,320 --> 00:00:12,000
+Farmaconal lleva más de cincuenta años llevando
+
+5
+00:00:12,020 --> 00:00:14,110
+implantes a los quirófanos dominicanos:
+
+6
+00:00:14,280 --> 00:00:18,150
+unos 725 expedientes quirúrgicos cada mes.
+
+7
+00:00:18,680 --> 00:00:21,810
+Pero hoy… cada caso viaja roto.
+
+8
+00:00:22,320 --> 00:00:25,710
+La asignación es una foto de la pizarra en un grupo de WhatsApp.
+
+9
+00:00:25,880 --> 00:00:29,810
+En el quirófano, el técnico escribe a mano hasta 70 líneas…
+
+10
+00:00:30,860 --> 00:00:33,010
+y persigue al cirujano por una firma.
+
+11
+00:00:33,340 --> 00:00:35,850
+El mismo dato se teclea cuatro veces.
+
+12
+00:00:35,940 --> 00:00:39,330
+Y el error aparece días después, en recepción…
+
+13
+00:00:39,360 --> 00:00:41,610
+cuando ya es un problema de facturación.
+
+14
+00:00:41,960 --> 00:00:43,690
+De la cotización al cobro:
+
+15
+00:00:43,820 --> 00:00:46,410
+entre 60 y 90 días.
+
+16
+00:00:47,280 --> 00:00:50,650
+La propuesta de Thraive no reemplaza a SAP Business One.
+
+17
+00:00:50,760 --> 00:00:54,590
+Pone encima una capa operativa donde el caso quirúrgico es el centro:
+
+18
+00:00:54,700 --> 00:00:57,290
+un solo hilo, de la orden al cobro.
+
+19
+00:00:57,839 --> 00:00:59,749
+Así se ve el ciclo completo.
+
+20
+00:00:59,979 --> 00:01:04,549
+Hoy, entre las ocho estaciones, el dato salta de una foto a un WhatsApp…
+
+21
+00:01:04,659 --> 00:01:06,289
+y de ahí, al papel.
+
+22
+00:01:07,179 --> 00:01:09,959
+Con la plataforma, el kit viaja en el camión…
+
+23
+00:01:09,979 --> 00:01:13,009
+y el dato viaja por el hilo, con el caso en el centro.
+
+24
+00:01:13,159 --> 00:01:14,989
+Cada etapa deja su evidencia:
+
+25
+00:01:15,039 --> 00:01:17,109
+quién, cuándo y dónde.
+
+26
+00:01:18,052 --> 00:01:20,682
+La fase uno va al corazón de la operación:
+
+27
+00:01:20,732 --> 00:01:24,202
+conduce, quirófano, conciliación y factura.
+
+28
+00:01:24,472 --> 00:01:27,942
+El catálogo sin códigos de barra es el gran bloqueante…
+
+29
+00:01:28,052 --> 00:01:30,542
+pero la ola uno no depende de él.
+
+30
+00:01:31,236 --> 00:01:32,766
+Y no es solo una app.
+
+31
+00:01:32,856 --> 00:01:36,696
+Es una plataforma web para coordinación, preparación, recepción
+
+32
+00:01:36,716 --> 00:01:40,366
+y facturación… con su versión móvil para el técnico y el chofer.
+
+33
+00:01:40,456 --> 00:01:42,866
+El mismo caso, en cada pantalla.
+
+34
+00:01:43,638 --> 00:01:46,388
+Coordinación lo ve todo en una torre de control:
+
+35
+00:01:46,538 --> 00:01:50,098
+la agenda, las firmas pendientes, la consignación por centro
+
+36
+00:01:50,118 --> 00:01:51,908
+y las indicaciones por vencer.
+
+37
+00:01:52,498 --> 00:01:55,058
+En el quirófano, el técnico ya no escribe:
+
+38
+00:01:55,078 --> 00:01:57,488
+selecciona. Funciona sin señal.
+
+39
+00:01:57,538 --> 00:01:59,348
+Y donde no hay código de barras…
+
+40
+00:01:59,478 --> 00:02:01,108
+la cámara lee la etiqueta:
+
+41
+00:02:01,158 --> 00:02:03,648
+referencia, lote y vencimiento.
+
+42
+00:02:04,298 --> 00:02:07,018
+¿Lote vencido? ¿Un ítem fuera del conduce?
+
+43
+00:02:07,038 --> 00:02:08,928
+El error se detiene ahí mismo.
+
+44
+00:02:09,538 --> 00:02:12,028
+Recepción escanea lo que vuelve y valida;
+
+45
+00:02:12,098 --> 00:02:13,108
+ya no calcula.
+
+46
+00:02:13,278 --> 00:02:18,488
+Consumo y devolución entran a SAP en un solo envío, sin tocar sus tablas.
+
+47
+00:02:18,718 --> 00:02:21,528
+Y el expediente para la aseguradora se arma solo,
+
+48
+00:02:21,558 --> 00:02:23,428
+con semáforo de completitud.
+
+49
+00:02:24,178 --> 00:02:26,608
+70 líneas a mano… a cero.
+
+50
+00:02:26,718 --> 00:02:28,668
+Cuatro capturas… a una.
+
+51
+00:02:28,798 --> 00:02:31,888
+Y la meta: 30 % menos de ciclo de cobro.
+
+52
+00:02:32,938 --> 00:02:36,488
+Todo en tres olas: primero, el hilo y la app.
+
+53
+00:02:36,638 --> 00:02:39,428
+Después, SAP y la conciliación.
+
+54
+00:02:39,458 --> 00:02:43,528
+Y al final, una inteligencia artificial que aprende del consumo real.
+
+55
+00:02:44,432 --> 00:02:47,852
+¿Cómo lo construimos? Con células de trabajo de CooWeb:
+
+56
+00:02:47,872 --> 00:02:51,292
+planeación cerrada e hitos claros de facturación, por tiempo,
+
+57
+00:02:51,312 --> 00:02:53,252
+por resultado, o ambos.
+
+58
+00:02:53,272 --> 00:02:54,492
+Cierres en poco tiempo…
+
+59
+00:02:54,512 --> 00:02:56,301
+con la ventaja de poder escalar.
+
+60
+00:02:56,884 --> 00:03:00,824
+O, si lo prefieren, el desarrollo completo, con una fase de soporte
+
+61
+00:03:00,844 --> 00:03:04,134
+y mantenimiento, y una bolsa de horas evolutivas.
+
+62
+00:03:05,220 --> 00:03:07,570
+Esta es una prueba de concepto de CooWeb.
+
+63
+00:03:07,860 --> 00:03:10,150
+Thiago… ¿lo construimos juntos?
+

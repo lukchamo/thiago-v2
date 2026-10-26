@@ -1,0 +1,862 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PoC Farmaconal · Video para Thiago</title>
+<link rel="stylesheet" href="assets/fuentes.css">
+<style>
+:root{
+  --bg:#FFFFFF; --bg2:#F6F9FC; --bg3:#EEF3F9; --line:#E3EAF3; --line2:#EEF2F7;
+  --ink:#0B1F3F; --ink2:#4B5E7E; --ink3:#8A9AB2;
+  --blue:#0064BF; --blue2:#3197F4; --bluebg:#E8F2FC; --navy:#00205B;
+  --green:#0B8A3C; --green2:#16A653; --greenbg:#E4F5EA;
+  --red:#D2452D; --redbg:#FDECE8; --amber:#B07400; --amberbg:#FFF3D6;
+  --violet:#5B3FD0; --violetbg:#EEEAFD; --wa:#1FA855;
+  --cw:#3197F4; --th:#05D080;
+  --hilo:linear-gradient(90deg,#0064BF,#16A653);
+  --shadow:0 1px 2px rgba(0,32,91,.05),0 18px 40px -22px rgba(0,32,91,.28);
+  --font:'Rubik',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#E9EEF4;height:100%;overflow:hidden}
+body{display:grid;place-items:center;font-family:var(--font);color:var(--ink);-webkit-font-smoothing:antialiased}
+#stage{position:relative;width:1920px;height:1080px;background:var(--bg);overflow:hidden;transform-origin:0 0}
+body.render{background:#fff;display:block}
+body.render #stage{transform:none!important}
+.abs{position:absolute}
+.mono{font-family:var(--mono)}
+.num{font-variant-numeric:tabular-nums}
+svg{overflow:visible}
+
+/* ---------- fondo ---------- */
+.bgdots{position:absolute;inset:0;background-image:radial-gradient(#DCE5F0 1.4px,transparent 1.5px);background-size:36px 36px;opacity:.55;
+  -webkit-mask-image:radial-gradient(120% 90% at 50% 40%,#000 30%,transparent 85%);mask-image:radial-gradient(120% 90% at 50% 40%,#000 30%,transparent 85%)}
+.blob{position:absolute;border-radius:50%;pointer-events:none}
+.blob.b1{width:1100px;height:1100px;left:-260px;top:-520px;background:radial-gradient(closest-side,rgba(49,151,244,.10),transparent)}
+.blob.b2{width:1000px;height:1000px;right:-300px;bottom:-560px;background:radial-gradient(closest-side,rgba(22,166,83,.08),transparent)}
+
+/* ---------- chrome ---------- */
+#chrome{position:absolute;left:0;right:0;top:0;height:96px;display:flex;align-items:center;gap:22px;padding:0 80px;z-index:30}
+#chrome img{height:38px;display:block}
+#chrome .sep{width:1px;height:30px;background:var(--line)}
+#chrome .ct{font-size:19px;color:var(--ink2)}
+#chrome .ct b{color:var(--ink);font-weight:500}
+#chrome .cr{margin-left:auto;display:flex;gap:10px}
+.chip{display:inline-flex;align-items:center;gap:8px;font-size:17px;font-weight:500;padding:6px 14px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);color:var(--ink2);white-space:nowrap;line-height:1.2}
+.chip.amber{background:var(--amberbg);border-color:transparent;color:var(--amber)}
+.chip.blue{background:var(--bluebg);border-color:transparent;color:var(--blue)}
+.chip.green{background:var(--greenbg);border-color:transparent;color:var(--green)}
+.chip.red{background:var(--redbg);border-color:transparent;color:var(--red)}
+.chip.violet{background:var(--violetbg);border-color:transparent;color:var(--violet)}
+.chip.navy{background:var(--navy);border-color:transparent;color:#fff}
+.chip .d{width:9px;height:9px;border-radius:50%;background:currentColor}
+#chapters{position:absolute;left:140px;right:140px;bottom:26px;height:34px;display:grid;grid-template-columns:repeat(12,1fr);gap:12px;z-index:30}
+#chapters div{font-size:15px;color:var(--ink3);position:relative;padding-top:12px;white-space:nowrap}
+#chapters div::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;border-radius:2px;background:var(--line)}
+#chapters div i{position:absolute;left:0;top:0;height:3px;border-radius:2px;background:var(--hilo);width:0}
+#chapters div.on{color:var(--ink);font-weight:500}
+#chapters div.done{color:var(--ink2)}
+#caption{position:absolute;left:0;right:0;bottom:84px;display:flex;justify-content:center;z-index:31;pointer-events:none}
+#caption span{max-width:1500px;text-align:center;font-size:31px;line-height:1.3;font-weight:500;color:var(--ink);background:rgba(255,255,255,.94);border:1px solid var(--line);padding:9px 24px 10px;border-radius:14px;box-shadow:0 10px 30px -18px rgba(0,32,91,.35)}
+
+/* ---------- escenas ---------- */
+.sc{position:absolute;inset:0;display:none}
+.eyebrow{font-family:var(--mono);font-size:19px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);display:flex;align-items:center;gap:12px}
+.eyebrow.red{color:var(--red)} .eyebrow.green{color:var(--green)} .eyebrow.violet{color:var(--violet)}
+.h2{font-size:58px;line-height:1.06;font-weight:600;letter-spacing:-.022em}
+.lead{font-size:26px;line-height:1.4;color:var(--ink2)}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}
+.grad{background:var(--hilo);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tile{width:96px;height:96px;border-radius:22px;background:#0A0706;overflow:hidden;display:grid;place-items:center;box-shadow:0 14px 30px -16px rgba(0,0,0,.6)}
+.tile img{width:118%;height:118%;object-fit:cover}
+.fword{font-weight:700;color:var(--blue);letter-spacing:-.02em;line-height:1}
+.fword small{display:block;font-weight:500;color:var(--green);letter-spacing:0;font-size:.42em;margin-top:.18em}
+.ico{display:grid;place-items:center;border-radius:16px}
+.ico svg{width:60%;height:60%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:500;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.pill.ok{background:var(--greenbg);color:var(--green)} .pill.warn{background:var(--amberbg);color:var(--amber)}
+.pill.bad{background:var(--redbg);color:var(--red)} .pill.info{background:var(--bluebg);color:var(--blue)} .pill.ia{background:var(--violetbg);color:var(--violet)}
+
+/* intro */
+#s-intro .h1{font-size:112px;line-height:1.0;font-weight:600;letter-spacing:-.035em}
+.lock{display:flex;align-items:center;gap:22px;padding:22px 26px;width:560px}
+.lock .lt{font-size:16px;color:var(--ink3);font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.lock .ld{font-size:22px;color:var(--ink);font-weight:500;margin-top:4px}
+.avatar{width:58px;height:58px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:600;font-size:22px}
+
+/* contexto */
+.stat{width:380px;height:250px;padding:28px 30px}
+.stat .v{font-size:84px;font-weight:600;letter-spacing:-.03em;line-height:1}
+.stat .l{font-size:24px;font-weight:500;margin-top:14px}
+.stat .s{font-size:19px;color:var(--ink2);margin-top:6px;line-height:1.35}
+.stat.hl{border:2px solid var(--blue);box-shadow:0 30px 60px -30px rgba(0,100,191,.55)}
+.stat.hl .v{color:var(--blue)}
+
+/* roto */
+.node{position:absolute;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:#fff;border:2.5px solid #C9D5E4;display:grid;place-items:center;font-weight:600;font-size:22px;color:var(--ink2)}
+.node.bad{border-color:var(--red);color:var(--red);background:var(--redbg)}
+.node.on{border-color:var(--blue);color:#fff;background:var(--blue)}
+.nlabel{position:absolute;width:200px;margin-left:-100px;text-align:center;font-size:19px;font-weight:500;color:var(--ink2)}
+.wa{width:380px;overflow:hidden}
+.wa .hd{background:var(--wa);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:12px;font-weight:500;font-size:19px}
+.wa .hd i{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.25);display:block}
+.wa .bd{background:#EFEAE2;padding:14px;display:flex;flex-direction:column;gap:10px}
+.bub{background:#fff;border-radius:12px;padding:8px;max-width:300px;font-size:17px;box-shadow:0 1px 1px rgba(0,0,0,.08)}
+.bub.me{align-self:flex-end;background:#DCF8C6;padding:9px 12px}
+.bub small{display:block;text-align:right;color:#7C8A80;font-size:13px;margin-top:3px}
+.paper{width:360px;height:360px;background:#FFFDF5;border:1px solid #EADFC4;border-radius:6px;padding:20px 22px;box-shadow:0 20px 40px -24px rgba(80,60,0,.45)}
+.paper .pt{font-size:17px;color:#6B5A2E;font-weight:500}
+.bigstat{font-weight:700;letter-spacing:-.04em;line-height:.9}
+.typed{font-family:var(--mono);font-size:15px;background:#fff;border:1.5px solid var(--red);border-radius:10px;padding:6px 10px;white-space:nowrap;color:var(--ink)}
+.typed b{color:var(--red);font-weight:600;margin-left:6px}
+
+/* propuesta */
+.slab{position:absolute;border-radius:22px;padding:24px 30px;display:flex;align-items:center;gap:22px}
+.slab .st{font-size:34px;font-weight:600;letter-spacing:-.01em}
+.slab .ss{font-size:19px;opacity:.85;margin-top:4px}
+.orb{position:absolute;transform:translate(-50%,-50%)}
+
+/* fase 1 */
+.step{width:340px;height:250px;padding:26px}
+.step .n{font-family:var(--mono);color:var(--ink3);font-size:17px}
+.step .t{font-size:32px;font-weight:600;margin-top:12px;letter-spacing:-.01em}
+.step .d{font-size:19px;color:var(--ink2);margin-top:8px;line-height:1.35}
+.step.on{border:2px solid var(--blue);box-shadow:0 26px 50px -28px rgba(0,100,191,.6)}
+
+/* torre */
+.win{overflow:hidden}
+.win .bar{height:52px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;padding:0 20px;background:var(--bg2)}
+.win .bar i{width:13px;height:13px;border-radius:50%;background:#D7DFEA;display:block}
+.win .bar span{margin-left:14px;font-size:17px;color:var(--ink2)}
+.kpi{position:absolute;height:104px;padding:16px 20px;border-radius:16px;border:1px solid var(--line);background:#fff}
+.kpi .v{font-size:40px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.kpi .l{font-size:16px;color:var(--ink2);margin-top:8px}
+.kpi.warn .v{color:var(--amber)} .kpi.bad .v{color:var(--red)}
+.panel{position:absolute;border:1px solid var(--line);border-radius:18px;background:#fff;padding:18px 20px}
+.panel h4{font-size:20px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.panel h4 small{font-size:15px;color:var(--ink3);font-weight:400}
+.row{display:grid;align-items:center;font-size:17px;border-top:1px solid var(--line2);height:52px}
+.row.h{border-top:0;height:34px;color:var(--ink3);font-size:14px}
+.sbar{display:flex;gap:3px}
+.sbar i{width:12px;height:7px;border-radius:2px;background:var(--line)}
+.sbar i.on{background:var(--blue)} .sbar i.now{background:var(--green2);width:18px}
+.hbar{height:12px;border-radius:6px;background:var(--bg3);overflow:hidden}
+.hbar span{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--blue),#5BB7F8)}
+#focus{position:absolute;border:3px solid var(--blue);border-radius:20px;box-shadow:0 0 0 8px rgba(0,100,191,.12);pointer-events:none}
+
+/* app */
+.phone{position:absolute;width:390px;height:800px;border-radius:52px;background:#0C1730;padding:12px;box-shadow:0 40px 70px -36px rgba(0,32,91,.7),inset 0 0 0 2px #22314F}
+.scr{width:100%;height:100%;border-radius:41px;overflow:hidden;background:#F4F7FB;position:relative}
+.notch{position:absolute;top:10px;left:50%;margin-left:-52px;width:104px;height:28px;border-radius:16px;background:#0C1730;z-index:5}
+.sbar2{position:absolute;left:0;right:0;top:0;height:52px;display:flex;justify-content:space-between;align-items:center;padding:12px 26px 0;font-size:15px;font-weight:600;z-index:4}
+.net{font-size:13px;font-weight:500;padding:3px 9px;border-radius:999px}
+.screen{position:absolute;left:0;right:0;top:52px;bottom:0;padding:10px 16px}
+.mcard{background:#fff;border:1px solid #E1E8F1;border-radius:16px;padding:12px 14px;margin-bottom:10px}
+.msearch{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--blue);border-radius:14px;padding:10px 12px;font-size:17px;margin-bottom:8px}
+.mres{background:#fff;border:1px solid #E1E8F1;border-radius:12px;padding:9px 12px;margin-bottom:6px;font-size:15px}
+.mres small,.mitem small{display:block;font-family:var(--mono);font-size:12px;color:var(--ink3)}
+.mitem{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #E1E8F1;border-radius:12px;padding:9px 12px;margin-bottom:6px;font-size:15px}
+.mitem .q{margin-left:auto;font-weight:600;font-size:17px;color:var(--blue);min-width:28px;text-align:center}
+.mitem.new{border-color:var(--blue);background:#F1F7FE}
+.vf{height:330px;border-radius:18px;background:#121C2E;position:relative;overflow:hidden;display:grid;place-items:center}
+.alertm{border-radius:14px;padding:11px 13px;font-size:15px;margin-bottom:8px;line-height:1.35}
+.alertm b{display:block;font-size:16px;margin-bottom:2px}
+.alertm.bad{background:var(--redbg);color:#8F2416} .alertm.warn{background:var(--amberbg);color:#714B00} .alertm.ok{background:var(--greenbg);color:#0B5A27}
+.call{position:absolute;width:520px;padding:20px 22px;border-left:4px solid var(--blue);background:#fff;border-radius:0 18px 18px 0;box-shadow:var(--shadow)}
+.call h5{font-size:24px;font-weight:600;display:flex;align-items:center;gap:10px}
+.call p{font-size:19px;color:var(--ink2);margin-top:6px;line-height:1.38}
+.call.ia{border-color:var(--violet)} .call.bad{border-color:var(--red)} .call.ok{border-color:var(--green2)}
+
+/* conciliación */
+.tbl .row{grid-template-columns:1fr 110px 110px 110px 110px;height:56px;font-size:18px}
+.tbl .row.h{height:36px;font-size:15px}
+.tbl .r{text-align:right;font-variant-numeric:tabular-nums}
+.tbl .row.flag{background:var(--redbg)}
+.code{font-family:var(--mono);font-size:17px;line-height:1.75;background:var(--bg2);border:1px solid var(--line2);border-radius:14px;padding:14px 18px;white-space:pre;color:var(--ink)}
+.code .k{color:var(--violet)} .code .c{color:var(--ink3)} .code .g{color:var(--green);font-weight:600} .code .b{color:var(--blue)}
+.chk{display:flex;align-items:center;gap:12px;font-size:18px;height:34px}
+.chk i{width:24px;height:24px;border-radius:50%;background:var(--line);display:grid;place-items:center;flex:none}
+.chk i svg{width:14px;height:14px;stroke:#fff;stroke-width:3.2;fill:none;opacity:0}
+.chk.on i{background:var(--green2)} .chk.on i svg{opacity:1}
+.sem{display:flex;gap:6px}
+.sem i{width:16px;height:16px;border-radius:50%;background:var(--line)}
+.sem.amber i:nth-child(2){background:#E2A325} .sem.green i:nth-child(3){background:var(--green2)} .sem.red i:nth-child(1){background:var(--red)}
+
+/* impacto */
+.imp{width:520px;height:380px;padding:30px 34px}
+.imp .l{font-size:24px;font-weight:500;color:var(--ink2);line-height:1.3}
+.imp .old{position:relative;display:inline-block;font-size:56px;font-weight:600;color:var(--ink3);margin-top:22px;letter-spacing:-.02em}
+.imp .old::after{content:"";position:absolute;left:-6px;right:-6px;top:52%;height:5px;border-radius:3px;background:var(--red);transform-origin:left;transform:scaleX(var(--s,0))}
+.imp .new{font-size:150px;font-weight:700;color:var(--green);letter-spacing:-.05em;line-height:1;margin-top:6px}
+.imp .new small{font-size:30px;letter-spacing:0;font-weight:500;margin-left:10px;color:var(--green)}
+
+/* olas */
+.ola{width:520px;height:440px;padding:30px 32px;display:flex;flex-direction:column}
+.ola .ft{margin-top:auto}
+.ola .on{font-family:var(--mono);font-size:18px;letter-spacing:.1em;text-transform:uppercase}
+.ola .t{font-size:40px;font-weight:600;letter-spacing:-.02em;margin-top:8px}
+.ola ul{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:12px}
+.ola li{font-size:20px;line-height:1.35;color:var(--ink2);padding-left:26px;position:relative}
+.ola li::before{content:"";position:absolute;left:2px;top:9px;width:11px;height:11px;border-radius:3px;background:currentColor;opacity:.8}
+
+
+/* isométrico */
+.iitem{position:absolute;left:1360px;width:420px;height:62px;display:flex;align-items:center;gap:14px;padding:0 16px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--red);border-radius:0 14px 14px 0;font-size:20px;font-weight:500;box-shadow:var(--shadow)}
+.iitem.ok{border-left-color:var(--green2)}
+.iitem i{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--redbg);color:var(--red);font-style:normal}
+.iitem.ok i{background:var(--greenbg);color:var(--green)}
+.iitem i svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* plataforma */
+.nav{position:absolute;left:0;top:52px;bottom:0;width:250px;border-right:1px solid var(--line);background:var(--bg2);padding:16px 12px}
+.nav div{display:flex;align-items:center;gap:10px;font-size:17px;color:var(--ink2);padding:10px 12px;border-radius:10px;margin-bottom:4px;transition:none}
+.nav div i{width:9px;height:9px;border-radius:3px;background:#C9D5E4;flex:none}
+.nav div.on{background:var(--bluebg);color:var(--blue);font-weight:500}
+.nav div.on i{background:var(--blue)}
+.dev{position:absolute;background:#0C1730;padding:10px;box-shadow:0 30px 60px -32px rgba(0,32,91,.6)}
+.dev .in{width:100%;height:100%;background:#F4F7FB;overflow:hidden;padding:14px}
+.devl{position:absolute;text-align:center;font-size:18px;font-weight:500;color:var(--ink2)}
+.devl small{display:block;font-size:15px;color:var(--ink3);font-weight:400}
+
+/* oferta */
+.of{width:800px;height:620px;padding:30px 34px}
+.of .tt{font-size:34px;font-weight:600;letter-spacing:-.015em}
+.of .ds{font-size:20px;color:var(--ink2);margin-top:6px;line-height:1.4}
+.av{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:600;font-size:18px}
+.avl{font-size:14px;color:var(--ink2);text-align:center;margin-top:6px;width:90px;margin-left:-14px}
+.gbar{position:absolute;height:54px;border-radius:12px;display:flex;align-items:center;padding:0 18px;color:#fff;font-size:19px;font-weight:500;white-space:nowrap}
+
+/* cierre */
+#s-cierre .q{font-size:76px;font-weight:600;letter-spacing:-.03em;color:var(--blue)}
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <linearGradient id="gh" x1="0" x2="1"><stop offset="0" stop-color="#0064BF"/><stop offset="1" stop-color="#16A653"/></linearGradient>
+      <linearGradient id="ghF" gradientUnits="userSpaceOnUse" x1="310" y1="0" x2="1570" y2="0"><stop offset="0" stop-color="#0064BF"/><stop offset="1" stop-color="#16A653"/></linearGradient>
+      <linearGradient id="gvI" gradientUnits="userSpaceOnUse" x1="0" y1="305" x2="0" y2="770"><stop offset="0" stop-color="#0064BF"/><stop offset="1" stop-color="#16A653"/></linearGradient>
+      <linearGradient id="gvP" gradientUnits="userSpaceOnUse" x1="0" y1="340" x2="0" y2="880"><stop offset="0" stop-color="#0064BF"/><stop offset="1" stop-color="#16A653"/></linearGradient>
+    </defs>
+  </svg>
+  <div class="bgdots"></div>
+  <div class="blob b1" id="blob1"></div>
+  <div class="blob b2" id="blob2"></div>
+
+  <!-- =============== INTRO =============== -->
+  <section class="sc" id="s-intro">
+    <svg class="abs" style="left:0;top:0" width="1920" height="1080">
+      <path data-in="@0.15" data-fx="draw" data-dur="1.6" d="M-40 905 C 360 905, 560 990, 900 930 S 1180 860, 1180 770" stroke="url(#gh)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path data-in="@1.2" data-fx="draw" data-dur="2.4" d="M1190 305 L1190 770" stroke="url(#gvI)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <circle cx="1190" cy="305" r="9" fill="#fff" stroke="#0064BF" stroke-width="4" data-in="@0.6" data-fx="pop"/>
+      <circle cx="1190" cy="505" r="9" fill="#fff" stroke="#0A78A0" stroke-width="4" data-in="v01.propuesta+0.3" data-fx="pop"/>
+      <circle cx="1190" cy="705" r="9" fill="#fff" stroke="#16A653" stroke-width="4" data-in="v01.farmaconal-0.1" data-fx="pop"/>
+    </svg>
+    <div class="abs" style="left:140px;top:205px;width:960px">
+      <div class="eyebrow" data-in="@0.35">Prueba de concepto · CooWeb</div>
+      <div class="h1" style="margin-top:26px">
+        <div data-in="@0.7">Un caso quirúrgico,</div>
+        <div data-in="@1.0">un solo <span class="grad">hilo.</span></div>
+      </div>
+      <p class="lead" style="margin-top:34px;max-width:860px;font-size:30px" data-in="v01.entendimos-0.2">Nuestro entendimiento de la propuesta de Thraive para Farmaconal Quirúrgica, convertido en algo que se puede ver.</p>
+      <div style="display:flex;align-items:center;gap:16px;margin-top:40px" data-in="v01.thiago-0.1">
+        <div class="avatar">TD</div>
+        <div style="font-size:24px;color:var(--ink2)">Preparado para <b style="color:var(--ink);font-weight:600">Thiago Da Cunha</b></div>
+      </div>
+    </div>
+    <div class="abs card lock" style="left:1220px;top:250px" data-in="@0.55" data-fx="left">
+      <img src="assets/cooweb-logo.png" style="height:64px">
+      <div><div class="lt">Construye</div><div class="ld">La prueba de concepto</div></div>
+    </div>
+    <div class="abs card lock" style="left:1220px;top:450px" data-in="v01.propuesta+0.3" data-fx="left">
+      <div class="tile"><img src="assets/thraive-logo.png" alt="ThrAIve"></div>
+      <div><div class="lt">Propone</div><div class="ld">Capa operativa sobre SAP B1</div></div>
+    </div>
+    <div class="abs card lock" style="left:1220px;top:650px" data-in="v01.farmaconal-0.1" data-fx="left">
+      <div class="fword" style="font-size:46px">Farmaconal<small>Quirúrgica</small></div>
+      <div style="margin-left:auto"><div class="lt">Cliente</div><div class="ld">Rep. Dominicana</div></div>
+    </div>
+    <div class="abs" style="left:140px;top:880px" data-in="v01.preferimos"><span class="chip amber"><span class="d"></span>Casos, nombres y montos de ejemplo · cifras de operación tomadas de la propuesta</span></div>
+  </section>
+
+  <!-- =============== CONTEXTO =============== -->
+  <section class="sc" id="s-contexto">
+    <div class="abs" style="left:140px;top:150px">
+      <div class="eyebrow" data-in="contexto+0.1">El cliente</div>
+      <div style="display:flex;align-items:flex-end;gap:30px;margin-top:20px">
+        <div class="fword" style="font-size:104px" data-in="v02.farmaconal-0.2">Farmaconal</div>
+        <div style="font-size:26px;color:var(--ink2);padding-bottom:12px;line-height:1.35" data-in="v02.lleva">Fármaco Química Nacional<br>empresa familiar dominicana, desde 1971</div>
+      </div>
+    </div>
+    <div class="abs card stat" style="left:140px;top:400px" data-in="v02.cincuenta-0.2">
+      <div class="v num"><span data-count="0:55" data-in="v02.cincuenta-0.1" data-dur="1.1">0</span>+</div>
+      <div class="l">años</div><div class="s">llevando implantes al quirófano</div>
+    </div>
+    <div class="abs card stat" style="left:560px;top:400px" data-in="v02.llevando">
+      <div class="v num"><span data-count="0:300" data-in="v02.llevando" data-dur="1.1">0</span>+</div>
+      <div class="l">colaboradores</div><div class="s">distribución, tiendas y servicios quirúrgicos</div>
+    </div>
+    <div class="abs card stat" style="left:980px;top:400px" data-in="v02.implantes">
+      <div class="v">5</div>
+      <div class="l">marcas de implantes</div><div class="s">Spineart · Medtronic · J&amp;J · Zimmer Biomet · Arthrex</div>
+    </div>
+    <div class="abs card stat hl" style="left:1400px;top:400px" data-in="v02.setecientos-0.3" data-fx="pop">
+      <div class="v num">~<span data-count="0:725" data-in="v02.setecientos-0.1" data-dur="1.6">0</span></div>
+      <div class="l">expedientes quirúrgicos</div><div class="s">cada mes, cada uno con su papel</div>
+    </div>
+    <div class="abs" style="left:140px;top:710px;display:flex;gap:12px;align-items:center" data-in="v02.quirurgicos">
+      <span style="font-size:20px;color:var(--ink3);margin-right:6px">Un caso cruza</span>
+      <span class="chip">8 etapas</span><span class="chip">6 áreas</span><span class="chip">de la orden en SAP al cobro a la aseguradora</span>
+    </div>
+  </section>
+
+  <!-- =============== ROTO =============== -->
+  <section class="sc" id="s-roto">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow red" data-in="v03.pero-0.2">El problema · hoy</div>
+      <div class="h2" style="margin-top:14px" data-in="v03.cada-0.1">Cada caso viaja <span style="color:var(--red)">roto</span></div>
+    </div>
+    <svg class="abs" style="left:0;top:0" width="1920" height="1080" id="rotoSvg"></svg>
+    <div id="rotoNodes"></div>
+    <!-- tecleado ×4 -->
+    <div id="typedBoxes"></div>
+    <!-- WhatsApp -->
+    <div class="abs" style="left:450px;top:440px" data-in="v04.foto-0.2" data-fx="pop" data-out="v05.el" data-outop="0.22">
+      <div class="card wa">
+        <div class="hd"><i></i>Técnicos · Columna<span style="margin-left:auto;font-size:15px;opacity:.85">14 miembros</span></div>
+        <div class="bd">
+          <div class="bub">
+            <svg width="284" height="160" viewBox="0 0 284 160" style="display:block;border-radius:8px;background:#F4F4F2">
+              <rect x="10" y="10" width="264" height="140" rx="4" fill="#fff" stroke="#B9B9B4" stroke-width="3"/>
+              <g stroke="#2F57B8" stroke-width="2.4" fill="none" stroke-linecap="round">
+                <path d="M24 34 q20 -6 40 0 t40 0"/><path d="M120 34 q16 -5 32 0 t30 0"/><path d="M200 34 q12 -4 26 0 t24 0"/>
+                <path d="M24 64 q22 -6 44 0 t36 2"/><path d="M120 64 q16 -6 30 0 t34 0"/><path d="M200 64 q14 -4 28 0"/>
+                <path d="M24 94 q18 -5 36 0 t42 0"/><path d="M120 94 q20 -6 38 0"/><path d="M200 94 q12 -4 24 0 t26 0"/>
+                <path d="M24 124 q24 -6 46 0"/><path d="M120 124 q14 -4 30 0 t30 0"/>
+              </g>
+              <g stroke="#C9302C" stroke-width="2.6" fill="none" stroke-linecap="round"><path d="M196 118 l28 14 M224 118 l-28 14"/><path d="M110 22 v116 M190 22 v116" stroke="#B9B9B4" stroke-width="1.5"/></g>
+            </svg>
+            <small>Foto · 6:52 a. m.</small>
+          </div>
+          <div class="bub me" data-in="v04.whatsapp+0.2">¿Quién lleva el CQ-10482 a Hospiten? <small>6:58 a. m. ✓✓</small></div>
+        </div>
+      </div>
+    </div>
+    <!-- hoja manuscrita -->
+    <div class="abs" style="left:900px;top:440px" data-in="v04.quirofano-0.2" data-fx="pop" data-out="v05.el" data-outop="0.22">
+      <div style="transform:rotate(-2deg)">
+        <div class="paper">
+          <div class="pt">Hoja de consumo · CQ-10481</div>
+          <svg width="316" height="250" viewBox="0 0 316 250" id="scrawl" style="margin-top:10px"></svg>
+        </div>
+      </div>
+      <div class="abs" style="left:250px;top:250px;width:170px;height:60px;transform:rotate(6deg);background:#fff;border:1px solid #D9D2BC;border-radius:4px;box-shadow:0 6px 12px -6px rgba(0,0,0,.3);background-image:repeating-linear-gradient(90deg,#222 0 2px,transparent 2px 5px,#222 5px 6px,transparent 6px 9px);background-size:120px 30px;background-repeat:no-repeat;background-position:24px 14px" data-in="v04.mano"></div>
+    </div>
+    <div class="abs" style="left:1290px;top:470px;text-align:left" data-in="v04.hasta-0.2" data-out="v05.el" data-outop="0.22">
+      <div class="bigstat num" style="font-size:150px;color:var(--amber)"><span data-count="0:70" data-in="v04.hasta" data-dur="1.4">0</span></div>
+      <div style="font-size:26px;font-weight:500;color:var(--amber);margin-top:6px">líneas escritas a mano</div>
+    </div>
+    <div class="abs card" style="left:1290px;top:690px;width:440px;padding:18px 20px" data-in="v04.persigue-0.2" data-fx="pop" data-out="v05.el" data-outop="0.22">
+      <div style="display:flex;align-items:center;gap:10px;font-size:20px;font-weight:600">Firma del cirujano <span class="pill bad" style="margin-left:auto">Pendiente · 2 días</span></div>
+      <svg width="400" height="70" viewBox="0 0 400 70" style="display:block;margin-top:8px">
+        <line x1="0" y1="58" x2="400" y2="58" stroke="#D9E1EC" stroke-width="2"/>
+        <path data-in="v04.cirujano" data-fx="draw" data-dur="1.0" d="M14 46 c10 -30 22 -34 26 -10 s 8 22 18 -6 s 14 -26 22 4 c 4 14 12 6 18 -8" stroke="#2C3E66" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </svg>
+      <div style="font-size:17px;color:var(--ink2)">Llamando a Dra. Carolina Peña… 3.ª vez</div>
+    </div>
+    <!-- 4× -->
+    <div class="abs" style="left:140px;top:450px;width:280px" data-in="v05.cuatro-0.2" data-fx="pop" data-out="v06.de" data-outop="0">
+      <div class="bigstat" style="font-size:170px;color:var(--red)">4×</div>
+      <div style="font-size:24px;font-weight:500;color:var(--red);margin-top:4px;line-height:1.3">el mismo dato, tecleado otra vez</div>
+    </div>
+    <!-- error que viaja -->
+    <div id="errDot" class="abs" style="width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:var(--red);color:#fff;font-weight:700;font-size:26px;display:grid;place-items:center;box-shadow:0 0 0 8px rgba(210,69,45,.18)">!</div>
+    <div id="errCal" class="abs chip red" style="font-size:18px">+0 días</div>
+    <div class="abs" style="left:1502px;top:398px;margin-left:-150px;width:300px;text-align:center" data-in="v05.recepcion" data-fx="pop" data-out="v06.de" data-outop="0"><span class="chip red">Error detectado en recepción</span></div>
+    <div class="abs" style="left:1600px;top:452px;width:200px;text-align:right" data-in="v05.facturacion-0.3" data-fx="pop" data-out="v06.de" data-outop="0"><span class="chip red">Factura en riesgo</span></div>
+    <!-- 60-90 días -->
+    <div class="abs card" style="left:140px;top:428px;width:1640px;height:420px;padding:44px 70px" data-in="v06.de-0.1" data-fx="up">
+      <div style="display:flex;align-items:flex-end;gap:36px">
+        <div class="bigstat" style="font-size:150px;color:var(--red)">60–90</div>
+        <div style="padding-bottom:18px"><div style="font-size:52px;font-weight:600;color:var(--red)">días</div><div style="font-size:26px;color:var(--ink2)">de la cotización al cobro</div></div>
+      </div>
+      <div style="position:relative;margin-top:40px;height:18px;border-radius:9px;background:var(--bg3)">
+        <div id="cobroFill" style="position:absolute;left:0;top:0;bottom:0;border-radius:9px;background:linear-gradient(90deg,#E2A325,var(--red));width:0"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:12px;font-size:19px;color:var(--ink2)"><span>Cotización</span><span>Autorización</span><span>Cirugía</span><span>Factura</span><span>Cobro</span></div>
+      <div style="display:flex;gap:12px;margin-top:34px;align-items:center"><span style="font-size:20px;color:var(--ink3);margin-right:4px">Por qué:</span>
+        <span class="chip red" data-in="v06.sesenta" data-fx="pop">El dato se re-teclea</span><span class="chip red" data-in="v06.noventa-0.1" data-fx="pop">El error aparece tarde</span><span class="chip red" data-in="v06.dias" data-fx="pop">Al expediente siempre le falta algo</span></div>
+    </div>
+  </section>
+
+  <!-- =============== PROPUESTA =============== -->
+  <section class="sc" id="s-propuesta">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="propuesta+0.1"><span class="tile" style="width:30px;height:30px;border-radius:8px"><img src="assets/thraive-logo.png" alt=""></span>La propuesta · Thraive</div>
+      <div class="h2" style="margin-top:14px" data-in="v07.pone-0.1">Una capa operativa <span class="grad">encima</span> de SAP</div>
+    </div>
+    <!-- hilo vertical -->
+    <svg class="abs" style="left:0;top:0" width="1920" height="1080">
+      <line x1="200" y1="340" x2="200" y2="880" stroke="#E3EAF3" stroke-width="5" stroke-linecap="round" data-in="propuesta+0.2" data-fx="fade"/>
+      <path id="hiloV" d="M200 340 L200 880" stroke="url(#gvP)" stroke-width="6" stroke-linecap="round" fill="none" data-in="v07.un-0.2" data-fx="draw" data-dur="1.9"/>
+    </svg>
+    <div id="hiloStops"></div>
+    <!-- diagrama de capas -->
+    <div class="slab" style="left:760px;top:740px;width:1020px;height:140px;background:var(--navy);color:#fff" data-in="v07.reemplaza-0.2">
+      <div class="ico" style="width:72px;height:72px;background:rgba(255,255,255,.12);color:#fff"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="7.5" ry="2.8"/><path d="M4.5 5.5v6c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8v-6"/><path d="M4.5 11.5v6c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8v-6"/></svg></div>
+      <div><div class="st">SAP Business One</div><div class="ss">Sistema de registro · inventario · pedidos · facturas</div></div>
+      <span class="chip green" style="margin-left:auto;background:#E4F5EA" data-in="v07.one">✓ Se queda</span>
+    </div>
+    <div class="abs" style="left:1270px;top:704px;margin-left:-110px;width:220px;text-align:center" data-in="v07.operativa+0.2"><span class="chip blue mono" style="font-size:15px">Service Layer</span></div>
+    <div class="slab card" style="left:760px;top:560px;width:1020px;height:130px;border:2px solid var(--blue)" data-in="v07.encima-0.1" data-fx="down">
+      <div class="ico" style="width:72px;height:72px;background:var(--bluebg);color:var(--blue)"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></div>
+      <div><div class="st">Capa operativa</div><div class="ss" style="color:var(--ink2)">App del técnico · torre de control · reglas · bandeja hacia SAP</div></div>
+    </div>
+    <div id="orbit"></div>
+    <div class="abs card" style="left:1270px;top:375px;width:380px;margin-left:-190px;padding:20px 24px;border:2px solid var(--green2);text-align:center;z-index:2" data-in="v07.caso-0.15" data-fx="pop">
+      <div class="mono" style="font-size:16px;color:var(--ink3);letter-spacing:.1em">EL CENTRO</div>
+      <div style="font-size:36px;font-weight:600;margin-top:4px">Caso CQ-10481</div>
+      <div style="font-size:18px;color:var(--ink2);margin-top:2px">Artrodesis lumbar L4–L5 · CEDIMAT</div>
+    </div>
+  </section>
+
+
+  <!-- =============== ISOMÉTRICO =============== -->
+  <section class="sc" id="s-isometrico">
+    <div class="abs" style="left:140px;top:132px;width:1180px">
+      <div class="eyebrow" data-in="isometrico+0.1">El ciclo completo · vista isométrica del PoC</div>
+      <div style="position:relative;height:66px;margin-top:14px">
+        <div class="h2 abs" style="left:0;top:0;white-space:nowrap" data-in="isometrico+0.25" data-out="v07c-0.35">Hoy, el dato <span style="color:var(--red)">salta</span> de mano en mano</div>
+        <div class="h2 abs" style="left:0;top:0;white-space:nowrap" data-in="v07c-0.15">Con la plataforma, <span class="grad">un solo hilo</span></div>
+      </div>
+    </div>
+    <div class="abs card" style="left:140px;top:262px;width:1180px;height:664px;overflow:hidden;padding:0" data-in="isometrico+0.15" data-fx="pop">
+      <img id="isoImg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
+      <video id="isoVid" src="assets/isometrico.mp4" muted playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none"></video>
+      <div id="isoFlash" style="position:absolute;inset:0;background:#fff;opacity:0"></div>
+    </div>
+    <div class="abs" style="left:1360px;top:262px" data-in="isometrico+0.4" data-out="v07c-0.2" data-outop="0.4"><span class="chip red"><span class="d"></span>Hoy</span> <span style="font-size:17px;color:var(--ink3);margin-left:6px">carpetas físicas al centro</span></div>
+    <div class="iitem" style="top:310px" data-in="v07b.foto-0.2" data-fx="left" data-out="v07c-0.2" data-outop="0.4"><i><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></i>Foto de la pizarra</div>
+    <div class="iitem" style="top:384px" data-in="v07b.whatsapp-0.2" data-fx="left" data-out="v07c-0.2" data-outop="0.4"><i><svg viewBox="0 0 24 24"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/></svg></i>Grupo de WhatsApp</div>
+    <div class="iitem" style="top:458px" data-in="v07b.papel-0.2" data-fx="left" data-out="v07c-0.2" data-outop="0.4"><i><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></i>Papel y recaptura</div>
+    <div class="abs" style="left:1360px;top:560px" data-in="v07c-0.1"><span class="chip green"><span class="d"></span>Con la plataforma</span></div>
+    <div class="iitem ok" style="top:608px" data-in="v07c.kit-0.2" data-fx="left"><i><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg></i>El kit viaja en el camión</div>
+    <div class="iitem ok" style="top:682px" data-in="v07c.hilo-0.2" data-fx="left"><i><svg viewBox="0 0 24 24"><path d="M3 15c3 0 4-6 7-6s4 6 7 6 3-3 4-3"/></svg></i>El dato viaja por el hilo</div>
+    <div class="iitem ok" style="top:756px" data-in="v07c.caso-0.2" data-fx="left"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><circle cx="12" cy="12" r="8"/></svg></i>El caso, en el centro</div>
+    <div class="iitem ok" style="top:830px" data-in="v07c.evidencia-0.2" data-fx="left"><i><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></i>Evidencia: quién · cuándo · dónde</div>
+  </section>
+
+  <!-- =============== FASE 1 =============== -->
+  <section class="sc" id="s-fase1">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="fase1+0.1">Alcance · Fase 1</div>
+      <div class="h2" style="margin-top:14px" data-in="v08.fase-0.1">El flujo interno del consumo quirúrgico</div>
+    </div>
+    <svg class="abs" style="left:0;top:0" width="1920" height="1080">
+      <path d="M310 455 L1570 455" stroke="url(#ghF)" stroke-width="6" stroke-linecap="round" fill="none" data-in="v08.conduce-0.1" data-fx="draw" data-dur="3.0"/>
+      <path id="detour" d="M840 760 C 880 760, 880 700, 960 700" stroke="#16A653" stroke-width="5" stroke-linecap="round" fill="none" stroke-dasharray="2 0" data-in="v09.pero" data-fx="draw" data-dur="0.6"/>
+    </svg>
+    <div class="abs card step" style="left:140px;top:330px" data-in="v08.conduce-0.15" data-on="v08.conduce">
+      <div style="display:flex;align-items:center;justify-content:space-between"><div class="ico" style="width:62px;height:62px;background:var(--bluebg);color:var(--blue)"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></div><span class="n">01</span></div>
+      <div class="t">Conduce</div><div class="d">Sale del caso, con lote y serie en cada línea</div>
+    </div>
+    <div class="abs card step" style="left:560px;top:330px" data-in="v08.quirofano-0.15" data-on="v08.quirofano">
+      <div style="display:flex;align-items:center;justify-content:space-between"><div class="ico" style="width:62px;height:62px;background:var(--bluebg);color:var(--blue)"><svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg></div><span class="n">02</span></div>
+      <div class="t">Quirófano</div><div class="d">El técnico registra el consumo en la app, sin papel</div>
+    </div>
+    <div class="abs card step" style="left:980px;top:330px" data-in="v08.conciliacion-0.15" data-on="v08.conciliacion">
+      <div style="display:flex;align-items:center;justify-content:space-between"><div class="ico" style="width:62px;height:62px;background:var(--bluebg);color:var(--blue)"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14"/><path d="M5 7l-3 7a3 3 0 0 0 6 0L5 7zM19 7l-3 7a3 3 0 0 0 6 0l-3-7z"/></svg></div><span class="n">03</span></div>
+      <div class="t">Conciliación</div><div class="d">Enviado, consumido y devuelto, ya cruzados</div>
+    </div>
+    <div class="abs card step" style="left:1400px;top:330px" data-in="v08.factura-0.15" data-on="v08.factura">
+      <div style="display:flex;align-items:center;justify-content:space-between"><div class="ico" style="width:62px;height:62px;background:var(--bluebg);color:var(--blue)"><svg viewBox="0 0 24 24"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg></div><span class="n">04</span></div>
+      <div class="t">Factura</div><div class="d">Desde un caso cerrado, no desde una hoja manuscrita</div>
+    </div>
+    <div class="abs card" style="left:140px;top:640px;width:700px;height:240px;padding:26px 30px;border:2px solid #F0C9A0" data-in="v09.catalogo-0.2" data-out="v09.depende" data-outop="0.5">
+      <div style="display:flex;gap:20px;align-items:flex-start">
+        <div class="ico" style="width:76px;height:76px;background:var(--amberbg);color:var(--amber);flex:none"><svg viewBox="0 0 24 24"><path d="M4 6v12M7 6v12M10 6v12M14 6v12M17 6v12M20 6v12"/><path d="M3 21 21 3" stroke="#D2452D" stroke-width="2.6"/></svg></div>
+        <div><div style="font-size:30px;font-weight:600">Catálogo sin códigos de barra</div>
+          <div style="font-size:20px;color:var(--ink2);margin-top:6px;line-height:1.38">El maestro de artículos está incompleto: sin código no hay escaneo.</div></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:20px"><span class="chip red" data-in="v09.bloqueante-0.1" data-fx="pop">Gran bloqueante</span><span class="chip" data-in="v09.depende" data-fx="pop">Se completa en paralelo</span></div>
+    </div>
+    <div class="abs card" style="left:960px;top:640px;width:820px;height:240px;padding:26px 30px;border:2px solid var(--green2)" data-in="v09.ola-0.25" data-fx="left">
+      <div style="display:flex;gap:20px;align-items:flex-start">
+        <div class="ico" style="width:76px;height:76px;background:var(--greenbg);color:var(--green);flex:none"><svg viewBox="0 0 24 24"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><circle cx="12" cy="12" r="3.5"/></svg></div>
+        <div><div style="font-size:30px;font-weight:600">La ola 1 <span style="color:var(--green)">no depende</span> de él</div>
+          <div style="font-size:20px;color:var(--ink2);margin-top:6px;line-height:1.38">Donde no hay código, la cámara lee la etiqueta: referencia, lote y vencimiento.</div></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:20px"><span class="chip violet" data-in="v09.no" data-fx="pop">Visión IA</span><span class="chip green" data-in="v09.el#2" data-fx="pop">Se arranca ya</span></div>
+    </div>
+  </section>
+
+
+  <!-- =============== PLATAFORMA =============== -->
+  <section class="sc" id="s-plataforma">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="plataforma+0.1">Plataforma web + versión móvil</div>
+      <div class="h2" style="margin-top:14px" data-in="v09b.no-0.1">No es solo una app: es una <span class="grad">plataforma</span></div>
+    </div>
+    <div class="abs card win" style="left:140px;top:262px;width:1040px;height:620px" data-in="v09b.plataforma-0.3">
+      <div class="bar"><i></i><i></i><i></i><span>Plataforma del caso · Farmaconal Quirúrgica</span><span style="margin-left:auto" class="pill info">Web</span></div>
+      <div class="nav">
+        <div data-on="v09b.coordinacion-0.1"><i></i>Torre de control</div>
+        <div><i></i>Casos y expedientes</div>
+        <div data-on="v09b.preparacion-0.1"><i></i>Preparación y calidad</div>
+        <div data-on="v09b.recepcion-0.1"><i></i>Recepción y conciliación</div>
+        <div data-on="v09b.facturacion-0.1"><i></i>Facturación y cobro</div>
+        <div><i></i>Integración SAP B1</div>
+        <div><i></i>Reportes e IA</div>
+      </div>
+      <div class="abs" style="left:278px;top:76px;right:28px">
+        <div style="display:flex;align-items:baseline;gap:14px"><b style="font-size:28px;font-weight:600">CQ-10481</b><span style="font-size:19px;color:var(--ink2)">Artrodesis lumbar L4–L5 · CEDIMAT · ARS Humano</span></div>
+        <div class="sbar" style="margin-top:14px;gap:5px"><i class="on" style="width:76px;height:9px"></i><i class="on" style="width:76px;height:9px"></i><i class="on" style="width:76px;height:9px"></i><i class="on" style="width:76px;height:9px"></i><i class="on" style="width:76px;height:9px"></i><i class="on" style="width:76px;height:9px"></i><i class="now" style="width:76px;height:9px"></i><i style="width:76px;height:9px"></i></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px">
+          <div class="panel" style="position:static;padding:14px 16px"><div style="font-size:15px;color:var(--ink3)">Conduce</div><div style="font-size:22px;font-weight:600;margin-top:4px">52 líneas</div><div style="font-size:15px;color:var(--ink2)">lote y serie por línea</div></div>
+          <div class="panel" style="position:static;padding:14px 16px"><div style="font-size:15px;color:var(--ink3)">Evidencias</div><div style="font-size:22px;font-weight:600;margin-top:4px">9 de 9</div><div style="font-size:15px;color:var(--ink2)">entrega, labels, retorno</div></div>
+          <div class="panel" style="position:static;padding:14px 16px"><div style="font-size:15px;color:var(--ink3)">Expediente</div><div style="font-size:22px;font-weight:600;margin-top:4px;color:var(--green)">Completo</div><div style="font-size:15px;color:var(--ink2)">listo para la ARS</div></div>
+        </div>
+        <div style="font-size:16px;color:var(--ink3);margin:22px 0 4px">Actividad del caso</div>
+        <div class="row" style="grid-template-columns:70px 1fr auto;height:44px" data-in="v09b.coordinacion"><span class="num" style="color:var(--ink2)">06:40</span><span>Caso abierto desde la orden de SAP</span><span class="pill info">Coordinación</span></div>
+        <div class="row" style="grid-template-columns:70px 1fr auto;height:44px" data-in="v09b.preparacion"><span class="num" style="color:var(--ink2)">06:58</span><span>Checklist de calidad completo en 2:40 min</span><span class="pill ok">Preparación</span></div>
+        <div class="row" style="grid-template-columns:70px 1fr auto;height:44px" data-in="v09b.movil"><span class="num" style="color:var(--ink2)">08:41</span><span>Consumo capturado y hoja firmada</span><span class="pill ia">Móvil</span></div>
+        <div class="row" style="grid-template-columns:70px 1fr auto;height:44px" data-in="v09b.recepcion"><span class="num" style="color:var(--ink2)">11:05</span><span>Retorno escaneado y conciliado</span><span class="pill info">Recepción</span></div>
+        <div class="row" style="grid-template-columns:70px 1fr auto;height:44px" data-in="v09b.facturacion"><span class="num" style="color:var(--ink2)">11:20</span><span>Consumo enviado a SAP · factura lista</span><span class="pill ok">Facturación</span></div>
+      </div>
+    </div>
+    <div class="dev" style="left:1222px;top:290px;width:290px;height:400px;border-radius:26px" data-in="v09b.preparacion-0.2" data-fx="pop">
+      <div class="in" style="border-radius:17px">
+        <div style="font-size:16px;font-weight:600">Checklist · CQ-10483</div>
+        <div style="font-size:13px;color:var(--ink3);margin-bottom:8px">Rodilla primaria · tablet</div>
+        <div class="chk on" style="font-size:14px;height:30px"><i><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></i>Bandejas (4)</div>
+        <div class="chk on" style="font-size:14px;height:30px"><i><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></i>Cubo de implantes</div>
+        <div class="chk on" style="font-size:14px;height:30px"><i><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></i>Sierra y cable</div>
+        <div class="chk" style="font-size:14px;height:30px"><i><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></i>Lote FEFO</div>
+        <div style="margin-top:12px;background:var(--line);color:var(--ink3);border-radius:10px;padding:9px;text-align:center;font-size:14px">Despachar · bloqueado</div>
+      </div>
+    </div>
+    <div class="devl" style="left:1222px;top:702px;width:290px" data-in="v09b.preparacion">Tablet<small>preparación y calidad</small></div>
+    <div class="dev" style="left:1550px;top:350px;width:210px;height:420px;border-radius:34px" data-in="v09b.movil-0.2" data-fx="pop">
+      <div class="in" style="border-radius:25px;padding:12px 10px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;margin:2px 4px 8px"><span>08:12</span><span style="color:var(--amber)">Sin señal</span></div>
+        <div class="mcard" style="padding:8px 9px"><b style="font-size:13px">CQ-10481</b><div style="font-size:11px;color:var(--ink2)">Quirófano 3 · CEDIMAT</div></div>
+        <div class="mitem" style="font-size:11px;padding:6px 8px">Tornillo 6.5 × 45<span class="q" style="font-size:13px">4</span></div>
+        <div class="mitem" style="font-size:11px;padding:6px 8px">Barra 5.5 × 80<span class="q" style="font-size:13px">2</span></div>
+        <div style="margin-top:8px;background:var(--blue);color:#fff;border-radius:10px;padding:8px;text-align:center;font-size:12px">Leer etiqueta</div>
+      </div>
+    </div>
+    <div class="devl" style="left:1550px;top:782px;width:210px" data-in="v09b.movil">Móvil<small>técnico y chofer</small></div>
+    <div class="abs" style="left:1222px;top:842px" data-in="v09b.mismo-0.2" data-fx="pop"><span class="chip navy" style="font-size:17px">El mismo caso, en cada pantalla</span></div>
+  </section>
+
+  <!-- =============== TORRE =============== -->
+  <section class="sc" id="s-torre">
+    <div class="abs card win" style="left:140px;top:110px;width:1640px;height:810px" data-in="torre+0.05">
+      <div class="bar"><i></i><i></i><i></i><span>Torre de control quirúrgica · Farmaconal</span><span style="margin-left:auto" class="pill info">Coordinación</span></div>
+      <div class="abs" style="left:28px;top:72px;display:flex;align-items:baseline;gap:18px">
+        <div style="font-size:34px;font-weight:600;letter-spacing:-.01em">Lunes 26 de octubre</div><div style="font-size:20px;color:var(--ink2)">07:42 · 31 cirugías en 9 centros</div>
+      </div>
+      <div class="kpi" style="left:28px;top:130px;width:302px" data-in="v10.coordinacion"><div class="v num" data-count="0:31" data-in="v10.coordinacion" data-dur="0.8">0</div><div class="l">Cirugías hoy</div></div>
+      <div class="kpi" style="left:346px;top:130px;width:302px" data-in="v10.lo"><div class="v num" data-count="0:47" data-in="v10.lo" data-dur="0.8">0</div><div class="l">Cubos en consignación</div></div>
+      <div class="kpi warn" style="left:664px;top:130px;width:302px" data-in="v10.ve"><div class="v num">6</div><div class="l">Firmas pendientes</div></div>
+      <div class="kpi warn" style="left:982px;top:130px;width:302px" data-in="v10.todo"><div class="v num">4</div><div class="l">Indicaciones por vencer</div></div>
+      <div class="kpi bad" style="left:1300px;top:130px;width:310px" data-in="v10.en"><div class="v num">2</div><div class="l">Incidencias abiertas</div></div>
+      <div class="panel" id="pAgenda" style="left:28px;top:256px;width:990px;height:530px" data-in="v10.torre-0.3">
+        <h4>Agenda quirúrgica <small>toque un caso para abrirlo</small></h4>
+        <div id="agenda"></div>
+      </div>
+      <div class="panel" id="pFirmas" style="left:1036px;top:256px;width:574px;height:168px" data-in="v10.control-0.2">
+        <h4>Firmas del cirujano</h4>
+        <div id="firmas"></div>
+      </div>
+      <div class="panel" id="pCons" style="left:1036px;top:436px;width:574px;height:186px" data-in="v10.control">
+        <h4>Consignación por centro <small>cubos</small></h4>
+        <div id="cons"></div>
+      </div>
+      <div class="panel" id="pVig" style="left:1036px;top:634px;width:574px;height:152px" data-in="v10.control+0.2">
+        <h4>Indicaciones por vencer <small>regla de 30 días</small></h4>
+        <div id="vig"></div>
+      </div>
+      <div id="focus"></div>
+    </div>
+  </section>
+
+  <!-- =============== APP =============== -->
+  <section class="sc" id="s-app">
+    <div class="abs" style="left:140px;top:150px;width:560px">
+      <div class="eyebrow" data-in="app+0.1">Ola 1 · App del técnico</div>
+      <div class="h2" style="margin-top:14px;font-size:52px" data-in="app+0.25">Seleccionar, no escribir</div>
+    </div>
+    <div class="call" style="left:140px;top:420px" data-in="v11.selecciona-0.2" data-fx="left">
+      <h5>Selección, no escritura</h5><p>La primera palabra y un toque, sobre el conduce del propio caso.</p>
+    </div>
+    <div class="call" style="left:140px;top:600px" data-in="v11.funciona-0.1" data-fx="left">
+      <h5>Funciona sin señal</h5><p>Todo queda en cola en el teléfono y sube a la plataforma al reconectar.</p>
+    </div>
+    <div class="call ia" style="left:1260px;top:200px" data-in="v11.camara-0.2" data-fx="right">
+      <h5>La cámara lee la etiqueta <span class="pill ia">Visión IA</span></h5><p>Referencia, lote y vencimiento, donde no hay código de barras.</p>
+    </div>
+    <div class="call bad" style="left:1260px;top:400px" data-in="v12.vencido-0.6" data-fx="right">
+      <h5>El error se detiene en el quirófano</h5><p>Lote vencido, ítem fuera del conduce o cantidad fuera de cobertura.</p>
+    </div>
+    <div class="call ok" style="left:1260px;top:600px" data-in="v12.mismo" data-fx="right">
+      <h5>La hoja va al cirujano</h5><p>Por WhatsApp para firmar con un toque, o impresa ya llena.</p>
+    </div>
+    <div class="phone" style="left:765px;top:132px" data-in="app+0.15">
+      <div class="scr">
+        <div class="notch"></div>
+        <div class="sbar2"><span>07:58</span><span class="net" id="netpill" style="background:var(--greenbg);color:var(--green)">En línea</span></div>
+        <!-- A: consumo -->
+        <div class="screen" id="scrA">
+          <div class="mcard">
+            <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:19px">CQ-10481</b><span class="pill info">Quirófano 3</span></div>
+            <div style="font-size:15px;color:var(--ink2);margin-top:3px">Artrodesis lumbar L4–L5</div>
+            <div style="font-size:14px;color:var(--ink3)">CEDIMAT · Dra. Carolina Peña · ARS Humano</div>
+          </div>
+          <div id="queue" class="alertm warn" style="padding:8px 12px;font-size:14px;margin-bottom:8px">Sin señal · 3 registros en cola</div>
+          <div class="msearch"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0064BF" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><span id="qtext"></span><span id="caret" style="width:2px;height:20px;background:var(--blue);display:inline-block"></span></div>
+          <div id="results">
+            <div class="mres" id="res1">Tornillo pedicular poliaxial 6.5 × 45 mm<small>IMP-TP-6545 · en el conduce</small></div>
+            <div class="mres">Tornillo pedicular poliaxial 6.5 × 50 mm<small>IMP-TP-6550 · en el conduce</small></div>
+            <div class="mres">Tornillo pedicular poliaxial 7.5 × 45 mm<small>IMP-TP-7545 · en el conduce</small></div>
+          </div>
+          <div style="font-size:14px;color:var(--ink3);margin:10px 2px 6px">Usado en esta cirugía</div>
+          <div class="mitem new" id="newItem"><div>Tornillo pedicular 6.5 × 45<small>L2507-4418</small></div><span class="q num" id="qty">1</span></div>
+          <div class="mitem"><div>Barra de titanio 5.5 × 80<small>L2504-1180</small></div><span class="q">2</span></div>
+          <div class="mitem"><div>Caja intersomática PEEK 10<small>L2503-2291</small></div><span class="q">1</span></div>
+        </div>
+        <!-- B: cámara -->
+        <div class="screen" id="scrB">
+          <div style="font-size:19px;font-weight:600;margin:2px 2px 10px">Leer etiqueta</div>
+          <div class="vf">
+            <div id="lbl" style="width:270px;background:#fff;border-radius:8px;padding:14px 16px;transform:rotate(-3deg);box-shadow:0 16px 30px -12px rgba(0,0,0,.7);font-family:var(--mono);font-size:13px;color:#1B2433;line-height:1.55">
+              <div style="font-family:var(--font);font-weight:600;font-size:14px;margin-bottom:6px">Tornillo pedicular poliaxial<br>6.5 × 45 mm · Ti6Al4V</div>
+              <div id="lb1">REF&nbsp; IMP-TP-6545</div><div id="lb2">LOT&nbsp; L2507-4418</div><div id="lb3">EXP&nbsp; 2030-03-31</div>
+              <div style="display:flex;gap:8px;margin-top:6px"><span style="border:1px solid #1B2433;padding:0 4px">STERILE R</span><span style="border:1px solid #1B2433;padding:0 4px">CE 0123</span></div>
+            </div>
+            <div id="scanline" style="position:absolute;left:8%;right:8%;height:3px;background:#6ADB9B;box-shadow:0 0 14px #6ADB9B"></div>
+            <div style="position:absolute;inset:18px;border:2px solid rgba(255,255,255,.35);border-radius:14px"></div>
+            <div id="hl" style="position:absolute;border:2px solid #6ADB9B;border-radius:6px;background:rgba(106,219,155,.15)"></div>
+          </div>
+          <div class="mcard" style="margin-top:12px">
+            <div class="row" style="grid-template-columns:120px 1fr;border-top:0;height:40px" data-in="v11.referencia-0.1" data-fx="left"><span style="color:var(--ink3);font-size:15px">Referencia</span><b class="mono" style="font-size:16px">IMP-TP-6545</b></div>
+            <div class="row" style="grid-template-columns:120px 1fr;height:40px" data-in="v11.lote-0.1" data-fx="left"><span style="color:var(--ink3);font-size:15px">Lote</span><b class="mono" style="font-size:16px">L2507-4418</b></div>
+            <div class="row" style="grid-template-columns:120px 1fr auto;height:40px" data-in="v11.vencimiento-0.1" data-fx="left"><span style="color:var(--ink3);font-size:15px">Vence</span><b class="mono" style="font-size:16px">31/03/2030</b><span class="pill ok">✓ vigente</span></div>
+          </div>
+        </div>
+        <!-- C: validación -->
+        <div class="screen" id="scrC">
+          <div style="font-size:19px;font-weight:600;margin:2px 2px 10px">Validación en el momento</div>
+          <div class="alertm bad" data-in="v12.vencido-0.5" data-fx="pop"><b>Lote vencido</b>Matriz ósea 10 cc · lote B2409-0042 venció el 31/12/2025. No se registra.</div>
+          <div class="alertm warn" data-in="v12.fuera-0.2" data-fx="pop"><b>Ítem fuera del conduce</b>Cera ósea 2.5 g no venía en el conduce de CQ-10481. ¿Agregar con aprobación?</div>
+          <div class="alertm ok" data-in="v12.detiene-0.1" data-fx="pop"><b>Detenido en el quirófano</b>No días después en recepción.</div>
+          <div class="mcard" style="margin-top:14px" data-in="v12.mismo-0.1" data-fx="up">
+            <div style="font-size:16px;font-weight:600">Hoja de consumo lista · 14 líneas</div>
+            <div style="display:flex;gap:8px;margin-top:10px"><span style="flex:1;text-align:center;background:var(--blue);color:#fff;border-radius:12px;padding:10px;font-weight:500;font-size:15px">Enviar al cirujano</span></div>
+            <div class="bub me" style="margin-top:10px;font-size:14px;max-width:none" data-in="v12.mismo+0.4">Dra. Peña firmó la hoja de CQ-10481 <small>8:41 a. m. ✓✓</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== CONCILIACIÓN =============== -->
+  <section class="sc" id="s-conciliacion">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="conciliacion+0.1">Ola 2 · Conciliación y SAP</div>
+      <div class="h2" style="margin-top:14px" data-in="v13.recepcion-0.1">Recepción valida; ya no calcula</div>
+    </div>
+    <div class="panel tbl" style="left:140px;top:290px;width:980px;height:600px;padding:22px 26px" data-in="conciliacion+0.2">
+      <h4>Retorno del caso CQ-10481 <small>CEDIMAT · cubo C-118</small><span class="pill ok" style="margin-left:auto" data-in="v13.calcula-0.1" data-fx="pop">✓ Validado por recepción</span></h4>
+      <div style="display:flex;align-items:center;gap:16px;margin:8px 0 12px">
+        <span class="chip blue" style="font-size:16px">Escaneando retorno</span>
+        <div style="flex:1;height:12px;border-radius:6px;background:var(--bg3);overflow:hidden"><div id="scanFill" style="height:100%;width:0;background:var(--green2);border-radius:6px"></div></div>
+        <span class="mono num" style="font-size:17px;color:var(--ink2)" id="scanTxt">0/24</span>
+      </div>
+      <div class="row h"><span>Ítem</span><span class="r">Enviado</span><span class="r">Consumido</span><span class="r">Devuelto</span><span class="r">Diferencia</span></div>
+      <div id="recRows"></div>
+      <div class="abs" style="left:26px;bottom:20px;right:26px" data-in="v13.valida-0.2" data-fx="up">
+        <div class="alertm bad" style="display:flex;align-items:center;gap:14px;margin:0;font-size:17px"><b style="display:inline;margin:0">Incidencia abierta</b>1 tapón de cierre no vuelve · dueño: Recepción · reloj 24 h</div>
+      </div>
+    </div>
+    <div class="panel" style="left:1150px;top:290px;width:630px;height:350px" data-in="v13.consumo-0.3">
+      <h4>Envío a SAP Business One <span class="pill info mono" style="margin-left:auto;font-size:14px">Service Layer</span></h4>
+      <div class="code" id="codeBox"></div>
+    </div>
+    <div class="abs" style="left:1150px;top:648px" data-in="v13.tablas-0.3" data-fx="pop"><span class="chip navy" style="font-size:16px">Nunca escribe directo en las tablas de SAP · clave de idempotencia</span></div>
+    <div class="panel" style="left:1150px;top:700px;width:630px;height:190px;padding:16px 20px" data-in="v14.expediente-0.3">
+      <h4 style="margin-bottom:6px">Expediente · ARS Humano <span class="sem amber" id="sem" style="margin-left:auto"><i></i><i></i><i></i></span></h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;column-gap:16px">
+        <div class="chk" data-on="v14.expediente+0.2"><i><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></i>Entrega firmada</div>
+        <div class="chk" data-on="v14.aseguradora"><i><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></i>Consumo en quirófano</div>
+        <div class="chk" data-on="v14.arma"><i><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></i>Etiquetas leídas</div>
+        <div class="chk" data-on="v14.solo"><i><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></i>Retorno escaneado</div>
+        <div class="chk" data-on="v14.semaforo-0.2"><i><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></i>Hoja firmada</div>
+        <div data-in="v14.completitud-0.2" data-fx="pop" style="align-self:center"><span class="pill ok">Completo · listo para enviar</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== IMPACTO =============== -->
+  <section class="sc" id="s-impacto">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow green" data-in="impacto+0.1">Lo que cambia por caso</div>
+      <div class="h2" style="margin-top:14px" data-in="impacto+0.25">Menos papel, el error en origen</div>
+    </div>
+    <div class="abs card imp" style="left:140px;top:300px" data-in="v15.setenta-0.25">
+      <div class="l">Escritura a mano por caso</div>
+      <div class="old" id="old1">70 líneas</div>
+      <div class="new" data-in="v15.cero-0.15" data-fx="pop">0</div>
+    </div>
+    <div class="abs card imp" style="left:700px;top:300px" data-in="v15.cuatro-0.25">
+      <div class="l">Veces que se captura el mismo dato</div>
+      <div class="old" id="old2">4 veces</div>
+      <div class="new" data-in="v15.una-0.15" data-fx="pop">1</div>
+    </div>
+    <div class="abs card imp" style="left:1260px;top:300px;border:2px solid var(--green2)" data-in="v15.meta-0.3">
+      <div class="l">Ciclo de la cotización al cobro</div>
+      <div class="old" id="old3">60–90 días</div>
+      <div class="new" data-in="v15.treinta-0.15" data-fx="pop">−30<small>% · meta</small></div>
+    </div>
+    <div class="abs card" style="left:140px;top:720px;width:820px;height:130px;padding:24px 30px;display:flex;align-items:center;gap:24px" data-in="v15.ciclo-0.3">
+      <div style="font-size:22px;color:var(--ink2);flex:1">Dónde aparece el error</div>
+      <div style="font-size:24px;color:var(--ink3);text-decoration:line-through">días después</div>
+      <div style="font-size:30px;font-weight:600;color:var(--green)">en el quirófano</div>
+    </div>
+    <div class="abs card" style="left:1000px;top:720px;width:780px;height:130px;padding:24px 30px;display:flex;align-items:center;gap:24px" data-in="v15.cobro-0.3">
+      <div style="font-size:22px;color:var(--ink2);flex:1">Checklist de calidad</div>
+      <div style="font-size:24px;color:var(--ink3);text-decoration:line-through">5–7 min</div>
+      <div style="font-size:30px;font-weight:600;color:var(--green)">2–3 min</div>
+    </div>
+  </section>
+
+  <!-- =============== OLAS =============== -->
+  <section class="sc" id="s-olas">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="olas+0.1">Cómo llegamos</div>
+      <div class="h2" style="margin-top:14px" data-in="v16.todo-0.1">La fase 1, en tres olas</div>
+    </div>
+    <svg class="abs" style="left:0;top:0" width="1920" height="1080">
+      <path d="M140 330 C 340 300, 500 360, 700 330 S 1060 300, 1260 330 S 1620 360, 1780 330" stroke="url(#gh)" stroke-width="6" fill="none" stroke-linecap="round" data-in="v16.olas-0.3" data-fx="draw" data-dur="6.5"/>
+    </svg>
+    <div class="abs card ola" style="left:140px;top:380px;color:var(--blue)" data-in="v16.primero-0.25">
+      <div class="on">Ola 1</div><div class="t" style="color:var(--ink)">El hilo</div>
+      <ul>
+        <li data-in="v16.hilo">Caso digital desde la orden en SAP</li>
+        <li data-in="v16.hilo+0.25">App del técnico sin señal, con visión</li>
+        <li data-in="v16.app">Torre de control para coordinación</li>
+        <li data-in="v16.app+0.25">Checklist que bloquea el despacho</li>
+      </ul>
+      <div class="ft" data-in="v16.app+0.5"><span class="chip blue">No depende del catálogo</span></div>
+    </div>
+    <div class="abs card ola" style="left:700px;top:380px;color:var(--navy)" data-in="v16.despues-0.25">
+      <div class="on">Ola 2</div><div class="t" style="color:var(--ink)">SAP y conciliación</div>
+      <ul>
+        <li data-in="v16.sap">Service Layer, con idempotencia</li>
+        <li data-in="v16.sap+0.3">Conciliación por escaneo</li>
+        <li data-in="v16.conciliacion">Lote que vence primero (FEFO)</li>
+        <li data-in="v16.conciliacion+0.3">Expediente con semáforo</li>
+      </ul>
+      <div class="ft" data-in="v16.conciliacion+0.6"><span class="chip navy">Sin escribir en las tablas de SAP</span></div>
+    </div>
+    <div class="abs card ola" style="left:1260px;top:380px;color:var(--violet);border:2px solid #CFC5F5" data-in="v16.final-0.25">
+      <div class="on">Ola 3</div><div class="t" style="color:var(--ink)">IA que aprende</div>
+      <ul>
+        <li data-in="v16.inteligencia">Kit sugerido por consumo histórico</li>
+        <li data-in="v16.aprende-0.2">Causa probable de cada incidencia</li>
+        <li data-in="v16.consumo">Con unos 12 meses de consumo real, registrado desde el día uno</li>
+      </ul>
+      <div class="ft" data-in="v16.real"><span class="chip violet">Aprende del consumo real</span></div>
+    </div>
+  </section>
+
+
+  <!-- =============== OFERTA =============== -->
+  <section class="sc" id="s-oferta">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="oferta+0.1"><img src="assets/cooweb-logo.png" style="height:26px">Cómo lo construimos</div>
+      <div class="h2" style="margin-top:14px" data-in="v16b-0.1">Dos formas de construirlo con CooWeb</div>
+    </div>
+    <div class="abs card of" style="left:140px;top:262px;border:2px solid var(--blue2)" data-in="v16b.celulas-0.3" data-out="v16c-0.2" data-outop="0.55">
+      <div style="display:flex;align-items:center;gap:14px"><span class="chip blue mono" style="font-size:15px">A</span><div class="tt">Células de trabajo</div><span class="chip green" style="margin-left:auto" data-in="v16b.escalar-0.2" data-fx="pop">Escalable</span></div>
+      <div class="ds">Un equipo multidisciplinario, con planeación cerrada.</div>
+      <div style="display:flex;gap:28px;margin-top:22px;padding-left:14px" data-in="v16b.trabajo">
+        <div><div class="av" style="background:var(--navy)">PM</div><div class="avl">Producto</div></div>
+        <div><div class="av" style="background:var(--blue)">TL</div><div class="avl">Tech lead</div></div>
+        <div><div class="av" style="background:#2E86DE">FS</div><div class="avl">Full-stack</div></div>
+        <div><div class="av" style="background:var(--green2)">MB</div><div class="avl">Móvil</div></div>
+        <div><div class="av" style="background:var(--violet)">IA</div><div class="avl">QA e IA</div></div>
+        <div data-in="v16b.escalar-0.1" data-fx="pop" style="align-self:flex-start"><div class="av" style="background:#fff;color:var(--blue);border:2.5px dashed var(--blue2)">+1</div><div class="avl">otra célula</div></div>
+      </div>
+      <div class="abs" style="left:34px;right:34px;top:300px;height:120px" data-in="v16b.planeacion-0.1">
+        <div class="abs mono" style="left:0;top:0;font-size:15px;color:var(--ink3)">PLANEACIÓN CERRADA · 4 HITOS</div>
+        <div class="abs" style="left:10px;right:10px;top:64px;height:5px;border-radius:3px;background:var(--hilo)"></div>
+      </div>
+      <div class="abs" style="left:34px;right:34px;top:372px;height:60px">
+        <div class="abs" style="left:4%;top:-18px;text-align:center" data-in="v16b.hitos-0.1" data-fx="pop"><div style="width:22px;height:22px;border-radius:50%;background:#fff;border:4px solid var(--blue);margin:0 auto"></div><div style="font-size:15px;margin-top:6px;font-weight:500">Hito 1</div><span class="pill ok" style="font-size:13px">$ factura</span></div>
+        <div class="abs" style="left:31%;top:-18px;text-align:center" data-in="v16b.hitos+0.1" data-fx="pop"><div style="width:22px;height:22px;border-radius:50%;background:#fff;border:4px solid #1F7FC4;margin:0 auto"></div><div style="font-size:15px;margin-top:6px;font-weight:500">Hito 2</div><span class="pill ok" style="font-size:13px">$ factura</span></div>
+        <div class="abs" style="left:58%;top:-18px;text-align:center" data-in="v16b.claros" data-fx="pop"><div style="width:22px;height:22px;border-radius:50%;background:#fff;border:4px solid #12A06A;margin:0 auto"></div><div style="font-size:15px;margin-top:6px;font-weight:500">Hito 3</div><span class="pill ok" style="font-size:13px">$ factura</span></div>
+        <div class="abs" style="left:85%;top:-18px;text-align:center" data-in="v16b.facturacion-0.1" data-fx="pop"><div style="width:22px;height:22px;border-radius:50%;background:#fff;border:4px solid var(--green2);margin:0 auto"></div><div style="font-size:15px;margin-top:6px;font-weight:500">Hito 4</div><span class="pill ok" style="font-size:13px">$ factura</span></div>
+      </div>
+      <div class="abs" style="left:34px;top:480px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;width:732px">
+        <span style="font-size:17px;color:var(--ink3)">Facturación</span>
+        <span class="chip blue" data-in="v16b.tiempo-0.1" data-fx="pop">por tiempo</span>
+        <span class="chip blue" data-in="v16b.resultado-0.1" data-fx="pop">por resultado</span>
+        <span class="chip blue" data-in="v16b.ambos-0.1" data-fx="pop">o ambos</span>
+        <span class="chip green" data-in="v16b.cierres-0.1" data-fx="pop">Cierres en poco tiempo</span>
+      </div>
+    </div>
+    <div class="abs card of" style="left:980px;top:262px;border:2px solid var(--navy)" data-in="v16c-0.25" data-fx="left">
+      <div style="display:flex;align-items:center;gap:14px"><span class="chip navy mono" style="font-size:15px">B</span><div class="tt">Desarrollo completo</div></div>
+      <div class="ds">Llave en mano, y después la plataforma sigue viva.</div>
+      <div class="abs" style="left:34px;right:34px;top:170px;height:300px">
+        <div class="abs mono" style="left:0;top:0;font-size:15px;color:var(--ink3)">FASES</div>
+        <div class="gbar" style="left:0;top:40px;width:62%;background:var(--blue)" data-in="v16c.desarrollo-0.1" data-fx="grow">Desarrollo completo</div>
+        <div class="gbar" style="left:52%;top:112px;width:48%;background:var(--navy)" data-in="v16c.soporte-0.1" data-fx="grow">Soporte y mantenimiento</div>
+        <div class="gbar" style="left:56%;top:184px;width:44%;background:var(--green2)" data-in="v16c.bolsa-0.1" data-fx="grow">Bolsa de horas evolutivas</div>
+      </div>
+      <div class="abs" style="left:34px;top:500px;display:flex;gap:10px;flex-wrap:wrap;width:732px" data-in="v16c.evolutivas-0.2">
+        <span class="chip">Un solo responsable</span><span class="chip">Mejoras continuas</span><span class="chip">SLA de soporte</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== CIERRE =============== -->
+  <section class="sc" id="s-cierre">
+    <div class="abs" style="left:0;right:0;top:170px;text-align:center">
+      <img src="assets/cooweb-logo.png" style="height:120px" data-in="cierre+0.15" data-fx="pop">
+      <div style="font-size:42px;font-weight:600;margin-top:36px;letter-spacing:-.01em" data-in="v17.prueba-0.2">Prueba de concepto de entendimiento</div>
+      <div style="font-size:26px;color:var(--ink2);margin-top:12px" data-in="v17.concepto">de la propuesta de Thraive para Farmaconal Quirúrgica · enviada a <b style="color:var(--ink);font-weight:600">Thiago Da Cunha</b></div>
+    </div>
+    <div class="abs" style="left:0;right:0;top:520px;display:flex;justify-content:center;align-items:center;gap:34px" data-in="v17.cooweb-0.2">
+      <img src="assets/cooweb-logo.png" style="height:58px">
+      <div style="width:90px;height:5px;border-radius:3px;background:var(--hilo)"></div>
+      <div class="tile" style="width:84px;height:84px"><img src="assets/thraive-logo.png" alt="ThrAIve"></div>
+      <div style="width:90px;height:5px;border-radius:3px;background:var(--hilo)"></div>
+      <div class="fword" style="font-size:44px;text-align:left">Farmaconal<small>Quirúrgica</small></div>
+    </div>
+    <div class="abs" style="left:0;right:0;top:690px;text-align:center" data-in="v17.lo-0.15" data-fx="pop">
+      <div class="q">¿Lo construimos juntos?</div>
+      <svg width="760" height="16" style="display:block;margin:10px auto 0"><path d="M10 8 C 200 0, 560 16, 750 8" stroke="url(#gh)" stroke-width="6" fill="none" stroke-linecap="round" data-in="v17.construimos" data-fx="draw" data-dur="0.9"/></svg>
+    </div>
+    <div class="abs" style="left:0;right:0;top:900px;text-align:center;font-size:19px;color:var(--ink3)" data-in="v17.juntos+0.3">cooweb.co · Casos, nombres y montos de ejemplo; cifras de operación tomadas de la propuesta</div>
+  </section>
+
+  <!-- =============== chrome =============== -->
+  <header id="chrome">
+    <img src="assets/cooweb-logo.png" alt="CooWeb">
+    <div class="sep"></div>
+    <div class="ct"><b>PoC de entendimiento</b> · Propuesta Thraive para Farmaconal Quirúrgica</div>
+    <div class="cr"><span class="chip">Para Thiago Da Cunha</span><span class="chip amber">Datos de ejemplo</span></div>
+  </header>
+  <nav id="chapters"></nav>
+  <div id="caption"><span id="cap"></span></div>
+</div>
+
+<audio id="audio" src="audio/banda.m4a" preload="auto"></audio>
+<script src="timeline.js"></script>
+<script src="motor.js"></script>
+</body>
+</html>
