@@ -1,0 +1,119 @@
+{
+  "entidad": "llc",
+  "meta": { "tipo": "Propuesta Comercial", "codigo": "PC-THRAIVE-01", "fecha": "26/10/2026", "version": "1.0", "categoria": "Externa" },
+  "titulo": "Equipo dedicado de producto para Thraive",
+  "subtitulo": "Desarrollador full-stack senior y Technical Lead para Farmaconal Quirúrgica y Cumbre · Family Office OS",
+  "secciones": [
+    { "titulo": "Resumen ejecutivo", "bloques": [
+      { "tipo": "parrafo", "texto": "{ENTIDAD} propone a Thraive un **desarrollador full-stack senior dedicado en exclusiva** y un **Technical Lead senior part-time** para construir sus dos soluciones, la plataforma del caso quirúrgico de Farmaconal y el Family Office OS de Cumbre, por **USD 5.300 al mes**. Cuando un frente necesite ir más rápido, se suma capacidad a demanda por semanas." },
+      { "tipo": "parrafo", "texto": "Thraive tiene un recurso fijo y estable que conoce sus dos productos, sin cargar con la selección, la contratación ni el reemplazo. La primera entrega es el centro de mando de Cumbre en **3 a 4 semanas**, como lo promete la propuesta a JC; después el mismo equipo avanza la ola 1 de Farmaconal." },
+      { "tipo": "parrafo", "texto": "El equipo trabaja con la metodología AI-Driven de CooWeb: desarrollo asistido por IA, pruebas automatizadas y documentación generada sobre el código. Eso permite que un desarrollador senior, guiado por un Technical Lead, entregue el alcance de un equipo más grande." }
+    ]},
+    { "titulo": "Alcance funcional", "bloques": [
+      { "tipo": "parrafo", "texto": "El equipo construye sobre una base técnica común y avanza cada producto por fases, en el orden que Thraive priorice con sus clientes." },
+      { "tipo": "tabla", "widths": [2.9, 6.46], "headers": ["Componente", "Qué se construye"], "rows": [
+        ["Base técnica compartida", "Autenticación con MFA, roles y permisos granulares, bitácora de auditoría, instancia privada por cliente y asistente de IA de solo lectura reutilizable en ambos productos."],
+        ["Cumbre · Fase 1 · Centro de mando", "Captura por chat (WhatsApp y app), tablero de solicitudes (entrada, por hacer, en espera de terceros, hecho), hub financiero (entradas, salidas, posición neta y flujo esperado), ingreso automático de documentos por correo, calendario con recordatorios recurrentes, KYC de contrapartes y asistente que responde y redacta, sin ejecutar nada."],
+        ["Cumbre · Fase 2 · Conectar todo", "Conectividad bancaria por API para que la caja se actualice sola, e integración con la plataforma de patrimonio (Aleta) para tener el patrimonio consolidado en una sola vista."],
+        ["Farmaconal · Ola 1 · El hilo", "Caso digital creado desde la orden de SAP Business One, app del técnico que funciona sin señal y lee etiquetas por visión, torre de control para coordinación y checklist de calidad que bloquea el despacho."],
+        ["Farmaconal · Ola 2 · SAP y conciliación", "Integración por Service Layer con clave de idempotencia (sin escritura directa en tablas), conciliación del retorno por escaneo, lote que vence primero (FEFO) y expediente con semáforo de completitud."],
+        ["Cumbre · Fase 3 y Farmaconal · Ola 3", "Automatizaciones, resúmenes y recordatorios inteligentes, kit sugerido por consumo histórico y causa probable de incidencias."],
+        ["Acompañamiento técnico", "Arquitectura, roadmap, revisión de código, estándares de seguridad, metodología AI-Driven y participación en demos con los clientes finales de Thraive."]
+      ]}
+    ]},
+    { "titulo": "Equipo propuesto", "bloques": [
+      { "tipo": "parrafo", "texto": "Un desarrollador dedicado al 100 % y en exclusiva a Thraive, más un Technical Lead de CooWeb a tiempo parcial. El Technical Lead es el punto único de contacto con Thraive." },
+      { "tipo": "tabla", "widths": [2.7, 4.96, 1.7], "headers": ["Perfil", "Responsabilidades principales", "Dedicación"], "rows": [
+        ["Desarrollador Full-Stack Senior", "Construye ambas soluciones de punta a punta: web, móvil, integraciones e IA. Despliegue, pruebas, documentación y soporte de lo entregado.", "100 %, dedicado a Thraive"],
+        ["Technical Lead Senior (Luis, CooWeb)", "Arquitectura y decisiones técnicas, priorización con Thraive, revisión de código, seguridad, acompañamiento al desarrollador y demos con Farmaconal y Cumbre.", "Part-time, ≈ 8 h/semana"]
+      ]},
+      { "tipo": "subtitulo", "texto": "Capacidad a demanda" },
+      { "tipo": "parrafo", "texto": "Cuando dos frentes coinciden (por ejemplo, la app móvil de Farmaconal y la conexión bancaria de Cumbre), {ENTIDAD} suma perfiles por semanas, con el mismo Technical Lead." },
+      { "tipo": "tabla", "widths": [3.36, 2.6, 3.4], "align": ["left", "right", "left"], "headers": ["Perfil a demanda", "Tarifa mensual (USD)", "Mínimo"], "rows": [
+        ["Desarrollador adicional (full-stack, móvil o integraciones)", "3.500", "2 semanas (semana = 875)"],
+        ["QA", "2.800", "1 semana (semana = 700)"]
+      ]},
+      { "tipo": "parrafo", "texto": "Los perfiles se presentan a Thraive con hoja de vida y entrevista técnica antes del arranque." }
+    ]},
+    { "titulo": "Plan de trabajo", "bloques": [
+      { "tipo": "parrafo", "texto": "Plan indicativo con el equipo base, en sprints de 2 semanas con demo al cierre de cada uno. El orden se ajusta con Thraive según los compromisos con cada cliente." },
+      { "tipo": "numerada", "items": [
+        "**Semana 0 – Arranque.** Presentación y entrevista del desarrollador, accesos, repositorios de Thraive, ambientes y base técnica compartida (autenticación, roles, auditoría).",
+        "**Semanas 1 a 4 – Cumbre, Fase 1.** Centro de mando: captura por chat, tablero de solicitudes, hub financiero, ingreso de documentos, calendario, KYC y asistente de solo lectura. Entrega a JC.",
+        "**Semanas 5 a 12 – Farmaconal, Ola 1.** Caso digital desde SAP, app del técnico sin señal y con visión, torre de control y checklist. Con un desarrollador a demanda en la app móvil, la ola baja a unas 6 semanas.",
+        "**Semanas 13 a 20 – Farmaconal, Ola 2 y Cumbre, Fase 2.** Service Layer de SAP y conciliación; conectividad bancaria y plataforma de patrimonio. Se recomienda capacidad a demanda para avanzar ambos en paralelo.",
+        "**Continuo – Fase 3 y Ola 3.** Automatizaciones e IA sobre los datos que ambos productos registran desde el primer día."
+      ]}
+    ]},
+    { "titulo": "Entregables", "bloques": [
+      { "tipo": "parrafo", "texto": "Todo el código vive en los repositorios de Thraive desde el primer commit y es propiedad de Thraive." },
+      { "tipo": "vinetas", "items": [
+        "Centro de mando de Cumbre (Fase 1) en producción en la instancia privada del cliente.",
+        "Ola 1 de Farmaconal: plataforma web y app del técnico en producción.",
+        "Base técnica compartida: autenticación con MFA, roles, auditoría y asistente de solo lectura.",
+        "Demo y notas de cada sprint, backlog priorizado y reporte semanal de avance.",
+        "Documentación técnica y de despliegue generada sobre el código."
+      ]}
+    ]},
+    { "titulo": "Inversión y condiciones comerciales", "bloques": [
+      { "tipo": "parrafo", "texto": "La inversión del equipo base es de **USD 5.300 al mes**. Como referencia, 6 meses de equipo base suman **USD 31.800**." },
+      { "tipo": "tabla", "widths": [3.36, 2.2, 1.8, 2.0], "align": ["left", "right", "center", "right"], "headers": ["Perfil", "Tarifa mensual (USD)", "Dedicación", "Subtotal mensual (USD)"], "rows": [
+        ["Desarrollador Full-Stack Senior", "3.800", "100 %", "3.800"],
+        ["Technical Lead Senior (part-time)", "1.500", "≈ 8 h/semana", "1.500"],
+        ["**Total mensual**", "", "", "**5.300**"]
+      ]},
+      { "tipo": "vinetas", "items": [
+        "**Modalidad:** staff augmentation con un desarrollador dedicado y Technical Lead part-time, con tarifa mensual fija.",
+        "**Plazo:** mínimo 3 meses; después, mes a mes con aviso de 30 días.",
+        "**Facturación:** emitida por {ENTIDAD_LARGA} en USD, mensual y anticipada. Pago a 15 días por transferencia internacional.",
+        "**Capacidad a demanda:** según la tabla de perfiles a demanda; se activa con 2 semanas de aviso y se factura junto con el mes.",
+        "**Incluye:** selección, contratación y pago del desarrollador, herramientas de desarrollo con IA, gestión del equipo y continuidad: si el desarrollador sale, {ENTIDAD} lo reemplaza con empalme y sin costo.",
+        "**Propiedad intelectual:** el código y la documentación son de Thraive.",
+        "**No incluye:** infraestructura cloud, licencias o APIs de terceros (WhatsApp Business, OCR e IA, Aleta, agregadores bancarios, SAP), impuestos, retenciones o costos bancarios del país del cliente, ni viajes.",
+        "**Garantía de ajuste:** si el desarrollador no encaja en los primeros 30 días, se reemplaza sin costo.",
+        "**Vigencia de la oferta:** 30 días."
+      ]}
+    ]},
+    { "titulo": "Supuestos, exclusiones y gobierno", "bloques": [
+      { "tipo": "parrafo", "texto": "El plan supone un solo desarrollador base: los productos avanzan en secuencia, y para avanzarlos en paralelo se suma capacidad a demanda." },
+      { "tipo": "subtitulo", "texto": "Supuestos" },
+      { "tipo": "vinetas", "items": [
+        "Thraive designa un responsable de producto por cliente con disponibilidad semanal para demos y decisiones.",
+        "Thraive gestiona los accesos de terceros: SAP Business One y Service Layer de Farmaconal, buzón de operaciones y WhatsApp Business de Cumbre, Aleta y bancos.",
+        "Las fechas del plan son indicativas y dependen de los accesos a terceros desde el inicio de cada fase.",
+        "Los datos de los clientes de Cumbre se manejan solo en su instancia privada, bajo acuerdo de confidencialidad."
+      ]},
+      { "tipo": "subtitulo", "texto": "Exclusiones" },
+      { "tipo": "vinetas", "items": [
+        "Contratación de licencias, planes de nube y servicios de terceros.",
+        "Migración masiva de datos históricos y limpieza del maestro de artículos de Farmaconal, salvo que se acuerden como alcance.",
+        "Soporte 24/7 y guardias fuera del horario laboral."
+      ]},
+      { "tipo": "subtitulo", "texto": "Riesgos y mitigación" },
+      { "tipo": "tabla", "widths": [3.4, 5.96], "headers": ["Riesgo", "Mitigación"], "rows": [
+        ["Dependencia de una sola persona", "Código y documentación en los repositorios de Thraive, revisión del Technical Lead y reemplazo con empalme a cargo de CooWeb."],
+        ["Compromisos simultáneos con Farmaconal y Cumbre", "Priorización mensual con Thraive y capacidad a demanda por semanas."],
+        ["Demora en accesos a SAP, bancos o Aleta", "Desarrollo contra simuladores de API; las fechas se ajustan por los días de bloqueo."],
+        ["Información financiera y personal sensible", "Instancia privada, cifrado, MFA, permisos granulares, auditoría y asistente de IA de solo lectura."]
+      ]},
+      { "tipo": "subtitulo", "texto": "Gobierno del proyecto" },
+      { "tipo": "vinetas", "items": [
+        "Daily del desarrollador con el Technical Lead.",
+        "Demo al cierre de cada sprint de 2 semanas y reporte semanal a Thraive.",
+        "Comité mensual con Thiago para priorizar entre productos y activar capacidad a demanda."
+      ]}
+    ]},
+    { "titulo": "Siguientes pasos", "bloques": [
+      { "tipo": "parrafo", "texto": "Con la aprobación de Thraive, el desarrollador puede arrancar en 1 a 2 semanas, empezando por el centro de mando de Cumbre." },
+      { "tipo": "checklist", "items": [
+        "Validar el modelo, las tarifas y el plan indicativo.",
+        "Presentación y entrevista técnica del desarrollador (formato de perfil CooWeb).",
+        "Firma de la orden de servicio y del acuerdo de confidencialidad.",
+        "Entrega de accesos y repositorios.",
+        "Kick-off de la semana 0 y arranque de la Fase 1 de Cumbre."
+      ]},
+      { "tipo": "parrafo", "texto": "{ENTIDAD} queda atento para revisar la propuesta y ajustarla a las prioridades de Thraive." }
+    ]}
+  ],
+  "pie": "Propuesta presentada por {ENTIDAD_LARGA}  ·  Modalidad: Staff augmentation con Technical Lead  ·  Documento confidencial"
+}

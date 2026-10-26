@@ -1,0 +1,2078 @@
+<title>Cumbre Family Office OS</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="PoC de entendimiento de CooWeb sobre la propuesta de Thraive para el family office de JC.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap">
+<style>
+/* Layout: a thin PoC ribbon over an app shell (left rail of views, sticky top bar, working canvas).
+   Under 900px of app width the rail becomes a phone tab bar. "Phone" view puts the same app in a 390px frame. */
+:root{
+  --bg:#F5F8F7; --surface:#FFFFFF; --surface-2:#EDF2F0; --surface-3:#E2EAE7;
+  --ink:#0E2A2C; --ink-2:#425658; --ink-3:#5E7375;
+  --line:#DBE4E1; --line-2:#C5D3CF;
+  --accent:#12806B; --accent-strong:#0A5E4F; --accent-soft:#DCF0EA; --on-accent:#FFFFFF;
+  --coral:#BC4F2B; --coral-soft:#FAE7DE;
+  --good:#0ca30c; --warning:#fab219; --critical:#d03b3b;
+  --bubble-me:#D5F2E6; --wall:#E9EFEC; --plate:#FFFFFF; --frame:#0E2A2C;
+  --grid:#E3EAE7; --hatch:#9FC9BD;
+  --shadow-sm:0 1px 2px rgba(14,42,44,.06);
+  --shadow:0 1px 2px rgba(14,42,44,.05),0 18px 40px -20px rgba(14,42,44,.28);
+  --f-display:"Newsreader","Iowan Old Style",Georgia,serif;
+  --f-ui:"Hanken Grotesk","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --r-sm:8px; --r:12px; --r-lg:16px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B1A1B; --surface:#112426; --surface-2:#163030; --surface-3:#1C3A39;
+    --ink:#E6EFED; --ink-2:#A8BBB8; --ink-3:#8DA19F;
+    --line:#22403F; --line-2:#2E5251;
+    --accent:#33B898; --accent-strong:#69D3B9; --accent-soft:#143D36; --on-accent:#062019;
+    --coral:#EE8B64; --coral-soft:#3B2219;
+    --bubble-me:#1B4A3F; --wall:#0F2223; --plate:#FFFFFF; --frame:#020909;
+    --grid:#1D3634; --hatch:#2C6E5F;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.35);
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 18px 40px -18px rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B1A1B; --surface:#112426; --surface-2:#163030; --surface-3:#1C3A39;
+  --ink:#E6EFED; --ink-2:#A8BBB8; --ink-3:#8DA19F;
+  --line:#22403F; --line-2:#2E5251;
+  --accent:#33B898; --accent-strong:#69D3B9; --accent-soft:#143D36; --on-accent:#062019;
+  --coral:#EE8B64; --coral-soft:#3B2219;
+  --bubble-me:#1B4A3F; --wall:#0F2223; --plate:#FFFFFF; --frame:#020909;
+  --grid:#1D3634; --hatch:#2C6E5F;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.35);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 18px 40px -18px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:70;background:var(--surface-2)}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+h1,h2,h3,h4{margin:0;font-weight:500;text-wrap:balance}
+p{margin:0}
+ul{margin:0;padding:0;list-style:none}
+.ic{width:18px;height:18px;flex:none;display:inline-block;vertical-align:middle}
+.ic.sm{width:14px;height:14px}
+.eyebrow{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--ink-3)}
+.display{font-family:var(--f-display);font-weight:500;letter-spacing:-.01em}
+
+/* ribbon */
+.ribbon{display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap;background:var(--surface-2);border-bottom:1px solid var(--line);padding-block:8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));font-size:12.5px;color:var(--ink-2)}
+.ribbon .poc{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);border:1px solid currentColor;border-radius:4px;padding:2px 6px;flex:none}
+.ribbon .msg{flex:1 1 300px;min-width:0}
+.ribbon .by{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-3);flex-wrap:wrap}
+.plate{display:inline-flex;align-items:center;height:28px;padding:0 8px;background:var(--plate);border:1px solid var(--line);border-radius:7px}
+.plate img{height:17px;width:auto;display:block}
+.thlogo{height:28px;width:auto;border-radius:7px;display:block}
+.seg{display:inline-flex;background:var(--surface-3);border-radius:9px;padding:2px;gap:2px}
+.seg button{padding:5px 10px;border-radius:7px;font-size:12.5px;font-weight:600;color:var(--ink-2);white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-sm)}
+@media (max-width:979px){.viewtoggle{display:none}}
+
+/* stage + phone preview */
+.app{background:var(--bg);position:relative}
+.app-scroll{container:app/inline-size}
+.stage.phone{display:flex;justify-content:center;padding-block:22px 30px;background:var(--surface-2)}
+.stage.phone .app{width:392px;height:min(820px,calc(100vh - 150px));min-height:560px;border-radius:46px;border:11px solid var(--frame);box-shadow:var(--shadow);overflow:hidden;transform:translateZ(0)}
+.stage.phone .app-scroll{height:100%;overflow-y:auto;overscroll-behavior:contain}
+
+/* top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;display:flex;align-items:center;gap:12px;background:var(--surface);border-bottom:1px solid var(--line);padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.stage.phone .topbar{top:0}
+.brand{display:flex;align-items:center;gap:10px;flex:none}
+.brand .mark{width:32px;height:32px;display:block}
+.brand b{font-family:var(--f-display);font-size:21px;font-weight:600;letter-spacing:-.01em;line-height:1}
+.brand small{display:block;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-top:3px}
+.search{position:relative;flex:1 1 auto;max-width:460px;margin-left:16px;min-width:0}
+.search input{width:100%;height:38px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:0 12px 0 36px;outline:none}
+.search input:focus{border-color:var(--accent);background:var(--surface)}
+.search>.ic{position:absolute;left:11px;top:10px;color:var(--ink-3)}
+.sres{position:absolute;top:44px;left:0;right:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:6px;z-index:50;max-height:380px;overflow:auto}
+.sres button{display:flex;gap:10px;align-items:center;width:100%;padding:8px 10px;border-radius:8px}
+.sres button:hover,.sres button:focus-visible{background:var(--surface-2)}
+.sres .k{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);width:84px;flex:none}
+.sres .tx{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sres .empty{padding:10px;color:var(--ink-3)}
+.tb-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex:none}
+.daychip{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15}
+.daychip span{font-size:12.5px;font-weight:600}
+.iconbtn{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:var(--ink-2);border:1px solid var(--line);background:var(--surface)}
+.iconbtn:hover{background:var(--surface-2)}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:700;font-size:12.5px;flex:none}
+
+/* shell */
+.shell{display:grid;grid-template-columns:224px minmax(0,1fr);padding-right:max(16px,env(safe-area-inset-right,0px))}
+.rail{position:sticky;top:59px;align-self:start;max-height:calc(100vh - 59px);overflow:auto;padding:18px 14px 24px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:16px}
+.stage.phone .rail{top:0}
+.rail .grp{display:flex;flex-direction:column;gap:2px}
+.rail .grp .eyebrow{padding:0 10px 6px}
+.nav{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;color:var(--ink-2);font-weight:500;width:100%}
+.nav:hover{background:var(--surface-2);color:var(--ink)}
+.nav[aria-current="page"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-sm);font-weight:600}
+.nav[aria-current="page"] .ic{color:var(--accent)}
+.nav .cnt{margin-left:auto;font-size:11.5px;font-weight:700;min-width:22px;height:20px;padding:0 6px;border-radius:10px;display:grid;place-items:center;background:var(--surface-3);color:var(--ink-2)}
+.nav .cnt.hot{background:var(--coral-soft);color:var(--coral)}
+.nav .p2{margin-left:auto;font-family:var(--f-mono);font-size:9.5px;color:var(--coral);letter-spacing:.08em}
+.rail .foot{margin-top:auto;display:flex;flex-direction:column;gap:6px;padding:0 10px}
+.linkbtn{color:var(--ink-3);font-size:12.5px;text-decoration:underline;text-underline-offset:3px}
+.linkbtn:hover{color:var(--ink)}
+main{padding:24px 0 72px 26px;min-width:0;outline:none}
+
+/* page header */
+.ph{display:flex;align-items:flex-end;justify-content:space-between;gap:12px 20px;flex-wrap:wrap;margin-bottom:18px}
+.ph h1{font-family:var(--f-display);font-size:34px;line-height:1.08;font-weight:500;letter-spacing:-.015em}
+.ph .lede{color:var(--ink-2);max-width:62ch;margin-top:6px}
+.ph .eyebrow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.phase{font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:2px 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent-strong)}
+.phase.p2{background:var(--coral-soft);color:var(--coral)}
+
+/* generic blocks */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;min-width:0}
+.card>header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.card h2{font-size:15px;font-weight:650;font-family:var(--f-ui)}
+.card h2 .muted{font-weight:500}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.g-21{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.mt{margin-top:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:36px;padding:0 14px;border-radius:10px;font-weight:600;font-size:13px;background:var(--surface);border:1px solid var(--line-2);color:var(--ink);white-space:nowrap}
+.btn:hover{background:var(--surface-2)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.pri:hover{background:var(--accent-strong);border-color:var(--accent-strong)}
+.btn.sm{height:30px;padding:0 10px;font-size:12.5px;border-radius:8px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.chip{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;font-size:11.5px;font-weight:600;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+.chip.acc{background:var(--accent-soft);color:var(--accent-strong)}
+.chip.cor{background:var(--coral-soft);color:var(--coral)}
+.mono-tag{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink-3)}
+.cli{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);white-space:nowrap}
+.cli i{font-style:normal;width:20px;height:20px;border-radius:6px;display:grid;place-items:center;font-size:9.5px;font-weight:700;letter-spacing:.02em;background:var(--ink);color:var(--bg)}
+.cli.all i{background:var(--surface-3);color:var(--ink-2)}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--ink-2);white-space:nowrap}
+.status .dot{width:8px;height:8px;border-radius:50%;flex:none}
+.dot.good{background:var(--good)} .dot.warn{background:var(--warning)} .dot.crit{background:var(--critical)} .dot.idle{background:var(--line-2)}
+.ro{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-strong);border:1px solid var(--accent);border-radius:999px;padding:2px 8px}
+.empty-note{color:var(--ink-3);font-size:13px;padding:8px 0}
+
+/* rows */
+.rows{display:flex;flex-direction:column}
+.row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;text-align:left}
+.row-title{font-weight:600;line-height:1.3}
+.row-meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:12px;color:var(--ink-3)}
+.row.hot{position:relative;padding-left:12px}
+.row.hot::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:2px;background:var(--coral)}
+.due{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--ink-3);white-space:nowrap}
+.due.is-hot{color:var(--coral);font-weight:600}
+
+/* today */
+.hero{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin-bottom:20px}
+.hero h1{font-family:var(--f-display);font-size:44px;line-height:1.02;font-weight:500;letter-spacing:-.02em}
+.hero .brief{font-family:var(--f-display);font-size:19px;line-height:1.5;color:var(--ink-2);max-width:66ch}
+.hero .brief b{color:var(--ink);font-weight:600}
+.pulse{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pulse button{display:flex;align-items:baseline;gap:7px;padding:9px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line);font-size:13px;color:var(--ink-2)}
+.pulse button:hover{border-color:var(--line-2)}
+.pulse b{font-size:19px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.pulse .hot b{color:var(--coral)}
+.glance .big{font-family:var(--f-display);font-size:34px;font-weight:500;letter-spacing:-.01em;line-height:1.1}
+.kv{display:grid;grid-template-columns:auto auto;justify-content:space-between;gap:6px 14px;font-size:13px}
+.kv dt{color:var(--ink-3)} .kv dd{margin:0;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+
+/* board */
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:start}
+.col{background:var(--surface-2);border-radius:var(--r-lg);padding:10px;min-height:220px;display:flex;flex-direction:column;gap:8px;transition:outline-color .15s}
+.col.drop{outline:2px dashed var(--accent);outline-offset:-2px}
+.col>header{display:flex;align-items:baseline;justify-content:space-between;padding:2px 4px 4px}
+.col>header b{font-size:13px}
+.col>header span{font-size:11.5px;color:var(--ink-3)}
+.col .hint{font-size:11.5px;color:var(--ink-3);padding:0 4px 2px}
+.tk{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 12px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:8px;cursor:grab;text-align:left;width:100%}
+.tk:hover{border-color:var(--line-2)}
+.tk.dragging{opacity:.45}
+.tk .t{font-weight:600;line-height:1.3;font-size:13.5px}
+.tk .m{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:12px;color:var(--ink-3)}
+.tk.fresh{animation:pop .9s ease-out}
+.tk.done .t{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--line-2)}
+.tk .acts{display:flex;gap:6px}
+@keyframes pop{0%{box-shadow:0 0 0 0 var(--accent)}40%{box-shadow:0 0 0 5px var(--accent-soft)}100%{box-shadow:var(--shadow-sm)}}
+
+/* drawer + sheet */
+.scrim{position:fixed;inset:0;background:rgba(5,20,20,.32);opacity:0;pointer-events:none;transition:opacity .2s;z-index:80}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--surface);border-left:1px solid var(--line);box-shadow:var(--shadow);z-index:90;transform:translateX(104%);transition:transform .25s ease;overflow:auto;padding:20px max(20px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) 22px;display:flex;flex-direction:column;gap:16px;visibility:hidden}
+.drawer.open{transform:none;visibility:visible}
+.drawer h2{font-family:var(--f-display);font-size:25px;line-height:1.15;font-weight:500}
+.drawer .close{position:absolute;top:14px;right:max(14px,env(safe-area-inset-right,0px))}
+.facts{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px 12px;font-size:13px}
+.facts dt{color:var(--ink-3)} .facts dd{margin:0;font-weight:500;min-width:0}
+.movebar{display:flex;flex-wrap:wrap;gap:6px}
+.log li{display:flex;gap:10px;font-size:12.5px;padding:7px 0;border-top:1px solid var(--line)}
+.log li:first-child{border-top:0}
+.log time{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);width:62px;flex:none;padding-top:1px}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:90;background:var(--surface);border-radius:18px 18px 0 0;box-shadow:var(--shadow);padding:14px max(16px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));transform:translateY(105%);transition:transform .25s ease;visibility:hidden}
+.sheet.open{transform:none;visibility:visible}
+.sheet .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.sheet .grid button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:12px;background:var(--surface-2);font-size:12.5px;font-weight:600;text-align:center}
+
+/* tab bar (phone) */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:none;justify-content:space-around;align-items:flex-end;background:var(--surface);border-top:1px solid var(--line);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.tabbar button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;color:var(--ink-3);padding:4px 6px;min-width:56px;position:relative}
+.tabbar button[aria-current="page"]{color:var(--accent-strong)}
+.tabbar .fab{width:46px;height:46px;border-radius:15px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;margin-top:-18px;box-shadow:var(--shadow)}
+.tabbar .bdg{position:absolute;top:0;right:12px;min-width:16px;height:16px;border-radius:8px;background:var(--coral);color:#fff;font-size:9.5px;display:grid;place-items:center;padding:0 4px}
+
+/* toast + tooltip */
+.toast{position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;font-size:13px;opacity:0;pointer-events:none;transition:all .25s;z-index:120;max-width:calc(100% - 32px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.tip{position:fixed;z-index:130;background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:10px;padding:8px 10px;font-size:12px;pointer-events:none;max-width:260px}
+.tip b{display:block;font-size:12.5px;margin-bottom:2px}
+
+/* capture */
+.cap{display:grid;grid-template-columns:minmax(300px,380px) minmax(0,1fr);gap:24px;align-items:start}
+.phonebox{background:var(--frame);border-radius:40px;padding:10px;box-shadow:var(--shadow)}
+.phonescreen{background:var(--wall);border-radius:31px;overflow:hidden;display:flex;flex-direction:column;height:620px}
+.wa-head{display:flex;align-items:center;gap:10px;padding:14px 14px 10px;background:var(--surface);border-bottom:1px solid var(--line)}
+.wa-head .mark{width:34px;height:34px;flex:none;display:block}
+.wa-head b{display:block;font-size:14px}
+.wa-head small{font-size:11.5px;color:var(--accent-strong)}
+.wa-body{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:8px}
+.bub{max-width:86%;padding:8px 11px;border-radius:14px;font-size:13.5px;line-height:1.4;box-shadow:var(--shadow-sm);overflow-wrap:anywhere}
+.bub.me{align-self:flex-end;background:var(--bubble-me);border-bottom-right-radius:4px}
+.bub.bot{align-self:flex-start;background:var(--surface);border-bottom-left-radius:4px}
+.bub time{display:block;text-align:right;font-size:10px;color:var(--ink-3);margin-top:3px}
+.capcard{margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:var(--surface-2);display:flex;flex-direction:column;gap:6px}
+.capcard .t{font-weight:600;font-size:13px}
+.capcard .m{display:flex;flex-wrap:wrap;gap:5px}
+.capcard .a{display:flex;gap:6px;flex-wrap:wrap}
+.tries{display:flex;gap:6px;overflow-x:auto;padding:8px 10px 0;scrollbar-width:none}
+.tries button{flex:none;font-size:12px;padding:6px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wa-input{display:flex;gap:8px;padding:10px;align-items:center}
+.wa-input input{flex:1;min-width:0;height:40px;border-radius:20px;border:1px solid var(--line);background:var(--surface);padding:0 14px;outline:none}
+.wa-input input:focus{border-color:var(--accent)}
+.sendbtn{width:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;flex:none}
+.steps{display:grid;gap:10px}
+.step{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start}
+.step i{font-style:normal;width:28px;height:28px;border-radius:8px;background:var(--accent-soft);color:var(--accent-strong);display:grid;place-items:center;font-family:var(--f-mono);font-size:12px;font-weight:500}
+.step p{color:var(--ink-2);font-size:13px}
+.step b{display:block;color:var(--ink);font-size:13.5px}
+.channels{display:flex;flex-wrap:wrap;gap:6px}
+
+/* assistant */
+.asst{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:20px;align-items:start}
+.thread{display:flex;flex-direction:column;gap:12px;min-height:280px}
+.msg{max-width:min(620px,92%);border-radius:16px;padding:12px 14px;line-height:1.5;overflow-wrap:anywhere}
+.msg.me{align-self:flex-end;background:var(--ink);color:var(--bg);border-bottom-right-radius:5px;font-weight:500}
+.msg.ai{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:5px}
+.msg.ai ul{margin:8px 0 2px;display:flex;flex-direction:column;gap:5px}
+.msg.ai li{display:flex;gap:8px}
+.msg.ai li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent);margin-top:8px;flex:none}
+.msg .src{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.msg .ronote{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:11.5px;color:var(--ink-3)}
+.msg .free{white-space:pre-wrap}
+.thinking{display:inline-flex;gap:4px;align-items:center;color:var(--ink-3)}
+.thinking span{width:6px;height:6px;border-radius:50%;background:var(--ink-3);animation:blink 1.2s infinite}
+.thinking span:nth-child(2){animation-delay:.2s}.thinking span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.draft{margin-top:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);overflow:hidden}
+.draft .subj{padding:9px 12px;border-bottom:1px solid var(--line);font-size:13px}
+.draft pre{margin:0;padding:12px;font-family:var(--f-ui);font-size:13.5px;white-space:pre-wrap;line-height:1.55}
+.draft .a{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;border-top:1px solid var(--line);background:var(--surface);align-items:center}
+.sugg{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.sugg button{padding:8px 12px;border-radius:999px;border:1px solid var(--line-2);background:var(--surface);font-size:13px;font-weight:500;text-align:left}
+.sugg button:hover{border-color:var(--accent);color:var(--accent-strong)}
+.composer{position:sticky;bottom:12px;margin-top:14px;display:flex;gap:8px;background:var(--surface);border:1px solid var(--line-2);border-radius:14px;padding:6px;box-shadow:var(--shadow)}
+.composer input{flex:1;min-width:0;border:0;background:none;padding:0 10px;outline:none;height:40px}
+.can li{display:flex;gap:8px;align-items:flex-start;padding:6px 0;font-size:13px}
+.can li .ic{color:var(--accent);margin-top:1px}
+.can.no li .ic{color:var(--ink-3)}
+
+/* money */
+.scopebar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+.hub{display:grid;grid-template-columns:minmax(0,1fr) 220px minmax(0,1fr);gap:16px;align-items:center}
+.hub-side{display:flex;flex-direction:column;gap:9px}
+.hub-row{display:grid;grid-template-columns:104px minmax(0,1fr) auto;gap:10px;align-items:center;font-size:13px}
+.hub-row .lbl{color:var(--ink-2);font-weight:500}
+.hub-row .val{font-weight:650;font-variant-numeric:tabular-nums;text-align:right;min-width:82px}
+.hub-row .val small{display:block;font-size:11px;font-weight:500;color:var(--ink-3)}
+.bar{height:10px;border-radius:0 4px 4px 0;background:var(--surface-2);position:relative;overflow:hidden}
+.bar>span{position:absolute;left:0;top:0;bottom:0;border-radius:0 4px 4px 0}
+.bar .in{background:var(--accent)} .bar .out{background:var(--coral)}
+.bar .exp{background-image:repeating-linear-gradient(135deg,var(--hatch) 0 3px,transparent 3px 6px);border-radius:0 4px 4px 0}
+.out-side .bar .exp{background-image:repeating-linear-gradient(135deg,var(--coral-soft) 0 3px,transparent 3px 6px);border:1px solid var(--coral);border-left:0}
+.hub-core{aspect-ratio:1;max-width:220px;width:100%;margin:auto;border-radius:50%;border:1.5px solid var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px;background:var(--surface);box-shadow:0 0 0 10px var(--accent-soft)}
+.hub-core .big{font-family:var(--f-display);font-size:32px;font-weight:500;line-height:1.05;letter-spacing:-.01em}
+.hub-core small{font-size:11.5px;color:var(--ink-3);margin-top:6px;line-height:1.35}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--ink-3);align-items:center}
+.legend i{display:inline-block;width:14px;height:10px;border-radius:2px;vertical-align:-1px;margin-right:5px}
+.legend .sw-a{background:var(--accent)} .legend .sw-e{background-image:repeating-linear-gradient(135deg,var(--hatch) 0 3px,transparent 3px 6px);border:1px solid var(--accent)}
+.legend .ln-a{height:2px;background:var(--accent)} .legend .ln-e{height:0;border-top:2px dashed var(--accent)}
+.budget{display:flex;flex-direction:column;gap:12px}
+.bud .top{display:flex;justify-content:space-between;gap:8px;font-size:13px;margin-bottom:6px}
+.bud .top b{font-weight:600}
+.bud .track{position:relative;height:10px;background:var(--surface-2);border-radius:5px;overflow:visible}
+.bud .track>span{position:absolute;top:0;bottom:0;left:0;border-radius:5px 0 0 5px}
+.bud .track .a{background:var(--ink-2)}
+.bud .track .e{background-image:repeating-linear-gradient(135deg,var(--line-2) 0 3px,transparent 3px 6px)}
+.bud .track .cap{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);border-radius:1px}
+.bud .note{margin-top:5px;font-size:12px}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+td.amt{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+td.amt.pos{color:var(--accent-strong)}
+.quick{display:flex;gap:8px;flex-wrap:wrap}
+.quick input{flex:1 1 260px;min-width:0;height:40px;border:1px solid var(--line-2);border-radius:10px;padding:0 12px;background:var(--surface);outline:none}
+.quick input:focus{border-color:var(--accent)}
+.parsed{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:26px;margin-top:10px;font-size:12.5px;color:var(--ink-3)}
+
+/* charts */
+.chart{width:100%;min-height:60px;position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .gl{stroke:var(--grid);stroke-width:1}
+.chart .base{stroke:var(--line-2);stroke-width:1}
+.chart .tk-l{fill:var(--ink-3);font-family:var(--f-ui);font-size:11px;font-variant-numeric:tabular-nums}
+.chart .ln{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.chart .ln.e{stroke-dasharray:5 5}
+.chart .ar{fill:var(--accent);opacity:.1}
+.chart .end{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.chart .xh{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:3 3}
+.chart .hd{fill:var(--surface);stroke:var(--accent);stroke-width:2}
+.chart .hover-layer{opacity:0;transition:opacity .1s}
+.chart.hovering .hover-layer{opacity:1}
+.chart .today-l{stroke:var(--coral);stroke-width:1}
+.chart .today-t{fill:var(--coral);font-family:var(--f-mono);font-size:10px;letter-spacing:.08em}
+.chart .pt1{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.chart .pt2{fill:var(--coral);stroke:var(--surface);stroke-width:2}
+.chart .pl{fill:var(--ink);font-family:var(--f-ui);font-size:11.5px;font-weight:600}
+.chart .q{fill:var(--accent-soft);opacity:.7}
+.chart .ql{fill:var(--accent-strong);font-family:var(--f-mono);font-size:10px;letter-spacing:.1em}
+.chart .ax{fill:var(--ink-3);font-family:var(--f-mono);font-size:10px;letter-spacing:.1em}
+
+/* documents */
+.docs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px;align-items:start}
+.inbox-head{display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap;margin-bottom:10px}
+.mail{display:flex;gap:12px;padding:12px;border-radius:12px;width:100%;text-align:left;align-items:flex-start;border:1px solid transparent}
+.mail:hover{background:var(--surface-2)}
+.mail[aria-current="true"]{background:var(--surface-2);border-color:var(--line)}
+.mail .ico{width:34px;height:34px;border-radius:9px;background:var(--surface-3);display:grid;place-items:center;color:var(--ink-2);flex:none}
+.mail .b{min-width:0;flex:1}
+.mail .f{font-size:12px;color:var(--ink-3);display:flex;justify-content:space-between;gap:8px}
+.mail .s{font-weight:600;line-height:1.3;margin:2px 0 6px}
+.pipe{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.pipe span{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:var(--ink-3)}
+.pipe span.on{color:var(--accent-strong)}
+.pipe span.cur{color:var(--coral)}
+.pipe .sep{width:10px;height:1px;background:var(--line-2)}
+.steps-big{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:12px 0 16px}
+.steps-big div{padding:10px;border-radius:10px;background:var(--surface-2);font-size:12px;font-weight:600;color:var(--ink-3);display:flex;flex-direction:column;gap:6px}
+.steps-big div.on{background:var(--accent-soft);color:var(--accent-strong)}
+.steps-big div.cur{background:var(--coral-soft);color:var(--coral)}
+.path{font-family:var(--f-mono);font-size:12px;color:var(--ink-2);background:var(--surface-2);padding:8px 10px;border-radius:8px;overflow-wrap:anywhere}
+.except{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:var(--coral-soft);color:var(--ink);font-size:13px;margin-top:12px}
+.except .ic{color:var(--coral)}
+
+/* calendar */
+.cal{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;align-items:start}
+.month{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.month .wd{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:4px 6px}
+.day{min-height:86px;border-radius:10px;background:var(--surface-2);padding:6px;display:flex;flex-direction:column;gap:3px;text-align:left;border:1px solid transparent;min-width:0}
+.day:hover{border-color:var(--line-2)}
+.day.blank{background:none;pointer-events:none}
+.day .n{font-size:12px;font-weight:700;color:var(--ink-2)}
+.day.past .n{color:var(--ink-3);font-weight:500}
+.day.today{background:var(--surface);border-color:var(--coral)}
+.day.today .n{color:var(--coral)}
+.day.sel{outline:2px solid var(--accent);outline-offset:-1px}
+.ev{font-size:10.5px;line-height:1.25;padding:2px 5px;border-radius:5px;background:var(--surface);color:var(--ink-2);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;border-left:3px solid var(--line-2)}
+.ev.in{border-left-color:var(--accent)} .ev.out{border-left-color:var(--coral)} .ev.task{border-left-color:var(--ink)} .ev.event{border-left-color:var(--warning)}
+.agenda li{display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--line);align-items:flex-start}
+.agenda li:first-child{border-top:0}
+.agenda .when{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);width:74px;flex:none;padding-top:2px}
+.kind{width:8px;height:8px;border-radius:2px;margin-top:6px;flex:none;background:var(--line-2)}
+.kind.in{background:var(--accent)} .kind.out{background:var(--coral)} .kind.task{background:var(--ink)} .kind.event{background:var(--warning)}
+.learn{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.learn:first-child{border-top:0}
+.learn .ic{color:var(--accent);margin-top:2px}
+.learn small{display:block;color:var(--ink-3);font-size:12px;margin-top:2px}
+
+/* kyc */
+.kyc{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px;align-items:start}
+.cp{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:12px;border-radius:12px;width:100%;text-align:left;border:1px solid transparent}
+.cp:hover{background:var(--surface-2)}
+.cp[aria-current="true"]{background:var(--surface-2);border-color:var(--line)}
+.cp b{font-weight:650}
+.cp .sub{font-size:12px;color:var(--ink-3);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.checks li{display:flex;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line);font-size:13.5px}
+.checks li:first-child{border-top:0}
+.ck{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;flex:none;border:1.5px solid var(--line-2);color:transparent}
+.ck.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.ck.run{border-color:var(--coral);border-style:dashed}
+.newcp{display:flex;gap:8px;margin-top:12px}
+.newcp input{flex:1;min-width:0;height:36px;border:1px solid var(--line-2);border-radius:10px;padding:0 12px;background:var(--surface);outline:none}
+
+/* wealth */
+.p2band{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:var(--coral-soft);margin-bottom:16px;font-size:13.5px}
+.p2band .ic{color:var(--coral);margin-top:1px}
+.nw{font-family:var(--f-display);font-size:46px;font-weight:500;letter-spacing:-.02em;line-height:1}
+.delta{color:var(--accent-strong);font-weight:700;font-size:14px}
+.hbar{display:grid;grid-template-columns:minmax(0,210px) minmax(0,1fr) auto;gap:10px;align-items:center;font-size:13px;padding:5px 0}
+.hbar .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2)}
+.hbar .v{font-weight:650;font-variant-numeric:tabular-nums;text-align:right;min-width:72px}
+.hbar .bar>span{background:var(--accent)}
+.hbar .bar.nb>span{background:var(--ink-2)}
+.feed li{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.feed li:first-child{border-top:0}
+.feed .ico{width:36px;height:36px;border-radius:10px;background:var(--surface-2);display:grid;place-items:center;color:var(--ink-2)}
+.feed small{display:block;color:var(--ink-3);font-size:12px}
+
+/* security */
+.pillars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.pillar{padding:16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.pillar .ic{color:var(--accent);width:22px;height:22px}
+.pillar b{font-size:14px}
+.pillar p{font-size:13px;color:var(--ink-2)}
+.matrix td,.matrix th{text-align:center}
+.matrix td:first-child,.matrix th:first-child{text-align:left}
+.perm{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+.perm.full{background:var(--accent-soft);color:var(--accent-strong)}
+.perm.none{background:none;color:var(--ink-3)}
+.perm.rd{background:var(--surface-3);color:var(--ink)}
+.matrix th.sel,.matrix td.sel{background:var(--surface-2)}
+.seen li{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:13px}
+.seen li:first-child{border-top:0}
+.seen .ic{color:var(--accent)}
+.seen .off{color:var(--ink-3)}
+.seen .off .ic{color:var(--ink-3)}
+
+/* plan */
+.phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.phasecard{padding:18px;border-radius:16px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.phasecard.now{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.phasecard h3{font-family:var(--f-display);font-size:22px;font-weight:500}
+.phasecard ul li{display:flex;gap:8px;font-size:13px;padding:3px 0;color:var(--ink-2)}
+.phasecard ul li .ic{color:var(--accent);margin-top:1px}
+.team{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.role{padding:14px;border-radius:14px;background:var(--surface-2);display:flex;gap:12px;align-items:flex-start}
+.role .ic{width:22px;height:22px;color:var(--accent-strong);margin-top:2px}
+.role b{display:block;font-size:14px}
+.role p{font-size:13px;color:var(--ink-2);margin-top:3px}
+.stackchips{display:flex;flex-wrap:wrap;gap:6px}
+.stackchips span{font-size:12.5px;padding:5px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface)}
+.stackchips span.p2{border-style:dashed;color:var(--ink-3)}
+.cadence{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.cadence div{padding:10px 12px;border-radius:10px;background:var(--surface-2);font-size:13px}
+.cadence b{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:500;margin-bottom:2px}
+
+.msearch{display:none !important}
+.day .dots{display:none;gap:3px;flex-wrap:wrap}
+.day .dots i{width:6px;height:6px;border-radius:2px;background:var(--line-2)}
+.day .dots i.in{background:var(--accent)} .day .dots i.out{background:var(--coral)} .day .dots i.task{background:var(--ink)} .day .dots i.event{background:var(--warning)}
+/* fixed layers live outside the container, so they follow a class set from the app width */
+.app.narrow .tabbar{display:flex}
+.app.narrow .drawer{top:auto;left:0;width:100%;max-height:86%;border-left:0;border-radius:18px 18px 0 0;transform:translateY(104%)}
+.app.narrow .drawer.open{transform:none}
+/* responsive (container: app width) */
+@container app (max-width: 1180px){
+  .asst{grid-template-columns:minmax(0,1fr)}
+  .asst aside{display:none}
+  .hub{grid-template-columns:minmax(0,1fr)}
+  .hub-core{max-width:190px;order:-1}
+  .grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pillars{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@container app (max-width: 900px){
+  .shell{grid-template-columns:minmax(0,1fr);padding-left:max(16px,env(safe-area-inset-left,0px))}
+  .rail{display:none}
+  main{padding:18px 0 110px}
+  .search{margin-left:0}
+  .daychip,.tb-right .avatar{display:none}
+  .brand small{display:none}
+  .grid-2,.grid-3,.g-21,.cap,.docs,.cal,.kyc,.team,.phases,.pillars,.cadence{grid-template-columns:minmax(0,1fr)}
+  .board{grid-template-columns:minmax(0,1fr)}
+  .col{min-height:0}
+  .ph h1{font-size:28px}
+  .hero h1{font-size:34px}
+  .hero .brief{font-size:17px}
+  .phonebox{border-radius:0;padding:0;background:none;box-shadow:none}
+  .phonescreen{border-radius:16px;height:560px;border:1px solid var(--line)}
+  .day{min-height:52px;padding:4px}
+  .day .ev{display:none}
+  .day .dots{display:flex}
+  .steps-big{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .composer{bottom:84px}
+  .hbar{grid-template-columns:minmax(0,110px) minmax(0,1fr) auto}
+}
+@container app (max-width: 520px){
+  .search{display:none}
+  .search.show{display:block;position:absolute;left:12px;right:12px;top:8px;max-width:none}
+  .msearch{display:grid !important}
+  .hub-row{grid-template-columns:90px minmax(0,1fr) auto}
+  .nw{font-size:36px}
+}
+@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+
+<div class="ribbon" id="ribbon"></div>
+<div class="stage" id="stage">
+  <div class="app" id="app">
+    <div class="app-scroll" id="scroller">
+      <header class="topbar" id="topbar"></header>
+      <div class="shell">
+        <nav class="rail" id="rail" aria-label="Views"></nav>
+        <main id="main" tabindex="-1"></main>
+      </div>
+    </div>
+    <nav class="tabbar" id="tabbar" aria-label="Views"></nav>
+    <div class="scrim" id="scrim" data-act="close-all"></div>
+    <aside class="drawer" id="drawer" aria-hidden="true"></aside>
+    <div class="sheet" id="sheet" aria-hidden="true"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+</div>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+"use strict";
+/* ───────────── demo constants ───────────── */
+const TODAY = "2026-07-28";           // demo day: Tuesday
+const TODAY_DAY = 28;
+let L = "en";
+
+/* ───────────── icons ───────────── */
+const IC = {
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',
+  board:'<rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="11" rx="1.5"/><rect x="17" y="4" width="4" height="7" rx="1.5"/>',
+  spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',
+  coins:'<ellipse cx="9" cy="7" rx="6" ry="3"/><path d="M3 7v5c0 1.7 2.7 3 6 3s6-1.3 6-3V7"/><path d="M9 15v2c0 1.7 2.7 3 6 3s6-1.3 6-3v-5c0-1.7-2.7-3-6-3"/>',
+  doc:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+  cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  shield:'<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
+  chart:'<path d="M3 20h18"/><path d="M5 16l4.5-5 3.5 3 6-7"/>',
+  lock:'<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+  flag:'<path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  send:'<path d="M4 12l16-8-6 16-2.5-6.5z"/>',
+  moon:'<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  phone:'<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>',
+  monitor:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
+  eye:'<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  repeat:'<path d="M17 2l3 3-3 3"/><path d="M4 11V9a4 4 0 0 1 4-4h12"/><path d="M7 22l-3-3 3-3"/><path d="M20 13v2a4 4 0 0 1-4 4H4"/>',
+  alert:'<path d="M12 3.5l9.5 16.5h-19z"/><path d="M12 10v4.5M12 17.5h.01"/>',
+  more:'<circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/>',
+  key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3"/>',
+  users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/>',
+  server:'<rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/>',
+  list:'<path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/>',
+  copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
+  card:'<rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 10h19M6 15h4"/>',
+  bank:'<path d="M3 10l9-6 9 6"/><path d="M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18"/>',
+  inbox:'<path d="M3 13l3-8h12l3 8v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M3 13h5l1.5 3h5L16 13h5"/>',
+  undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>',
+  layers:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
+  stop:'<rect x="6" y="6" width="12" height="12" rx="2"/>'
+};
+const icon = (n, cls) => `<svg class="ic ${cls||""}" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${IC[n]||""}</g></svg>`;
+const MARK = `<svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--ink)"/><path d="M4.5 24 L12.5 11 L16.5 17 L19.5 13 L27.5 24 Z" fill="var(--accent)"/><path d="M12.5 11 L15 15 L13.4 16.1 L12.2 14.7 L10.6 15.6 Z" fill="var(--bg)"/></svg>`;
+
+/* ───────────── strings ───────────── */
+const S = {
+  pocMsg:["CooWeb's working reading of the Thraive proposal for JC, shared with Thiago Da Cunha. All names and figures are fictitious.","Lectura funcional de CooWeb sobre la propuesta de Thraive para JC, enviada a Thiago Da Cunha. Todos los nombres y cifras son ficticios."],
+  builtBy:["Built by","Construido por"], forW:["for","para"],
+  vDesktop:["Desktop","Escritorio"], vPhone:["Phone","Móvil"],
+  searchPh:["Search clients, documents, follow-ups…","Busca clientes, documentos, seguimientos…"],
+  demoDay:["Demo day","Día de demo"], noResults:["Nothing matches yet.","Todavía no hay coincidencias."],
+  k_ticket:["Follow-up","Seguimiento"], k_doc:["Document","Documento"], k_party:["Contact","Contacto"], k_client:["Client","Cliente"], k_kyc:["KYC","KYC"], k_event:["Calendar","Calendario"], k_tx:["Money","Dinero"],
+  g_cc:["Command center","Centro de mando"], g_ops:["Operations","Operaciones"], g_p2:["Phase 2 preview","Vista fase 2"], g_found:["Foundation","Base"], g_proj:["The project","El proyecto"],
+  v_today:["Today","Hoy"], v_capture:["Capture","Capturar"], v_board:["Follow-ups","Seguimientos"], v_assistant:["Assistant","Asistente"], v_money:["Financial hub","Centro financiero"], v_docs:["Documents","Documentos"], v_calendar:["Calendar","Calendario"], v_kyc:["KYC on partners","KYC de terceros"], v_wealth:["Wealth","Patrimonio"], v_security:["Security","Seguridad"], v_plan:["Roadmap","Hoja de ruta"],
+  t_board:["Board","Tablero"], t_ask:["Ask","Preguntar"], more:["More","Más"], allViews:["All views","Todas las vistas"],
+  reset:["Reset demo","Reiniciar demo"], resetDone:["Demo reset to this morning","Demo reiniciada a esta mañana"],
+  themeDark:["Dark theme","Tema oscuro"], themeLight:["Light theme","Tema claro"],
+  phase1:["Phase 1","Fase 1"], phase2:["Phase 2","Fase 2"], phase3:["Phase 3","Fase 3"],
+  readOnly:["Read-only","Solo lectura"],
+  today:["Today","Hoy"], tomorrow:["Tomorrow","Mañana"], overdue:["Overdue","Vencido"], days:["days","días"], day:["day","día"],
+  allHouseholds:["All households","Todos los hogares"],
+  // today
+  morningBrief:["Morning brief","Resumen de la mañana"], goodMorning:["Good morning, JC.","Buenos días, JC."],
+  needYou:["need you","te necesitan"], waitingOn:["waiting on others","esperando a terceros"], inInbox:["to triage","por clasificar"], netJuly:["net July, projected","neto de julio, proyectado"],
+  needsNow:["What needs you now","Lo que te necesita ahora"], waitingTitle:["Waiting on others","Esperando a terceros"],
+  nudge:["Draft a nudge","Redactar recordatorio"], draftApproval:["Draft approval","Redactar aprobación"], markReviewed:["Mark reviewed","Marcar revisado"],
+  comingUp:["Coming up · next 7 days","Próximos 7 días"], overnight:["Arrived overnight","Llegó durante la noche"], glance:["July at a glance","Julio de un vistazo"],
+  netPos:["Net position","Posición neta"], received:["Received so far","Recibido hasta hoy"], paid:["Paid so far","Pagado hasta hoy"], expIn:["Still expected in","Por entrar"], expOut:["Still expected out","Por salir"],
+  openHub:["Open the financial hub","Abrir el centro financiero"], openBoard:["Open follow-ups","Abrir seguimientos"], openDocs:["Open documents","Abrir documentos"], openCal:["Open calendar","Abrir calendario"],
+  sinceD:["for","hace"], nothingNeeds:["Nothing needs you right now.","Nada te necesita ahora mismo."], nothingWaiting:["Nobody owes you anything.","Nadie te debe nada."],
+  // board
+  boardLede:["Every request on one board, captured from a single message. You see what needs you, and what is waiting on someone else.","Cada solicitud en un solo tablero, capturada desde un mensaje. Ves lo que te necesita y lo que espera a otra persona."],
+  c_inbox:["Inbox","Bandeja"], c_todo:["To do","Por hacer"], c_waiting:["Waiting on others","Esperando a terceros"], c_done:["Done","Hecho"],
+  h_inbox:["New, not yet sorted","Nuevo, sin clasificar"], h_todo:["Needs you","Te necesita"], h_waiting:["Someone else has the ball","La pelota la tiene otro"], h_done:["Closed this month","Cerrado este mes"],
+  dragHint:["Drag cards between columns, or open one to move it.","Arrastra las tarjetas entre columnas o abre una para moverla."],
+  newFromChat:["New from chat","Nuevo desde el chat"], idea:["Idea","Idea"],
+  movedTo:["Moved to","Movido a"], reviewed:["Wire reviewed and closed","Transferencia revisada y cerrada"],
+  // drawer
+  client:["Client","Cliente"], due:["Due","Vence"], waitingOnL:["Waiting on","Esperando a"], source:["Captured from","Capturado desde"], status:["Column","Columna"], moveTo:["Move to","Mover a"], history:["History","Historial"], askAbout:["Ask the assistant about this","Preguntar al asistente"], close:["Close","Cerrar"],
+  src_whatsapp:["WhatsApp","WhatsApp"], src_email:["Email · B27 Ops inbox","Correo · bandeja B27 Ops"], src_app:["Cumbre app","App Cumbre"], src_intake:["Document intake","Lectura de documentos"], src_kyc:["KYC review","Revisión KYC"],
+  logCreated:["Created","Creado"], logMoved:["Moved to","Movido a"], logDraft:["Draft saved to this follow-up","Borrador guardado en este seguimiento"],
+  // capture
+  captureLede:["Send a task, an idea, a request or an expense from WhatsApp, the app or your desktop. It lands on the board, filed and dated, before the meeting ends.","Envía una tarea, una idea, una solicitud o un gasto desde WhatsApp, la app o el escritorio. Llega al tablero, archivado y con fecha, antes de que termine la reunión."],
+  waName:["Cumbre OS","Cumbre OS"], waStatus:["private instance · end-to-end","instancia privada · cifrado"],
+  tryThis:["Try one","Prueba uno"], typeMsg:["Message","Mensaje"], send:["Send","Enviar"],
+  capHello:["Hi JC. Send me anything: a task, an idea, a request, an expense. I'll file it where it belongs.","Hola JC. Mándame lo que sea: una tarea, una idea, una solicitud, un gasto. Lo archivo donde va."],
+  capTicket:["Done. I put it on the board:","Listo. Lo puse en el tablero:"], capIdea:["Saved as an idea in your inbox:","Guardado como idea en tu bandeja:"], capExpense:["Captured and categorized:","Capturado y categorizado:"],
+  capAsk:["Which client is this for?","¿De qué cliente es?"], capUndone:["Undone. Nothing was filed.","Deshecho. No se archivó nada."], capAi:["read by AI","leído con IA"],
+  openInBoard:["Open in board","Ver en tablero"], openInMoney:["Open in money","Ver en dinero"], undo:["Undo","Deshacer"],
+  howTitle:["How capture works","Cómo funciona la captura"],
+  how1:["You write the way you talk","Escribes como hablas"], how1d:["One line in WhatsApp, the app or a forwarded email. No forms.","Una línea por WhatsApp, la app o un correo reenviado. Sin formularios."],
+  how2:["Cumbre reads it","Cumbre lo entiende"], how2d:["Client, date, who has the ball, amount and category are picked out of the sentence.","Del mensaje salen el cliente, la fecha, quién tiene la pelota, el monto y la categoría."],
+  how3:["It lands where it belongs","Llega a donde va"], how3d:["A follow-up on the board, an idea in the inbox, or an expense in the financial hub. Every step is logged.","Un seguimiento en el tablero, una idea en la bandeja o un gasto en el centro financiero. Cada paso queda registrado."],
+  channels:["Channels","Canales"], ch_wa:["WhatsApp Business","WhatsApp Business"], ch_app:["Cumbre app (iOS / Android)","App Cumbre (iOS / Android)"], ch_desk:["Desktop","Escritorio"], ch_mail:["Forward to B27 Ops","Reenvío a B27 Ops"],
+  createdFromChat:["Created from chat this session","Creado desde el chat en esta sesión"], noneYet:["Nothing yet. Send a message on the left.","Todavía nada. Envía un mensaje a la izquierda."],
+  // assistant
+  asstLede:["Ask anything in plain language. It reads across operations and wealth, and drafts the email the way you would write it. It never books, moves or changes anything.","Pregunta lo que sea en lenguaje natural. Lee operaciones y patrimonio, y redacta el correo como lo escribirías tú. Nunca agenda, mueve ni cambia nada."],
+  aiLive:["Live answers on","Respuestas en vivo"], aiDemo:["Demo answers","Respuestas de demo"],
+  askPh:["Ask anything…","Pregunta lo que sea…"], ask:["Ask","Preguntar"], stop:["Stop","Detener"],
+  roNote:["Read-only · nothing was changed","Solo lectura · no se cambió nada"],
+  canRead:["What it reads","Lo que lee"], cantDo:["What it never does","Lo que nunca hace"],
+  cr1:["Follow-ups and their history","Seguimientos y su historial"], cr2:["Money in and out, budgets","Entradas, salidas y presupuestos"], cr3:["Documents and what they say","Documentos y su contenido"], cr4:["Calendar and recurring items","Calendario y recurrentes"], cr5:["KYC files on partners","Expedientes KYC de terceros"], cr6:["Wealth positions (Phase 2)","Posiciones patrimoniales (fase 2)"],
+  cd1:["Send an email or a message","Enviar un correo o un mensaje"], cd2:["Move money or approve a wire","Mover dinero o aprobar transferencias"], cd3:["Book, edit or delete anything","Agendar, editar o borrar nada"],
+  q1:["What's open with the Reyes trust?","¿Qué hay abierto con el fideicomiso Reyes?"], q2:["Legal spend this quarter?","¿Gasto legal este trimestre?"], q3:["Draft the approval email to the private bank","Redacta el correo de aprobación para el banco privado"], q4:["What's due this week?","¿Qué vence esta semana?"], q5:["Where does July's cash flow stand?","¿Cómo va el flujo de caja de julio?"], q6:["What is waiting on Lisa Moreno?","¿Qué está esperando a Lisa Moreno?"],
+  emptyAsst:["Pick a question below or type your own.","Elige una pregunta abajo o escribe la tuya."],
+  copy:["Copy","Copiar"], copied:["Copied","Copiado"], copyFail:["Select the text to copy it","Selecciona el texto para copiarlo"],
+  soften:["Warmer tone","Tono más cálido"], formal:["More formal","Más formal"], saveDraft:["Save to follow-up","Guardar en el seguimiento"], youSend:["You send it. The assistant never does.","Tú lo envías. El asistente nunca lo hace."],
+  draftSaved:["Draft saved to the follow-up","Borrador guardado en el seguimiento"], subject:["Subject","Asunto"], to:["To","Para"],
+  fallback:["In this PoC I answer from the demo data: open items by client, legal spend, what's due, cash flow, what's waiting on someone, statements, and drafts. In the product I read across everything you hold.","En este PoC respondo con los datos de demo: pendientes por cliente, gasto legal, vencimientos, flujo de caja, lo que espera a alguien, extractos y borradores. En el producto leo todo lo que manejas."],
+  aiErr:["The live assistant isn't available right now. The suggested questions still work.","El asistente en vivo no está disponible ahora. Las preguntas sugeridas siguen funcionando."],
+  aiStopped:["Stopped.","Detenido."],
+  // money
+  moneyLede:["Salary, contracts, endorsements and distributions on one side; taxes, debt, lifestyle and investments on the other. One current net position per household.","Salario, contratos, patrocinios y distribuciones de un lado; impuestos, deuda, estilo de vida e inversiones del otro. Una posición neta al día por hogar."],
+  moneyIn:["Money in","Entradas"], moneyOut:["Money out","Salidas"], julyNet:["Net position · July","Posición neta · julio"],
+  soFar:["so far","hasta hoy"], expected:["expected","esperado"], actual:["Received / paid","Recibido / pagado"], expectedRest:["Expected by July 31","Esperado al 31 de julio"],
+  cashTitle:["July cash flow","Flujo de caja de julio"], cashSub:["Net month-to-date, with what is still expected","Neto acumulado del mes, con lo que aún se espera"],
+  restTitle:["Expected in & out for the rest of July","Entradas y salidas esperadas el resto de julio"],
+  budgets:["Budgets · July","Presupuestos · julio"], budgetsSub:["Built from what you actually owe","Hechos con lo que realmente debes"],
+  within:["Within budget","Dentro del presupuesto"], over:["Over by","Excedido en"], left:["left","disponible"],
+  captureExp:["Capture an expense","Capturar un gasto"], expPh:["e.g. Dinner with Vanta sponsor 420 Reyes","ej. Cena con patrocinador Vanta 420 Reyes"], add:["Add","Agregar"],
+  expHint:["Type it the way you'd say it. Amount, client and category are read for you.","Escríbelo como lo dirías. El monto, el cliente y la categoría se leen solos."],
+  recent:["Recent transactions","Movimientos recientes"], date:["Date","Fecha"], desc:["Description","Descripción"], cat:["Category","Categoría"], amount:["Amount","Monto"], via:["Source","Origen"],
+  syncNote:["Investments sync to the wealth backbone in Phase 2, so a capital call is counted once.","En la fase 2 las inversiones se sincronizan con el backbone patrimonial, así un capital call se cuenta una sola vez."],
+  needClient:["Add a client name (Reyes, Almánzar or Batista)","Agrega un cliente (Reyes, Almánzar o Batista)"], needAmount:["Add an amount","Agrega un monto"],
+  expAdded:["Expense captured","Gasto capturado"],
+  cat_salary:["Salary","Salario"], cat_contracts:["Contracts","Contratos"], cat_endorse:["Endorsements","Patrocinios"], cat_distrib:["Distributions","Distribuciones"], cat_taxes:["Taxes","Impuestos"], cat_debt:["Debt service","Servicio de deuda"], cat_lifestyle:["Lifestyle","Estilo de vida"], cat_invest:["Investments","Inversiones"],
+  s_gentros:["Gentros statement","Extracto Gentros"], s_amex:["AmEx","AmEx"], s_wire:["Wire · pending you","Transferencia · te espera"], s_recurring:["Recurring","Recurrente"], s_meridian:["Meridian quote","Cotización Meridian"], s_contract:["Contract","Contrato"], s_costa:["Invoice","Factura"], s_chat:["Captured · chat","Capturado · chat"], s_app:["Captured · app","Capturado · app"],
+  // docs
+  docsLede:["Statements and contracts that arrive by email are read, filed and reconciled. Nobody re-keys a number.","Los extractos y contratos que llegan por correo se leen, se archivan y se concilian. Nadie vuelve a digitar un número."],
+  inboxName:["B27 Ops inbox","Bandeja B27 Ops"], simulate:["Simulate an incoming statement","Simular un extracto entrante"],
+  st_received:["Received","Recibido"], st_read:["Read","Leído"], st_filed:["Filed","Archivado"], st_reconciled:["Reconciled","Conciliado"],
+  extracted:["Read from the document","Leído del documento"], filedTo:["Filed to","Archivado en"], linked:["Linked to","Vinculado a"],
+  f_acct:["Account","Cuenta"], f_custodian:["Custodian","Custodio"], f_period:["Period","Periodo"], f_open:["Opening balance","Saldo inicial"], f_close:["Closing balance","Saldo final"], f_matched:["Transactions matched","Movimientos conciliados"],
+  f_party:["Counterparty","Contraparte"], f_term:["Term","Plazo"], f_value:["Value","Valor"], f_sign:["Signatures","Firmas"], f_premium:["Premium","Prima"], f_coverage:["Coverage","Cobertura"], f_renewal:["Renewal date","Fecha de renovación"],
+  pendingSig:["Pending: Tomás Almánzar","Pendiente: Tomás Almánzar"],
+  exception:["needs review","requiere revisión"], excText:["AmEx $3,180 · Punta Cana trip has no receipt on file. I opened a follow-up in your inbox.","AmEx $3,180 · viaje a Punta Cana no tiene recibo. Abrí un seguimiento en tu bandeja."],
+  receiptTicket:["Receipt needed · AmEx $3,180 · Punta Cana trip","Falta recibo · AmEx $3,180 · viaje a Punta Cana"],
+  simDone:["Statement read, filed and reconciled","Extracto leído, archivado y conciliado"],
+  instant:["Instant retrieval: use the search bar to find any document, client or follow-up in seconds.","Búsqueda instantánea: usa la barra de búsqueda para encontrar cualquier documento, cliente o seguimiento en segundos."],
+  yesterday:["Yesterday","Ayer"],
+  // calendar
+  calLede:["Dates and recurring items sit next to the board. The system learns what repeats and surfaces it before it's due.","Las fechas y los recurrentes viven junto al tablero. El sistema aprende lo que se repite y te lo muestra antes de que venza."],
+  learned:["Learned patterns","Patrones aprendidos"], onDay:["On this day","Este día"], nothingDay:["Nothing scheduled.","Nada programado."], next14:["Next 14 days","Próximos 14 días"],
+  k_in:["Money in","Entrada"], k_out:["Money out","Salida"], k_task:["Follow-up","Seguimiento"], k_eventL:["Event","Evento"],
+  r1:["Distribution out · Reyes trust · $40,000","Sale distribución · fideicomiso Reyes · $40,000"], r1d:["Every month on the 30th · learned from 6 months · surfaced 2 days ahead","Cada mes el día 30 · aprendido de 6 meses · aviso 2 días antes"],
+  r2:["Payroll in · all clients","Entra nómina · todos los clientes"], r2d:["1st and 15th, April to September","Días 1 y 15, de abril a septiembre"],
+  r3:["Mortgage · Reyes · Miami residence","Hipoteca · Reyes · residencia Miami"], r3d:["3rd of every month · $38,400","Día 3 de cada mes · $38,400"],
+  r4:["Estimated taxes · all clients","Impuestos estimados · todos"], r4d:["Quarterly: Apr 15, Jun 15, Sep 15, Jan 15","Trimestral: 15 abr, 15 jun, 15 sep, 15 ene"],
+  r5:["AmEx statements","Estados de cuenta AmEx"], r5d:["Mid-month, matched to receipts","A mitad de mes, cruzados con recibos"],
+  // kyc
+  kycLede:["Due diligence on a company before you commit, captured once and kept on file for every household that deals with it.","Debida diligencia sobre una empresa antes de comprometerte, capturada una vez y guardada para cada hogar que trate con ella."],
+  verified:["Verified","Verificado"], reviewDue:["Review due","Revisión pendiente"], inReview:["In review","En revisión"],
+  checkedOn:["Checked","Revisado"], nextReview:["Next review","Próxima revisión"], usedBy:["Used by","Usado por"],
+  runChecks:["Run remaining checks","Correr verificaciones pendientes"], requestDocs:["Request updated documents","Pedir documentos actualizados"],
+  vetNew:["Vet a new counterparty","Verificar una contraparte nueva"], vetPh:["Company name","Nombre de la empresa"], vet:["Start","Iniciar"],
+  checksDone:["All checks passed · kept on file","Todas las verificaciones pasaron · guardado en expediente"], kycRefresh:["KYC refresh","Actualización KYC"],
+  onceNote:["Captured once. Reused by every household, never chased twice.","Capturado una vez. Lo reutiliza cada hogar, nunca se persigue dos veces."],
+  // wealth
+  wealthLede:["A proven platform underneath consolidates every account and asset, bankable and non-bankable, into one verified picture.","Una plataforma probada por debajo consolida cada cuenta y activo, bancarizable o no, en una sola foto verificada."],
+  p2Note:["Phase 2 preview. Phase 1 runs without it; the Aleta backbone connects once the base is proven. Figures here are illustrative.","Vista previa de la fase 2. La fase 1 funciona sin ella; el backbone de Aleta se conecta cuando la base esté probada. Cifras ilustrativas."],
+  consolidated:["Consolidated net worth","Patrimonio neto consolidado"], ytd:["year to date","en el año"], byHousehold:["By household","Por hogar"], byClass:["By asset class","Por clase de activo"],
+  nonBank:["non-bankable","no bancarizable"], trend12:["Last 12 months","Últimos 12 meses"], positionsAsOf:["Yesterday's positions, ready today","Posiciones de ayer, listas hoy"],
+  bankFeed:["Bank connectivity","Conectividad bancaria"], bankFeedSub:["Accounts connected by API keep the cash position current on their own.","Las cuentas conectadas por API mantienen la caja al día solas."],
+  autoVerified:["verified automatically","verificado automáticamente"],
+  ac_eq:["Public equities","Renta variable"], ac_fi:["Fixed income","Renta fija"], ac_pf:["Private funds","Fondos privados"], ac_re:["Real estate","Bienes raíces"], ac_cash:["Cash","Efectivo"], ac_oth:["Aircraft share & collectibles","Avión compartido y colecciones"],
+  custodians:["Connected sources","Fuentes conectadas"],
+  // security
+  secLede:["For a boutique office, privacy is the foundation everything else stands on, from the first line of code.","Para una oficina boutique, la privacidad es la base de todo lo demás, desde la primera línea de código."],
+  pi1:["Encryption everywhere","Cifrado en todo"], pi1d:["At rest and in transit, on every layer.","En reposo y en tránsito, en cada capa."],
+  pi2:["Multi-factor access","Acceso multifactor"], pi2d:["Face ID or a security key for everyone who touches it.","Face ID o llave de seguridad para todo el que entra."],
+  pi3:["A private instance","Instancia privada"], pi3d:["Your own isolated environment, never a shared pool.","Tu propio entorno aislado, nunca compartido."],
+  pi4:["Granular access","Acceso granular"], pi4d:["Each person sees only what they should.","Cada persona ve solo lo que le toca."],
+  pi5:["Read-only AI by design","IA de solo lectura"], pi5d:["The assistant can see, but can never change a thing.","El asistente puede ver, pero nunca cambiar nada."],
+  pi6:["Full audit trail","Trazabilidad completa"], pi6d:["Who saw what, and when. Nothing happens off the record.","Quién vio qué y cuándo. Nada pasa fuera del registro."],
+  access:["Who sees what","Quién ve qué"], viewAs:["Preview as","Ver como"], audit:["Audit trail · today","Trazabilidad · hoy"], auditSub:["Every action in this demo is logged here as you go.","Cada acción de esta demo queda registrada aquí."],
+  role_jc:["JC · Principal","JC · Principal"], role_ea:["Office assistant","Asistente de oficina"], role_cpa:["Lisa Moreno · CPA (guest)","Lisa Moreno · CPA (invitada)"], role_ai:["AI assistant","Asistente IA"],
+  pm_full:["Full","Total"], pm_edit:["Edit","Editar"], pm_view:["View","Ver"], pm_assigned:["Assigned only","Solo lo asignado"], pm_none:["None","Ninguno"], pm_ro:["Read-only","Solo lectura"],
+  area_board:["Follow-ups","Seguimientos"], area_money:["Financial hub","Centro financiero"], area_docs:["Documents","Documentos"], area_wealth:["Wealth","Patrimonio"], area_kyc:["KYC","KYC"], area_audit:["Audit trail","Trazabilidad"],
+  sees:["Sees","Ve"], hidden:["Hidden","Oculto"],
+  // plan
+  planLede:["A phased path that puts value in JC's hands early: the operations layer first, the rest connected as we go, reviewed together week by week.","Un camino por fases que pone valor en manos de JC desde temprano: primero la capa operativa, el resto se conecta en el camino, revisado juntos semana a semana."],
+  ph1t:["Your command center","Tu centro de mando"], ph1w:["3–4 weeks","3–4 semanas"], ph1d:["Running, with no external dependencies.","Funcionando, sin dependencias externas."],
+  ph2t:["Connect everything","Conectar todo"], ph2w:["After Phase 1 is proven","Cuando la fase 1 esté probada"], ph2d:["Third parties wired in, once the base works.","Se conectan terceros, cuando la base funciona."],
+  ph3t:["Refine & extend","Afinar y extender"], ph3w:["Continuous","Continuo"], ph3d:["Grows with the practice, feature by feature, on JC's review.","Crece con la práctica, función por función, con la revisión de JC."],
+  f_chat:["Chat capture (WhatsApp)","Captura por chat (WhatsApp)"], f_board:["Ticket board & follow-ups","Tablero de seguimientos"], f_hub:["Financial hub","Centro financiero"], f_ask:["Assistant · ask & draft","Asistente · preguntar y redactar"], f_intake:["Document intake","Lectura de documentos"], f_cal:["Calendar & reminders","Calendario y recordatorios"], f_kyc:["KYC on partners","KYC de terceros"],
+  f_bank:["Bank connectivity by API","Conectividad bancaria por API"], f_aleta:["Aleta wealth backbone","Backbone patrimonial Aleta"], f_across:["Assistant reads across it all","El asistente lee todo"],
+  f_auto:["Automate the routine","Automatizar lo rutinario"], f_new:["New features on review","Nuevas funciones con revisión"], f_more:["More clients, same team","Más clientes, mismo equipo"],
+  feas:["Sequenced by value and ease","Secuenciado por valor y facilidad"], feasSub:["Each capability placed by how much it moves the needle against how quickly it can be live. Phase 1 starts top right.","Cada capacidad según cuánto aporta y qué tan rápido puede estar viva. La fase 1 empieza arriba a la derecha."],
+  doFirst:["DO FIRST","PRIMERO"], valueAx:["VALUE ADDED →","VALOR →"], easeAx:["EASE OF IMPLEMENTATION →","FACILIDAD →"],
+  howBuild:["How CooWeb builds it with Thraive","Cómo lo construye CooWeb con Thraive"], howBuildSub:["A dedicated team that builds both Thraive products, Cumbre and Farmaconal, under one technical standard.","Un equipo dedicado que construye los dos productos de Thraive, Cumbre y Farmaconal, con un mismo estándar técnico."],
+  tm1:["Senior full-stack developer, dedicated","Desarrollador full-stack senior, dedicado"], tm1d:["Builds the product end to end and stays with it. Works inside Thraive's day to day.","Construye el producto de punta a punta y se queda con él. Trabaja en el día a día de Thraive."],
+  tm2:["Technical Lead, part-time","Technical Lead, part-time"], tm2d:["Luis, from CooWeb: architecture, security, code review and the weekly review with Thiago.","Luis, de CooWeb: arquitectura, seguridad, revisión de código y la revisión semanal con Thiago."],
+  tm3:["Capacity on demand","Capacidad a demanda"], tm3d:["Add a developer or QA by the week when a phase needs it, and release them after.","Suma un desarrollador o QA por semanas cuando una fase lo pide, y se liberan después."],
+  tm4:["Thraive owns everything","Thraive es dueño de todo"], tm4d:["Code, repositories, data and the private instance belong to Thraive from day one.","El código, los repositorios, los datos y la instancia privada son de Thraive desde el primer día."],
+  cadence:["Weekly rhythm","Ritmo semanal"], cad1:["Monday","Lunes"], cad1d:["Plan the week with Thiago","Plan de la semana con Thiago"], cad2:["Thursday","Jueves"], cad2d:["Live demo of what shipped","Demo en vivo de lo entregado"], cad3:["Friday","Viernes"], cad3d:["Release notes and next priorities","Notas de versión y prioridades"],
+  under:["Under the hood","Por dentro"],
+  nextStep:["Next step: a 30-minute walkthrough with JC to confirm the Phase 1 scope and the first two clients to load.","Siguiente paso: un recorrido de 30 minutos con JC para confirmar el alcance de la fase 1 y los dos primeros clientes a cargar."],
+  pocShows:["What this PoC already shows","Lo que este PoC ya muestra"]
+};
+const t = k => { const v = S[k]; return v ? (L === "es" ? v[1] : v[0]) : k; };
+const tr = o => o == null ? "" : (typeof o === "string" ? o : (o[L] || o.en));
+
+/* ───────────── data ───────────── */
+const CLIENTS = {
+  reyes:{name:"Reyes Family Trust", short:"Reyes", person:"Adrián Reyes", ini:"AR", role:{en:"Right-handed pitcher · 8th season", es:"Lanzador derecho · 8.ª temporada"}},
+  almanzar:{name:"Almánzar Holdings LLC", short:"Almánzar", person:"Tomás Almánzar", ini:"TA", role:{en:"Shortstop · 4th season", es:"Campocorto · 4.ª temporada"}},
+  batista:{name:"Batista Household", short:"Batista", person:"Elías Batista", ini:"EB", role:{en:"Center fielder · rookie", es:"Jardinero central · novato"}}
+};
+const PARTIES = {
+  lisa:{name:"Lisa Moreno, CPA", first:"Lisa", kind:{en:"Accountant", es:"Contadora"}},
+  ortega:{name:"Ortega & Asociados", first:"Patricia", kind:{en:"Lawyers", es:"Abogados"}},
+  harbor:{name:"Harbor Private Bank", first:"Daniela", kind:{en:"Private bank", es:"Banca privada"}},
+  meridian:{name:"Meridian Insurance", first:"Kevin", kind:{en:"Insurer", es:"Aseguradora"}},
+  agent:{name:"Diamond Line Sports", first:"Rafa", kind:{en:"Agent", es:"Agente"}},
+  costa:{name:"Costa Builders", first:"Ana", kind:{en:"Contractor", es:"Contratista"}}
+};
+const COLS = ["inbox","todo","waiting","done"];
+const T0 = [
+  {id:"t1", c:"reyes", col:"todo", kind:"wire", title:{en:"Approve wire · $250,000 capital call to Solaris Capital Fund II", es:"Aprobar transferencia · $250,000 capital call a Solaris Capital Fund II"}, due:"2026-07-28", party:"harbor", src:"email", created:"2026-07-27"},
+  {id:"t2", c:"reyes", col:"waiting", title:{en:"2025 K-1 · Reyes Family Trust", es:"K-1 2025 · Reyes Family Trust"}, due:"2026-08-07", party:"lisa", src:"app", created:"2026-07-14", since:"2026-07-14"},
+  {id:"t3", c:"reyes", col:"waiting", title:{en:"Trust deed amendment · successor trustee", es:"Enmienda a la escritura del fideicomiso · fiduciario sucesor"}, due:"2026-08-12", party:"ortega", src:"whatsapp", created:"2026-07-20", since:"2026-07-20"},
+  {id:"t4", c:"reyes", col:"waiting", title:{en:"Homeowners insurance renewal · Miami residence", es:"Renovación del seguro de hogar · residencia en Miami"}, due:"2026-07-31", party:"meridian", src:"email", created:"2026-07-21", since:"2026-07-23"},
+  {id:"t5", c:"almanzar", col:"todo", title:{en:"Review the K-1 draft · Almánzar Holdings", es:"Revisar el borrador del K-1 · Almánzar Holdings"}, due:"2026-08-05", party:"lisa", src:"email", created:"2026-07-26"},
+  {id:"t6", c:"almanzar", col:"waiting", title:{en:"Countersigned endorsement amendment · Vanta Sportswear", es:"Enmienda del patrocinio contrafirmada · Vanta Sportswear"}, due:"2026-08-03", party:"agent", src:"email", created:"2026-07-24", since:"2026-07-24"},
+  {id:"t7", c:"batista", col:"todo", title:{en:"Approve the August household budget", es:"Aprobar el presupuesto del hogar de agosto"}, due:"2026-07-30", src:"app", created:"2026-07-25"},
+  {id:"t8", c:"batista", col:"inbox", title:{en:"Agent request · appearance in Santo Domingo, Aug 14", es:"Solicitud del agente · aparición en Santo Domingo, 14 ago"}, due:"2026-08-14", party:"agent", src:"whatsapp", created:"2026-07-28"},
+  {id:"t9", c:"almanzar", col:"inbox", title:{en:"File the signed Miami lease", es:"Archivar el contrato de arriendo de Miami firmado"}, src:"email", created:"2026-07-27"},
+  {id:"t10", c:"batista", col:"waiting", title:{en:"Villa renovation · invoice #2", es:"Remodelación de la villa · factura n.º 2"}, due:"2026-07-31", party:"costa", src:"whatsapp", created:"2026-07-22", since:"2026-07-22"},
+  {id:"t11", c:"all", col:"done", title:{en:"Q2 statements reconciled · all households", es:"Extractos del Q2 conciliados · todos los hogares"}, src:"email", created:"2026-07-06", doneAt:"2026-07-10"},
+  {id:"t12", c:"batista", col:"done", title:{en:"Passport renewal · Batista family", es:"Renovación de pasaportes · familia Batista"}, src:"whatsapp", created:"2026-07-02", doneAt:"2026-07-21"},
+  {id:"t13", c:"almanzar", col:"done", title:{en:"Car registration · Almánzar", es:"Matrícula del carro · Almánzar"}, src:"app", created:"2026-07-08", doneAt:"2026-07-17"}
+];
+const IN_CATS = ["salary","contracts","endorse","distrib"];
+const OUT_CATS = ["taxes","debt","lifestyle","invest"];
+const PAY = {en:"MLB payroll", es:"Nómina MLB"}, WH = {en:"Federal & state withholding", es:"Retenciones federales y estatales"}, AMEX = {en:"AmEx statement", es:"Estado de cuenta AmEx"};
+// [household, day, category, amount, description, a=actual / e=expected, source, tag]
+const TX0 = [
+  ["reyes",1,"salary",1166650,PAY,"a","gentros"],["reyes",1,"taxes",512000,WH,"a","gentros"],
+  ["reyes",3,"debt",38400,{en:"Mortgage · Miami residence",es:"Hipoteca · residencia Miami"},"a","gentros"],
+  ["reyes",5,"debt",26100,{en:"Yacht loan",es:"Préstamo del yate"},"a","gentros"],
+  ["reyes",6,"lifestyle",42800,{en:"Household staff payroll",es:"Nómina del personal del hogar"},"a","gentros"],
+  ["reyes",8,"lifestyle",22500,{en:"Ortega & Asociados · trust deed amendment",es:"Ortega & Asociados · enmienda del fideicomiso"},"a","gentros","legal"],
+  ["reyes",10,"endorse",300000,{en:"Vanta Sportswear · Q3 installment",es:"Vanta Sportswear · cuota Q3"},"a","gentros"],
+  ["reyes",12,"contracts",120000,{en:"Card & memorabilia signing",es:"Firma de cromos y memorabilia"},"a","gentros"],
+  ["reyes",14,"lifestyle",18950,AMEX,"a","amex"],
+  ["reyes",15,"salary",1166650,PAY,"a","gentros"],["reyes",15,"taxes",512000,WH,"a","gentros"],
+  ["reyes",18,"invest",350000,{en:"Capital call · Harborview Real Estate Fund",es:"Capital call · Harborview Real Estate Fund"},"a","gentros"],
+  ["reyes",20,"distrib",85000,{en:"Distribution · Bayside Holdings LP",es:"Distribución · Bayside Holdings LP"},"a","gentros"],
+  ["reyes",22,"lifestyle",9400,{en:"Private school · fall deposit",es:"Colegio privado · depósito de otoño"},"a","gentros"],
+  ["reyes",28,"invest",250000,{en:"Capital call · Solaris Capital Fund II",es:"Capital call · Solaris Capital Fund II"},"e","wire"],
+  ["reyes",30,"lifestyle",40000,{en:"Monthly trust distribution to beneficiaries",es:"Distribución mensual del fideicomiso a beneficiarios"},"e","recurring"],
+  ["reyes",31,"lifestyle",28500,{en:"Homeowners premium · renewal",es:"Prima del seguro de hogar · renovación"},"e","meridian"],
+  ["reyes",31,"endorse",150000,{en:"Vanta Sportswear · All-Star bonus",es:"Vanta Sportswear · bono All-Star"},"e","contract"],
+  ["almanzar",1,"salary",350000,PAY,"a","gentros"],["almanzar",1,"taxes",154000,WH,"a","gentros"],
+  ["almanzar",4,"debt",21300,{en:"Mortgage · Santo Domingo apartment",es:"Hipoteca · apartamento en Santo Domingo"},"a","gentros"],
+  ["almanzar",7,"lifestyle",15800,{en:"Family support",es:"Apoyo familiar"},"a","gentros"],
+  ["almanzar",9,"endorse",75000,{en:"Brisa Water · endorsement",es:"Brisa Water · patrocinio"},"a","gentros"],
+  ["almanzar",15,"salary",350000,PAY,"a","gentros"],["almanzar",15,"taxes",154000,WH,"a","gentros"],
+  ["almanzar",16,"lifestyle",14200,{en:"Ortega & Asociados · Vanta contract review",es:"Ortega & Asociados · revisión del contrato Vanta"},"a","gentros","legal"],
+  ["almanzar",19,"invest",120000,{en:"Brokerage contribution · Atlas Securities",es:"Aporte a corretaje · Atlas Securities"},"a","gentros"],
+  ["almanzar",23,"contracts",40000,{en:"Youth camp · Dominican academy",es:"Campamento juvenil · academia dominicana"},"a","gentros"],
+  ["almanzar",25,"lifestyle",6350,AMEX,"a","amex"],
+  ["almanzar",30,"lifestyle",12000,{en:"Family support · monthly",es:"Apoyo familiar · mensual"},"e","recurring"],
+  ["almanzar",31,"debt",8900,{en:"Car loan",es:"Préstamo del carro"},"e","recurring"],
+  ["batista",1,"salary",63330,PAY,"a","gentros"],["batista",1,"taxes",21500,WH,"a","gentros"],
+  ["batista",2,"debt",4800,{en:"Car loan",es:"Préstamo del carro"},"a","gentros"],
+  ["batista",8,"lifestyle",6900,{en:"Rent · Houston apartment",es:"Alquiler · apartamento en Houston"},"a","gentros"],
+  ["batista",11,"endorse",25000,{en:"Cibao Motors · local sponsor",es:"Cibao Motors · patrocinador local"},"a","gentros"],
+  ["batista",13,"invest",15000,{en:"Retirement & brokerage contribution",es:"Aporte a retiro y corretaje"},"a","gentros"],
+  ["batista",15,"salary",63330,PAY,"a","gentros"],["batista",15,"taxes",21500,WH,"a","gentros"],
+  ["batista",21,"lifestyle",11500,{en:"Vega Immigration Law · family visas",es:"Vega Immigration Law · visas familiares"},"a","gentros","legal"],
+  ["batista",26,"lifestyle",3180,{en:"AmEx · Punta Cana trip",es:"AmEx · viaje a Punta Cana"},"a","amex"],
+  ["batista",30,"lifestyle",6500,{en:"Family support · Santo Domingo",es:"Apoyo familiar · Santo Domingo"},"e","recurring"],
+  ["batista",31,"invest",18000,{en:"Villa renovation · invoice #2",es:"Remodelación de la villa · factura n.º 2"},"e","costa"]
+];
+const BUDGET = {
+  reyes:{taxes:1024000, debt:64500, lifestyle:175000, invest:600000},
+  almanzar:{taxes:308000, debt:30200, lifestyle:45000, invest:120000},
+  batista:{taxes:43000, debt:4800, lifestyle:30000, invest:35000}
+};
+const EV0 = [
+  {d:"2026-07-01", kind:"in", title:{en:"Payroll in · all clients", es:"Entra nómina · todos los clientes"}},
+  {d:"2026-07-03", kind:"out", c:"reyes", title:{en:"Mortgage · Reyes", es:"Hipoteca · Reyes"}},
+  {d:"2026-07-10", kind:"in", c:"reyes", title:{en:"Vanta Q3 installment", es:"Cuota Q3 de Vanta"}},
+  {d:"2026-07-14", kind:"out", title:{en:"AmEx statements", es:"Estados de cuenta AmEx"}},
+  {d:"2026-07-15", kind:"in", title:{en:"Payroll in · all clients", es:"Entra nómina · todos los clientes"}},
+  {d:"2026-07-18", kind:"out", c:"reyes", title:{en:"Capital call paid · Harborview", es:"Capital call pagado · Harborview"}},
+  {d:"2026-07-20", kind:"in", c:"reyes", title:{en:"Bayside distribution in", es:"Entra distribución Bayside"}},
+  {d:"2026-07-30", kind:"out", c:"reyes", learned:true, title:{en:"Distribution out · Reyes trust · $40,000", es:"Sale distribución · fideicomiso Reyes · $40,000"}},
+  {d:"2026-07-31", kind:"in", c:"reyes", title:{en:"Vanta All-Star bonus expected", es:"Bono All-Star de Vanta esperado"}},
+  {d:"2026-08-01", kind:"in", title:{en:"Payroll in · all clients", es:"Entra nómina · todos los clientes"}},
+  {d:"2026-08-03", kind:"out", c:"reyes", title:{en:"Mortgage · Reyes", es:"Hipoteca · Reyes"}},
+  {d:"2026-08-14", kind:"event", c:"batista", title:{en:"Appearance · Santo Domingo", es:"Aparición · Santo Domingo"}},
+  {d:"2026-09-15", kind:"out", learned:true, title:{en:"Q3 estimated taxes · all clients", es:"Impuestos estimados Q3 · todos"}}
+];
+const STEPS_ST = ["received","read","filed","reconciled"], STEPS_DOC = ["received","read","filed"];
+const DOCS0 = [
+  {id:"d1", from:"Gentros · Statements", c:"reyes", at:"06:12", type:"statement", step:4, subj:{en:"July statement · Reyes Family Trust ••4471", es:"Extracto de julio · Reyes Family Trust ••4471"},
+   fields:{f_custodian:"Gentros", f_acct:"Reyes Family Trust ••4471", f_period:{en:"Jul 1 – Jul 27, 2026", es:"1 – 27 jul 2026"}, f_open:8412330, f_close:9718480, f_matched:[14,14]}, folder:"Reyes Family Trust › Statements › 2026-07"},
+  {id:"d2", from:"Gentros · Statements", c:"almanzar", at:"06:14", type:"statement", step:4, subj:{en:"July statement · Almánzar Holdings ••2208", es:"Extracto de julio · Almánzar Holdings ••2208"},
+   fields:{f_custodian:"Gentros", f_acct:"Almánzar Holdings ••2208", f_period:{en:"Jul 1 – Jul 27, 2026", es:"1 – 27 jul 2026"}, f_open:2904115, f_close:3233465, f_matched:[11,11]}, folder:"Almánzar Holdings › Statements › 2026-07"},
+  {id:"d3", from:"Diamond Line Sports", c:"almanzar", at:"y17:40", type:"contract", step:3, subj:{en:"Vanta endorsement amendment · signed by the brand", es:"Enmienda del patrocinio Vanta · firmada por la marca"},
+   fields:{f_party:"Vanta Sportswear Inc.", f_term:"2026 – 2028", f_value:"$225,000 / yr", f_sign:{en:"Pending: Tomás Almánzar", es:"Pendiente: Tomás Almánzar"}}, folder:"Almánzar Holdings › Contracts › Vanta", links:["t6","kyc:vanta"]},
+  {id:"d4", from:"Meridian Insurance", c:"reyes", at:"y11:05", type:"quote", step:3, subj:{en:"Homeowners renewal quote · Miami residence", es:"Cotización de renovación · seguro de hogar Miami"},
+   fields:{f_premium:28500, f_coverage:{en:"$6.2M dwelling", es:"$6.2M vivienda"}, f_renewal:"2026-07-31"}, folder:"Reyes Family Trust › Insurance › Homeowners", links:["t4"]}
+];
+const DOC_SIM = {id:"d5", from:"Gentros · Statements", c:"batista", at:"now", type:"statement", step:0, subj:{en:"July statement · Batista Household ••9015", es:"Extracto de julio · Hogar Batista ••9015"},
+  fields:{f_custodian:"Gentros", f_acct:"Batista Household ••9015", f_period:{en:"Jul 1 – Jul 27, 2026", es:"1 – 27 jul 2026"}, f_open:412880, f_close:480160, f_matched:[9,10]}, folder:"Batista Household › Statements › 2026-07", exception:true};
+const KYC_ITEMS = [{en:"Certificate of incorporation", es:"Certificado de constitución"},{en:"Ultimate beneficial owners", es:"Beneficiarios finales"},{en:"Sanctions & PEP screening", es:"Listas de sanciones y PEP"},{en:"Adverse media", es:"Prensa negativa"},{en:"Bank reference letter", es:"Carta de referencia bancaria"},{en:"Tax form (W-9 / W-8BEN-E)", es:"Formulario fiscal (W-9 / W-8BEN-E)"}];
+const KYC0 = [
+  {id:"vanta", name:"Vanta Sportswear Inc.", kind:{en:"Endorsement partner", es:"Patrocinador"}, status:"ok", checked:"2026-01-12", next:"2027-01-12", used:["reyes","almanzar"], items:[1,1,1,1,1,1]},
+  {id:"solaris", name:"Solaris Capital Fund II LP", kind:{en:"Private equity fund", es:"Fondo de capital privado"}, status:"ok", checked:"2026-03-04", next:"2027-03-04", used:["reyes"], items:[1,1,1,1,1,1]},
+  {id:"harbor", name:"Harbor Private Bank", kind:{en:"Private bank", es:"Banca privada"}, status:"ok", checked:"2025-11-20", next:"2026-11-20", used:["reyes","almanzar","batista"], items:[1,1,1,1,1,1]},
+  {id:"ortega", name:"Ortega & Asociados", kind:{en:"Law firm", es:"Firma de abogados"}, status:"ok", checked:"2026-02-02", next:"2027-02-02", used:["reyes","almanzar"], items:[1,1,1,1,1,1]},
+  {id:"costa", name:"Costa Builders SRL", kind:{en:"Contractor", es:"Contratista"}, status:"due", checked:"2025-08-15", next:"2026-08-15", used:["batista"], items:[1,1,1,1,1,1]},
+  {id:"caribe", name:"Caribe Coast Realty SRL", kind:{en:"Real estate seller", es:"Vendedor inmobiliario"}, status:"review", checked:null, next:null, used:["batista"], items:[1,1,0,1,0,0]}
+];
+const WEALTH = {
+  total:248610925, ytd:6.4,
+  months:[["2025-08",221.4],["2025-09",224.9],["2025-10",222.1],["2025-11",228.7],["2025-12",233.66],["2026-01",236.2],["2026-02",234.8],["2026-03",239.5],["2026-04",241.0],["2026-05",243.9],["2026-06",246.3],["2026-07",248.61]],
+  hh:[["reyes",158420310],["almanzar",82640215],["batista",7550400]],
+  cls:[["ac_eq",86420000,0],["ac_pf",52880000,0],["ac_re",47610925,1],["ac_fi",41300000,0],["ac_cash",14900000,0],["ac_oth",5500000,1]],
+  sources:["Gentros","Harbor Private Bank","Atlas Securities","Solaris · fund admin","Harborview · fund admin","Appraisals"]
+};
+const AUDIT0 = [
+  {t:"08:05", who:"Lisa Moreno, CPA", what:{en:"Viewed Almánzar › Tax › K-1 draft (guest access)", es:"Vio Almánzar › Impuestos › borrador K-1 (acceso invitado)"}},
+  {t:"07:41", who:"JC", what:{en:"Signed in · MFA (Face ID) · iPhone", es:"Inició sesión · MFA (Face ID) · iPhone"}},
+  {t:"06:30", who:"Assistant", what:{en:"Prepared the morning brief (read-only)", es:"Preparó el resumen de la mañana (solo lectura)"}},
+  {t:"06:14", who:"System", what:{en:"Read and reconciled 2 Gentros statements", es:"Leyó y concilió 2 extractos de Gentros"}}
+];
+
+/* ───────────── state ───────────── */
+const clone = o => JSON.parse(JSON.stringify(o));
+function fresh(){
+  return {
+    view:"today", scope:"all", boardFilter:"all",
+    tickets:clone(T0),
+    tx:TX0.map((r,i)=>({id:"x"+i, hh:r[0], day:r[1], cat:r[2], amt:r[3], desc:r[4], st:r[5], src:r[6], tag:r[7]||null})),
+    docs:clone(DOCS0), kyc:clone(KYC0), audit:clone(AUDIT0),
+    chat:[{who:"bot", k:"capHello", at:"07:58"}], asst:[], captured:[],
+    selDoc:"d1", selKyc:"caribe", selDay:TODAY, viewAs:"cpa", drawer:null, simRunning:false, kycRunning:false,
+    logs:{}, seq:100
+  };
+}
+let state = fresh();
+let AI = null;          // sample() when the viewer's Claude is available
+let aiReady = false;
+let CTL = null;
+
+/* ───────────── helpers ───────────── */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const usd = n => (n < 0 ? "−" : "") + "$" + Math.round(Math.abs(n)).toLocaleString("en-US");
+const usdS = n => (n > 0 ? "+" : n < 0 ? "−" : "") + "$" + Math.round(Math.abs(n)).toLocaleString("en-US");
+function usdK(n, signed){
+  const a = Math.abs(n), s = n < 0 ? "−" : (signed && n > 0 ? "+" : "");
+  if (a >= 1e6) return s + "$" + parseFloat((a/1e6).toFixed(a >= 1e8 ? 1 : 2)) + "M";
+  if (a >= 1e3) return s + "$" + parseFloat((a/1e3).toFixed(a >= 1e5 ? 0 : 1)) + "K";
+  return s + "$" + Math.round(a);
+}
+const D = iso => new Date(iso + "T12:00:00Z");
+const dayDiff = (a, b) => Math.round((D(b) - D(a)) / 864e5);
+const addDays = (iso, n) => { const d = D(iso); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0,10); };
+const fmtD = (iso, o) => new Intl.DateTimeFormat(L === "es" ? "es-DO" : "en-GB", Object.assign({timeZone:"UTC"}, o || {weekday:"short", day:"numeric", month:"short"})).format(D(iso));
+const julyIso = d => "2026-07-" + String(d).padStart(2,"0");
+const norm = s => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+const nowHM = () => { const d = new Date(); return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0"); };
+function dueLabel(iso){
+  if (!iso) return "";
+  const n = dayDiff(TODAY, iso);
+  if (n < 0) return t("overdue");
+  if (n === 0) return t("today");
+  if (n === 1) return t("tomorrow");
+  return fmtD(iso);
+}
+const isHot = x => x.due && x.col !== "done" && dayDiff(TODAY, x.due) <= 0;
+function clientTag(c){
+  if (!c || c === "all") return `<span class="cli all"><i>·</i>${esc(t("allHouseholds"))}</span>`;
+  const k = CLIENTS[c];
+  return `<span class="cli"><i>${k.ini}</i>${esc(k.short)}</span>`;
+}
+const clientName = c => (!c || c === "all") ? t("allHouseholds") : CLIENTS[c].name;
+const byCol = (col, list) => (list || state.tickets).filter(x => x.col === col);
+const tk = id => state.tickets.find(x => x.id === id);
+const plural = (n, one, many) => n === 1 ? one : many;
+function audit(who, what){ state.audit.unshift({t:nowHM(), who, what}); }
+function logT(id, en, es){ (state.logs[id] = state.logs[id] || []).push({t:nowHM(), what:{en, es}}); }
+function toast(msg){
+  const el = $("#toast"); el.textContent = msg; el.classList.add("on");
+  clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove("on"), 2400);
+}
+const store = {
+  get(k){ try { return localStorage.getItem("cumbre:" + k); } catch(e) { return null; } },
+  set(k, v){ try { localStorage.setItem("cumbre:" + k, v); } catch(e) {} }
+};
+
+/* ───────────── money math ───────────── */
+const isIn = cat => IN_CATS.includes(cat);
+const sgn = x => isIn(x.cat) ? x.amt : -x.amt;
+function txOf(scope){ return state.tx.filter(x => scope === "all" || x.hh === scope); }
+function money(scope){
+  const r = {cat:{}, inA:0, inE:0, outA:0, outE:0};
+  IN_CATS.concat(OUT_CATS).forEach(c => r.cat[c] = {a:0, e:0});
+  txOf(scope).forEach(x => {
+    r.cat[x.cat][x.st] += x.amt;
+    if (isIn(x.cat)) { x.st === "a" ? r.inA += x.amt : r.inE += x.amt; }
+    else { x.st === "a" ? r.outA += x.amt : r.outE += x.amt; }
+  });
+  r.inT = r.inA + r.inE; r.outT = r.outA + r.outE;
+  r.netA = r.inA - r.outA; r.net = r.inT - r.outT;
+  return r;
+}
+function budgetOf(scope){
+  const b = {taxes:0, debt:0, lifestyle:0, invest:0};
+  Object.keys(BUDGET).forEach(h => { if (scope === "all" || scope === h) OUT_CATS.forEach(c => b[c] += BUDGET[h][c]); });
+  return b;
+}
+
+/* ───────────── views registry ───────────── */
+const VIEWS = [
+  {id:"today", g:"g_cc", ic:"sun"}, {id:"capture", g:"g_cc", ic:"chat"}, {id:"board", g:"g_cc", ic:"board"}, {id:"assistant", g:"g_cc", ic:"spark"},
+  {id:"money", g:"g_ops", ic:"coins"}, {id:"docs", g:"g_ops", ic:"doc"}, {id:"calendar", g:"g_ops", ic:"cal"}, {id:"kyc", g:"g_ops", ic:"shield"},
+  {id:"wealth", g:"g_p2", ic:"chart"}, {id:"security", g:"g_found", ic:"lock"}, {id:"plan", g:"g_proj", ic:"flag"}
+];
+const needsYou = () => state.tickets.filter(x => x.col === "todo").sort((a,b) => (a.due || "9999").localeCompare(b.due || "9999"));
+
+/* ───────────── chrome ───────────── */
+function renderChrome(){
+  $("#ribbon").innerHTML = `
+    <span class="poc">PoC</span>
+    <span class="msg">${esc(t("pocMsg"))}</span>
+    <span class="by">${esc(t("builtBy"))} <span class="plate"><img src="assets/cooweb-logo.png" alt="CooWeb"></span> ${esc(t("forW"))} <img class="thlogo" src="assets/thraive-wordmark.png" alt="Thraive"></span>
+    <span class="seg viewtoggle" role="group" aria-label="View">
+      <button data-act="frame" data-v="desk" aria-pressed="${!stagePhone()}">${icon("monitor","sm")} ${esc(t("vDesktop"))}</button>
+      <button data-act="frame" data-v="phone" aria-pressed="${stagePhone()}">${icon("phone","sm")} ${esc(t("vPhone"))}</button>
+    </span>`;
+  const dark = document.documentElement.dataset.theme === "dark";
+  $("#topbar").innerHTML = `
+    <div class="brand">${MARK}<div><b>Cumbre</b><small>Family Office OS</small></div></div>
+    <div class="search" id="searchbox">${icon("search")}<input id="q" type="search" autocomplete="off" placeholder="${esc(t("searchPh"))}" aria-label="${esc(t("searchPh"))}"><div class="sres" id="sres" hidden></div></div>
+    <div class="tb-right">
+      <button class="iconbtn msearch" data-act="msearch" aria-label="Search">${icon("search")}</button>
+      <div class="daychip"><span class="eyebrow">${esc(t("demoDay"))}</span><span>${esc(fmtD(TODAY,{weekday:"short", day:"numeric", month:"short", year:"numeric"}))}</span></div>
+      <span class="seg" role="group" aria-label="Language"><button data-act="lang" data-v="en" aria-pressed="${L==="en"}">EN</button><button data-act="lang" data-v="es" aria-pressed="${L==="es"}">ES</button></span>
+      <button class="iconbtn" data-act="theme" aria-label="${esc(dark ? t("themeLight") : t("themeDark"))}" title="${esc(dark ? t("themeLight") : t("themeDark"))}">${icon(dark ? "sun" : "moon")}</button>
+      <span class="avatar" title="JC">JC</span>
+    </div>`;
+  const counts = {today:needsYou().length, board:state.tickets.filter(x => x.col !== "done").length, docs:state.docs.filter(d => d.at === "now" || /^0/.test(d.at)).length};
+  let rail = "", g = "";
+  VIEWS.forEach(v => {
+    if (v.g !== g){ if (g) rail += "</div>"; g = v.g; rail += `<div class="grp"><div class="eyebrow">${esc(t(g))}</div>`; }
+    const c = counts[v.id];
+    rail += `<button class="nav" data-act="go" data-view="${v.id}" ${state.view === v.id ? 'aria-current="page"' : ""}>${icon(v.ic)}<span>${esc(t("v_" + v.id))}</span>${v.id === "wealth" ? `<span class="p2">P2</span>` : c ? `<span class="cnt ${v.id === "today" ? "hot" : ""}">${c}</span>` : ""}</button>`;
+  });
+  rail += `</div><div class="foot"><button class="linkbtn" data-act="reset">${esc(t("reset"))}</button></div>`;
+  $("#rail").innerHTML = rail;
+  const tab = (id, ic, lbl, extra) => `<button data-act="go" data-view="${id}" ${state.view === id ? 'aria-current="page"' : ""}>${icon(ic)}<span>${esc(lbl)}</span>${extra || ""}</button>`;
+  const inMore = !["today","board","capture","assistant"].includes(state.view);
+  $("#tabbar").innerHTML = tab("today","sun",t("v_today"), counts.today ? `<span class="bdg">${counts.today}</span>` : "") + tab("board","board",t("t_board")) +
+    `<button data-act="go" data-view="capture" aria-label="${esc(t("v_capture"))}"><span class="fab">${icon("plus")}</span></button>` +
+    tab("assistant","spark",t("t_ask")) + `<button data-act="more" ${inMore ? 'aria-current="page"' : ""}>${icon("more")}<span>${esc(t("more"))}</span></button>`;
+}
+const stagePhone = () => $("#stage").classList.contains("phone");
+
+/* ───────────── page header ───────────── */
+function ph(view, lede, opts){
+  opts = opts || {};
+  const phase = opts.phase === 2 ? `<span class="phase p2">${esc(t("phase2"))}</span>` : opts.phase === 0 ? "" : `<span class="phase">${esc(t("phase1"))}</span>`;
+  return `<div class="ph"><div><div class="eyebrow">${phase}${opts.ro ? `<span class="ro">${icon("eye","sm")}${esc(t("readOnly"))}</span>` : ""}</div><h1>${esc(t("v_" + view))}</h1><p class="lede">${esc(lede)}</p></div>${opts.right || ""}</div>`;
+}
+
+/* ───────────── TODAY ───────────── */
+function brief(){
+  const due = needsYou().filter(x => x.due && dayDiff(TODAY, x.due) <= 0);
+  const todo = needsYou();
+  const st = state.docs.filter(d => d.type === "statement" && d.step >= 4);
+  const waiting = byCol("waiting").filter(x => x.since).sort((a,b) => a.since.localeCompare(b.since));
+  const es = L === "es"; let s = "";
+  if (due.length === 1) s += es ? `Una cosa te necesita hoy: <b>${esc(tr(due[0].title))}</b>. ` : `One thing needs you today: <b>${esc(tr(due[0].title))}</b>. `;
+  else if (due.length > 1) s += es ? `${due.length} cosas te necesitan hoy, empezando por <b>${esc(tr(due[0].title))}</b>. ` : `${due.length} things need you today, starting with <b>${esc(tr(due[0].title))}</b>. `;
+  else s += es ? `Nada vence hoy; tienes ${todo.length} ${plural(todo.length,"pendiente","pendientes")} por hacer. ` : `Nothing is due today; ${todo.length} ${plural(todo.length,"item waits","items wait")} in your To do. `;
+  if (st.length) s += es ? `Durante la noche se leyeron y conciliaron ${st.length} extractos de Gentros sin excepciones. ` : `Overnight, ${st.length} Gentros statements were read and reconciled with no exceptions. `;
+  s += es ? `El jueves sale la distribución del fideicomiso Reyes (<b>$40,000</b>). ` : `On Thursday the Reyes trust distribution goes out (<b>$40,000</b>). `;
+  if (waiting.length){
+    const w = waiting[0], d = dayDiff(w.since, TODAY);
+    s += es ? `${esc(PARTIES[w.party].name)} lleva ${d} días con «${esc(tr(w.title))}»; tengo listo un recordatorio si lo quieres.` : `${esc(PARTIES[w.party].name)} has had “${esc(tr(w.title))}” for ${d} days; a follow-up is ready to draft.`;
+  }
+  return s;
+}
+function upcoming(days){
+  const end = addDays(TODAY, days), out = [];
+  EV0.forEach(e => { if (e.d >= TODAY && e.d <= end) out.push({d:e.d, kind:e.kind, title:tr(e.title), c:e.c, learned:e.learned}); });
+  state.tickets.forEach(x => { if (x.due && x.col !== "done" && x.due >= TODAY && x.due <= end) out.push({d:x.due, kind:"task", title:tr(x.title), c:x.c, id:x.id}); });
+  return out.sort((a,b) => a.d.localeCompare(b.d));
+}
+function vToday(){
+  const needs = needsYou(), waiting = byCol("waiting"), inbox = byCol("inbox"), m = money("all");
+  const needRows = needs.length ? needs.map(x => `
+    <div class="row ${isHot(x) ? "hot" : ""}">
+      <button class="row-main" data-act="open-ticket" data-id="${x.id}"><span class="row-title">${esc(tr(x.title))}</span>
+        <span class="row-meta">${clientTag(x.c)}${x.due ? `<span class="due ${isHot(x) ? "is-hot" : ""}">${icon("clock","sm")}${esc(dueLabel(x.due))}</span>` : ""}</span></button>
+      ${x.kind === "wire" ? `<button class="btn sm" data-act="ask" data-intent="draft" data-arg="bank">${esc(t("draftApproval"))}</button>` : ""}
+    </div>`).join("") : `<p class="empty-note">${esc(t("nothingNeeds"))}</p>`;
+  const waitRows = waiting.length ? waiting.slice().sort((a,b) => (a.since || "").localeCompare(b.since || "")).map(x => {
+    const d = x.since ? dayDiff(x.since, TODAY) : 0;
+    return `<div class="row">
+      <button class="row-main" data-act="open-ticket" data-id="${x.id}"><span class="row-title">${esc(tr(x.title))}</span>
+        <span class="row-meta">${clientTag(x.c)}<span>${icon("clock","sm")} ${esc(PARTIES[x.party] ? PARTIES[x.party].name : "")} · ${d ? `${t("sinceD")} ${d} ${t("days")}` : esc(t("today"))}</span></span></button>
+      <button class="btn sm" data-act="ask" data-intent="nudge" data-arg="${x.id}">${esc(t("nudge"))}</button>
+    </div>`; }).join("") : `<p class="empty-note">${esc(t("nothingWaiting"))}</p>`;
+  const up = upcoming(7).map(e => `<li><span class="when">${esc(e.d === TODAY ? t("today") : fmtD(e.d))}</span><span class="kind ${e.kind}"></span><span>${esc(e.title)}${e.learned ? ` <span class="chip acc">${icon("repeat","sm")}${L === "es" ? "aprendido" : "learned"}</span>` : ""}</span></li>`).join("");
+  const docs = state.docs.slice(0,4).map(d => `<div class="row"><button class="row-main" data-act="open-doc" data-id="${d.id}"><span class="row-title">${esc(tr(d.subj))}</span><span class="row-meta"><span>${esc(d.from)} · ${esc(docTime(d))}</span>${docStatus(d)}</span></button></div>`).join("");
+  return `
+  <section class="hero">
+    <div class="eyebrow" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${esc(t("morningBrief"))} · 06:30 <span class="ro">${icon("eye","sm")}${esc(t("readOnly"))}</span></div>
+    <h1>${esc(t("goodMorning"))}</h1>
+    <p class="brief">${brief()}</p>
+    <div class="pulse">
+      <button class="hot" data-act="go" data-view="board"><b>${needs.length}</b>${esc(t("needYou"))}</button>
+      <button data-act="go" data-view="board"><b>${waiting.length}</b>${esc(t("waitingOn"))}</button>
+      <button data-act="go" data-view="board"><b>${inbox.length}</b>${esc(t("inInbox"))}</button>
+      <button data-act="go" data-view="money"><b>${usdK(m.net, true)}</b>${esc(t("netJuly"))}</button>
+    </div>
+  </section>
+  <div class="grid-2">
+    <section class="card"><header><h2>${esc(t("needsNow"))}</h2><button class="linkbtn" data-act="go" data-view="board">${esc(t("openBoard"))}</button></header><div class="rows">${needRows}</div></section>
+    <section class="card"><header><h2>${esc(t("waitingTitle"))}</h2><span class="muted">${waiting.length}</span></header><div class="rows">${waitRows}</div></section>
+  </div>
+  <div class="grid-3 mt">
+    <section class="card"><header><h2>${esc(t("comingUp"))}</h2><button class="linkbtn" data-act="go" data-view="calendar">${esc(t("openCal"))}</button></header><ul class="agenda">${up}</ul></section>
+    <section class="card"><header><h2>${esc(t("overnight"))}</h2><button class="linkbtn" data-act="go" data-view="docs">${esc(t("openDocs"))}</button></header><div class="rows">${docs}</div></section>
+    <section class="card glance"><header><h2>${esc(t("glance"))}</h2><span class="chip">${esc(t("allHouseholds"))}</span></header>
+      <div class="eyebrow">${esc(t("julyNet"))}</div><div class="big num">${usdS(m.net)}</div>
+      <dl class="kv mt"><dt>${esc(t("received"))}</dt><dd>${usd(m.inA)}</dd><dt>${esc(t("paid"))}</dt><dd>${usd(m.outA)}</dd><dt>${esc(t("expIn"))}</dt><dd>${usdS(m.inE)}</dd><dt>${esc(t("expOut"))}</dt><dd>${usdS(-m.outE)}</dd></dl>
+      <div class="mt"><button class="btn sm" data-act="go" data-view="money">${esc(t("openHub"))} ${icon("arrow","sm")}</button></div>
+    </section>
+  </div>`;
+}
+
+/* ───────────── BOARD ───────────── */
+function srcLabel(s){ return t("src_" + s); }
+function srcIcon(s){ return s === "whatsapp" ? "chat" : s === "email" ? "mail" : s === "intake" ? "doc" : s === "kyc" ? "shield" : "phone"; }
+function card(x){
+  const days = x.since ? dayDiff(x.since, TODAY) : null;
+  return `<div class="tk ${x.col === "done" ? "done" : ""} ${x.fresh ? "fresh" : ""}" draggable="true" data-drag="${x.id}" data-act="open-ticket" data-id="${x.id}" role="button" tabindex="0">
+    <span class="t">${x.kind === "idea" ? `<span class="chip cor" style="margin-right:6px">${esc(t("idea"))}</span>` : ""}${esc(tr(x.title))}</span>
+    <span class="m">${clientTag(x.c)}
+      ${x.due && x.col !== "done" ? `<span class="due ${isHot(x) ? "is-hot" : ""}">${icon("clock","sm")}${esc(dueLabel(x.due))}</span>` : ""}
+      ${x.col === "waiting" && x.party ? `<span>${esc(PARTIES[x.party].name)}${days != null ? " · " + (days ? days + "d" : esc(t("today"))) : ""}</span>` : ""}
+      <span title="${esc(srcLabel(x.src))}">${icon(srcIcon(x.src),"sm")}</span>
+    </span>
+    ${x.kind === "wire" && x.col !== "done" ? `<span class="acts"><button class="btn sm pri" data-act="reviewed" data-id="${x.id}">${icon("check","sm")}${esc(t("markReviewed"))}</button></span>` : ""}
+  </div>`;
+}
+function vBoard(){
+  const f = state.boardFilter;
+  const list = state.tickets.filter(x => f === "all" || x.c === f || x.c === "all");
+  const cols = COLS.map(c => {
+    const items = byCol(c, list);
+    return `<section class="col" data-drop="${c}"><header><b>${esc(t("c_" + c))}</b><span>${items.length}</span></header><div class="hint">${esc(t("h_" + c))}</div>${items.map(card).join("")}</section>`;
+  }).join("");
+  const seg = ["all","reyes","almanzar","batista"].map(k => `<button data-act="bfilter" data-v="${k}" aria-pressed="${f === k}">${esc(k === "all" ? t("allHouseholds") : CLIENTS[k].short)}</button>`).join("");
+  return ph("board", t("boardLede")) + `
+    <div class="toolbar"><span class="seg" role="group">${seg}</span><span class="muted" style="font-size:12.5px">${esc(t("dragHint"))}</span>
+      <button class="btn sm" style="margin-left:auto" data-act="go" data-view="capture">${icon("plus","sm")}${esc(t("newFromChat"))}</button></div>
+    <div class="board">${cols}</div>`;
+}
+function drawerTicket(x){
+  const log = [{t:fmtD(x.created,{day:"numeric", month:"short"}), what:{en:"Created from " + t("src_" + x.src).split(" ·")[0], es:"Creado desde " + t("src_" + x.src).split(" ·")[0]}}].concat(state.logs[x.id] || []);
+  const move = COLS.map(c => `<button class="btn sm ${x.col === c ? "pri" : ""}" data-act="move" data-id="${x.id}" data-col="${c}" ${x.col === c ? "disabled" : ""}>${esc(t("c_" + c))}</button>`).join("");
+  return `<button class="iconbtn close" data-act="close-all" aria-label="${esc(t("close"))}">${icon("x")}</button>
+    <div class="eyebrow">${esc(clientName(x.c))}</div>
+    <h2>${esc(tr(x.title))}</h2>
+    <dl class="facts">
+      <dt>${esc(t("status"))}</dt><dd>${esc(t("c_" + x.col))}</dd>
+      ${x.due ? `<dt>${esc(t("due"))}</dt><dd>${esc(fmtD(x.due,{weekday:"long", day:"numeric", month:"long"}))}${isHot(x) ? ` <span class="chip cor">${esc(dueLabel(x.due))}</span>` : ""}</dd>` : ""}
+      ${x.party ? `<dt>${esc(t("waitingOnL"))}</dt><dd>${esc(PARTIES[x.party].name)} · ${esc(tr(PARTIES[x.party].kind))}${x.since ? ` · ${dayDiff(x.since, TODAY) ? dayDiff(x.since, TODAY) + " " + esc(t("days")) : esc(t("today"))}` : ""}</dd>` : ""}
+      <dt>${esc(t("source"))}</dt><dd>${icon(srcIcon(x.src),"sm")} ${esc(srcLabel(x.src))}</dd>
+    </dl>
+    <div><div class="eyebrow" style="margin-bottom:8px">${esc(t("moveTo"))}</div><div class="movebar">${move}</div></div>
+    <div class="movebar">
+      ${x.kind === "wire" && x.col !== "done" ? `<button class="btn pri" data-act="reviewed" data-id="${x.id}">${icon("check","sm")}${esc(t("markReviewed"))}</button><button class="btn" data-act="ask" data-intent="draft" data-arg="bank">${icon("mail","sm")}${esc(t("draftApproval"))}</button>` : ""}
+      ${x.col === "waiting" && x.party ? `<button class="btn" data-act="ask" data-intent="nudge" data-arg="${x.id}">${icon("mail","sm")}${esc(t("nudge"))}</button>` : ""}
+      ${x.c && x.c !== "all" ? `<button class="btn" data-act="ask" data-intent="open" data-arg="${x.c}">${icon("spark","sm")}${esc(t("askAbout"))}</button>` : ""}
+    </div>
+    <div><div class="eyebrow" style="margin-bottom:6px">${esc(t("history"))}</div><ul class="log">${log.map(l => `<li><time>${esc(l.t)}</time><span>${esc(tr(l.what))}</span></li>`).join("")}</ul></div>`;
+}
+
+/* ───────────── CAPTURE ───────────── */
+const TRIES = {
+  en:["Remind me Friday to call Harbor about the Reyes credit line","Lisa still owes us the Almánzar K-1, follow up next Tuesday","Spent 420 on dinner with the Vanta sponsor, Reyes","Idea: open 529 college plans for the Batista kids"],
+  es:["Recuérdame el viernes llamar a Harbor por la línea de crédito de Reyes","Lisa todavía nos debe el K-1 de Almánzar, dale seguimiento el próximo martes","Gasté 420 en la cena con el patrocinador de Vanta, Reyes","Idea: abrir planes 529 para la universidad de los hijos de Batista"]
+};
+function capCard(m){
+  if (m.ref && m.ref[0] === "t"){
+    const x = tk(m.ref); if (!x) return "";
+    return `<div class="capcard"><span class="t">${esc(tr(x.title))}</span>
+      <span class="m"><span class="chip acc">${esc(t("c_" + x.col))}</span>${clientTag(x.c)}${x.due ? `<span class="chip">${icon("clock","sm")}${esc(fmtD(x.due))}</span>` : ""}${x.party ? `<span class="chip">${esc(PARTIES[x.party].name)}</span>` : ""}${m.ai ? `<span class="chip cor">${icon("spark","sm")}${esc(t("capAi"))}</span>` : ""}</span>
+      <span class="a"><button class="btn sm" data-act="open-ticket" data-id="${x.id}">${esc(t("openInBoard"))}</button><button class="btn sm" data-act="cap-undo" data-ref="${x.id}">${icon("undo","sm")}${esc(t("undo"))}</button></span></div>`;
+  }
+  if (m.ref && m.ref[0] === "x"){
+    const x = state.tx.find(y => y.id === m.ref); if (!x) return "";
+    return `<div class="capcard"><span class="t">${esc(tr(x.desc))}</span>
+      <span class="m"><span class="chip cor">−${usd(x.amt)}</span><span class="chip">${esc(t("cat_" + x.cat))}</span>${clientTag(x.hh)}${m.ai ? `<span class="chip cor">${icon("spark","sm")}${esc(t("capAi"))}</span>` : ""}</span>
+      <span class="a"><button class="btn sm" data-act="go-money" data-hh="${x.hh}">${esc(t("openInMoney"))}</button><button class="btn sm" data-act="cap-undo" data-ref="${x.id}">${icon("undo","sm")}${esc(t("undo"))}</button></span></div>`;
+  }
+  if (m.pending){
+    return `<div class="capcard"><span class="m">${["reyes","almanzar","batista"].map(c => `<button class="btn sm" data-act="cap-client" data-i="${m.i}" data-c="${c}">${esc(CLIENTS[c].short)}</button>`).join("")}</span></div>`;
+  }
+  return "";
+}
+function bubble(m, i){
+  if (m.who === "me") return `<div class="bub me">${esc(m.text)}<time>${esc(m.at)}</time></div>`;
+  if (m.k === "thinking") return `<div class="bub bot"><span class="thinking"><span></span><span></span><span></span></span></div>`;
+  m.i = i;
+  return `<div class="bub bot">${esc(t(m.k))}${capCard(m)}<time>${esc(m.at)}</time></div>`;
+}
+function vCapture(){
+  const caps = state.captured.length ? state.captured.map(r => {
+    if (r[0] === "t"){ const x = tk(r); return x ? `<div class="row"><button class="row-main" data-act="open-ticket" data-id="${x.id}"><span class="row-title">${esc(tr(x.title))}</span><span class="row-meta"><span class="chip acc">${esc(t("c_" + x.col))}</span>${clientTag(x.c)}${x.due ? `<span class="due">${icon("clock","sm")}${esc(fmtD(x.due))}</span>` : ""}</span></button></div>` : ""; }
+    const x = state.tx.find(y => y.id === r); return x ? `<div class="row"><button class="row-main" data-act="go-money" data-hh="${x.hh}"><span class="row-title">${esc(tr(x.desc))}</span><span class="row-meta"><span class="chip cor">−${usd(x.amt)}</span><span class="chip">${esc(t("cat_" + x.cat))}</span>${clientTag(x.hh)}</span></button></div>` : "";
+  }).join("") : `<p class="empty-note">${esc(t("noneYet"))}</p>`;
+  return ph("capture", t("captureLede")) + `
+  <div class="cap">
+    <div class="phonebox"><div class="phonescreen">
+      <div class="wa-head">${MARK}<div><b>${esc(t("waName"))}</b><small>${esc(t("waStatus"))}</small></div></div>
+      <div class="wa-body" id="wabody">${state.chat.map(bubble).join("")}</div>
+      <div class="eyebrow" style="padding:8px 12px 0">${esc(t("tryThis"))}</div>
+      <div class="tries">${TRIES[L].map((q,i) => `<button data-act="try" data-i="${i}" title="${esc(q)}">${esc(q)}</button>`).join("")}</div>
+      <form class="wa-input" data-form="cap"><input id="capin" autocomplete="off" placeholder="${esc(t("typeMsg"))}" aria-label="${esc(t("typeMsg"))}"><button class="sendbtn" aria-label="${esc(t("send"))}">${icon("send")}</button></form>
+    </div></div>
+    <div class="stack">
+      <section class="card"><header><h2>${esc(t("howTitle"))}</h2></header><div class="steps">
+        <div class="step"><i>1</i><div><b>${esc(t("how1"))}</b><p>${esc(t("how1d"))}</p></div></div>
+        <div class="step"><i>2</i><div><b>${esc(t("how2"))}</b><p>${esc(t("how2d"))}</p></div></div>
+        <div class="step"><i>3</i><div><b>${esc(t("how3"))}</b><p>${esc(t("how3d"))}</p></div></div>
+      </div>
+      <div class="eyebrow" style="margin:16px 0 8px">${esc(t("channels"))}</div>
+      <div class="channels"><span class="chip acc">${icon("chat","sm")}${esc(t("ch_wa"))}</span><span class="chip">${icon("phone","sm")}${esc(t("ch_app"))}</span><span class="chip">${icon("monitor","sm")}${esc(t("ch_desk"))}</span><span class="chip">${icon("mail","sm")}${esc(t("ch_mail"))}</span></div></section>
+      <section class="card"><header><h2>${esc(t("createdFromChat"))}</h2><span class="muted">${state.captured.length}</span></header><div class="rows">${caps}</div></section>
+    </div>
+  </div>`;
+}
+/* capture parsing (rule-based; the live assistant takes over free text when available) */
+const WD = {sunday:0,domingo:0,monday:1,lunes:1,tuesday:2,martes:2,wednesday:3,miercoles:3,thursday:4,jueves:4,friday:5,viernes:5,saturday:6,sabado:6};
+function parseDue(s){
+  if (/\b(today|hoy)\b/.test(s)) return TODAY;
+  if (/\b(tomorrow|manana)\b/.test(s) && !/(por|en) la manana/.test(s)) return addDays(TODAY,1);
+  if (/\b(next week|proxima semana|semana que viene)\b/.test(s)) return addDays(TODAY,7);
+  for (const w in WD){
+    if (new RegExp("\\b" + w + "\\b").test(s)){
+      let diff = (WD[w] - 2 + 7) % 7; if (diff === 0) diff = 7;
+      return addDays(TODAY, diff);
+    }
+  }
+  const m = s.match(/\b(\d{1,2})(st|nd|rd|th)\b/) || s.match(/\bel (\d{1,2})\b/);
+  if (m){ const d = +m[1]; if (d >= 1 && d <= 31) return d >= TODAY_DAY ? julyIso(d) : "2026-08-" + String(d).padStart(2,"0"); }
+  return null;
+}
+function catOf(s){
+  if (/(tax|irs|impuest)/.test(s)) return "taxes";
+  if (/(mortgage|loan|hipotec|prestamo)/.test(s)) return "debt";
+  if (/(fund|capital call|brokerage|invest|inversion|fondo)/.test(s)) return "invest";
+  return "lifestyle";
+}
+function cleanTitle(raw){
+  let s = raw.trim();
+  s = s.replace(/^(please\s+)?remind me(\s+on|\s+to)?\s*/i, "").replace(/^(por favor\s+)?recu[eé]rdame\s*/i, "");
+  s = s.replace(/^idea\s*:?\s*/i, "");
+  s = s.replace(/^(i\s+)?(spent|paid)\s+\$?[\d.,]+\s+(on\s+)?/i, "").replace(/^(gast[eé]|pagu[eé])\s+\$?[\d.,]+\s+(en\s+)?/i, "");
+  s = s.replace(/\s*[,—–-]?\s*(follow up|follow-up|dale seguimiento|haz seguimiento|hazle seguimiento)\b.*$/i, "");
+  s = s.replace(/\b(on\s+|this\s+|next\s+)?(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b\s*/ig, "");
+  s = s.replace(/\b(el\s+)?(pr[oó]ximo\s+)?(lunes|martes|mi[eé]rcoles|jueves|viernes|s[aá]bado|domingo)\b\s*/ig, "");
+  s = s.replace(/\b(today|tomorrow|hoy|ma[nñ]ana)\b\s*/ig, "");
+  s = s.replace(/,\s*(reyes|alm[aá]nzar|batista)\s*$/i, "");
+  s = s.replace(/^(to|que)\s+/i, "").replace(/\s{2,}/g, " ").replace(/[\s,.;:—–-]+$/, "").trim();
+  if (!s) s = raw.trim();
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+function parseCapture(raw){
+  const s = norm(raw);
+  const r = {kind:"ticket", title:"", client:null, column:"todo", due:null, party:null, amount:null, category:null};
+  if (/reyes/.test(s)) r.client = "reyes"; else if (/almanzar/.test(s)) r.client = "almanzar"; else if (/batista/.test(s)) r.client = "batista";
+  const P = [["lisa",/\blisa\b|\bcpa\b|contador|accountant/],["ortega",/ortega|abogad|lawyer/],["harbor",/harbor|\bbank\b|\bbanco\b/],["meridian",/meridian|insurance|seguro/],["agent",/\bagent|\bagente|diamond line/],["costa",/costa builders|contractor|contratista/]];
+  for (const [k, re] of P) if (re.test(s)){ r.party = k; break; }
+  const am = s.match(/\$?\s?(\d{1,3}(?:[.,]\d{3})+|\d{2,})(?![\d-])/);
+  if (/^idea\b/.test(s)){ r.kind = "idea"; r.column = "inbox"; }
+  else if (am && /(spent|spend|paid|gaste|pague|gasto|expense|cost)/.test(s)){ r.kind = "expense"; r.amount = parseInt(am[1].replace(/[.,]/g,""), 10); r.category = catOf(s); }
+  else if (/(follow up|follow-up|still|waiting|hasn.?t|owes|seguimiento|todavia|nos debe|esperando)/.test(s)) r.column = "waiting";
+  r.due = parseDue(s);
+  r.title = cleanTitle(raw);
+  return r;
+}
+async function aiParse(raw){
+  const prompt = `Turn this message that JC sent to their family-office system into one JSON object. Today is Tuesday 2026-07-28.
+Clients: "reyes" (Reyes Family Trust, Adrián Reyes), "almanzar" (Almánzar Holdings, Tomás Almánzar), "batista" (Batista Household, Elías Batista).
+Third parties: "lisa" (Lisa Moreno, CPA), "ortega" (Ortega & Asociados, lawyers), "harbor" (Harbor Private Bank), "meridian" (Meridian Insurance), "agent" (Diamond Line Sports, sports agent), "costa" (Costa Builders, contractor).
+Reply with only this JSON shape: {"kind":"ticket"|"expense"|"idea","title":string,"client":"reyes"|"almanzar"|"batista"|null,"column":"inbox"|"todo"|"waiting","due":"YYYY-MM-DD"|null,"party":string|null,"amount":number|null,"category":"taxes"|"debt"|"lifestyle"|"invest"|null}
+"title" is a short task title in ${L === "es" ? "Spanish" : "English"}, without the date. Use "waiting" when someone else owes the next step, "inbox" for ideas, "todo" otherwise. Use "expense" only for money already spent.
+Message: ${JSON.stringify(raw)}`;
+  const r = await AI.json(prompt, {modelTier:"quick"});
+  const ok = r && typeof r === "object" && ["ticket","expense","idea"].includes(r.kind) && typeof r.title === "string";
+  if (!ok) throw new Error("shape");
+  return {
+    kind:r.kind, title:r.title.slice(0,120),
+    client:CLIENTS[r.client] ? r.client : null,
+    column:COLS.includes(r.column) && r.column !== "done" ? r.column : (r.kind === "idea" ? "inbox" : "todo"),
+    due:/^\d{4}-\d{2}-\d{2}$/.test(r.due || "") ? r.due : null,
+    party:PARTIES[r.party] ? r.party : null,
+    amount:Number(r.amount) > 0 ? Math.round(Number(r.amount)) : null,
+    category:OUT_CATS.includes(r.category) ? r.category : "lifestyle", ai:true
+  };
+}
+async function capSend(raw, useAI){
+  raw = String(raw || "").trim(); if (!raw) return;
+  state.chat.push({who:"me", text:raw, at:nowHM()});
+  const thinking = {who:"bot", k:"thinking"}; state.chat.push(thinking); render();
+  let p = null;
+  if (useAI && AI){ try { p = await aiParse(raw); } catch(e){ if (e && ["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(e.code)) AI = null; p = null; } }
+  else await new Promise(r => setTimeout(r, 650));
+  if (!p) p = parseCapture(raw);
+  state.chat.splice(state.chat.indexOf(thinking), 1);
+  if (p.kind === "expense" && p.amount && !p.client){ state.chat.push({who:"bot", k:"capAsk", pending:p, at:nowHM()}); render(); return; }
+  finishCapture(p);
+}
+function finishCapture(p){
+  if (p.kind === "expense" && p.amount){
+    const id = "x" + (++state.seq);
+    state.tx.push({id, hh:p.client, day:TODAY_DAY, cat:p.category || "lifestyle", amt:p.amount, desc:{en:p.title, es:p.title}, st:"a", src:"chat", tag:null});
+    state.captured.unshift(id);
+    state.chat.push({who:"bot", k:"capExpense", ref:id, ai:!!p.ai, at:nowHM()});
+    audit("JC", {en:`Captured an expense by WhatsApp · ${usd(p.amount)}`, es:`Capturó un gasto por WhatsApp · ${usd(p.amount)}`});
+  } else {
+    const id = "t" + (++state.seq);
+    const x = {id, c:p.client || "all", col:p.kind === "idea" ? "inbox" : p.column, kind:p.kind === "idea" ? "idea" : undefined, title:{en:p.title, es:p.title}, due:p.due, party:p.party, src:"whatsapp", created:TODAY, fresh:true};
+    if (x.col === "waiting") x.since = TODAY;
+    state.tickets.push(x); state.captured.unshift(id);
+    state.chat.push({who:"bot", k:p.kind === "idea" ? "capIdea" : "capTicket", ref:id, ai:!!p.ai, at:nowHM()});
+    audit("JC", {en:`Captured “${p.title}” by WhatsApp`, es:`Capturó «${p.title}» por WhatsApp`});
+  }
+  render();
+}
+
+/* ───────────── ASSISTANT ───────────── */
+function srcChips(list){ return `<div class="src">${list.map(s => `<span class="chip">${icon("eye","sm")}${esc(s)}</span>`).join("")}</div>`; }
+const li = arr => `<ul>${arr.map(s => `<li><span>${s}</span></li>`).join("")}</ul>`;
+const ANSWERS = {
+  open(c){
+    const items = state.tickets.filter(x => x.c === c && x.col !== "done");
+    const w = items.filter(x => x.col === "waiting"), mine = items.filter(x => x.col !== "waiting");
+    const es = L === "es", name = CLIENTS[c].name;
+    let head;
+    if (!items.length) head = es ? `No hay nada abierto con ${name}.` : `Nothing is open with ${name}.`;
+    else if (!mine.length) head = es ? `${items.length} ${plural(items.length,"pendiente","pendientes")}, ${plural(items.length,"esperando","todos esperando")} a terceros:` : `${items.length} ${plural(items.length,"item","items")}, all waiting on others:`;
+    else head = es ? `${items.length} abiertos: ${mine.length} ${plural(mine.length,"te necesita","te necesitan")} y ${w.length} ${plural(w.length,"espera","esperan")} a terceros.` : `${items.length} open: ${mine.length} ${plural(mine.length,"needs","need")} you, ${w.length} waiting on others.`;
+    const rows = mine.concat(w).map(x => `<b>${esc(tr(x.title))}</b> · ${x.col === "waiting" && x.party ? esc(PARTIES[x.party].name) : esc(t("c_" + x.col))}${x.due ? " · " + esc(dueLabel(x.due)) : ""}`);
+    return {html:`<p>${esc(head)}</p>${rows.length ? li(rows) : ""}`, src:[`${t("v_board")} · ${items.length}`]};
+  },
+  party(p){
+    const items = state.tickets.filter(x => x.party === p && x.col !== "done"), es = L === "es";
+    const head = items.length ? (es ? `${items.length} ${plural(items.length,"pendiente","pendientes")} con ${PARTIES[p].name}:` : `${items.length} open ${plural(items.length,"item","items")} with ${PARTIES[p].name}:`) : (es ? `Nada abierto con ${PARTIES[p].name}.` : `Nothing open with ${PARTIES[p].name}.`);
+    const rows = items.map(x => `<b>${esc(tr(x.title))}</b> · ${esc(t("c_" + x.col))}${x.since ? ` · ${dayDiff(x.since, TODAY)} ${esc(t("days"))}` : ""}`);
+    return {html:`<p>${esc(head)}</p>${rows.length ? li(rows) : ""}`, src:[`${t("v_board")} · ${items.length}`]};
+  },
+  legal(){
+    const L3 = state.tx.filter(x => x.tag === "legal"), sum = L3.reduce((a,x) => a + x.amt, 0), es = L === "es";
+    const rows = L3.map(x => `<b>${usd(x.amt)}</b> · ${esc(tr(x.desc))} · ${esc(CLIENTS[x.hh].short)}`);
+    return {html:`<p>${es ? `<b>${usd(sum)}</b> en ${L3.length} asuntos este trimestre (Q3 a la fecha):` : `<b>${usd(sum)}</b> across ${L3.length} matters this quarter (Q3 to date):`}</p>${li(rows)}`, src:[`${t("v_money")} · ${L3.length}`]};
+  },
+  week(){
+    const ev = upcoming(6), es = L === "es";
+    const rows = ev.map(e => `<b>${esc(e.d === TODAY ? t("today") : fmtD(e.d))}</b> · ${esc(e.title)}`);
+    return {html:`<p>${es ? `${ev.length} cosas entre hoy y el lunes:` : `${ev.length} things between today and Monday:`}</p>${li(rows)}`, src:[`${t("v_calendar")}`, `${t("v_board")}`]};
+  },
+  cash(){
+    const m = money("all"), es = L === "es";
+    const exp = state.tx.filter(x => x.st === "e").sort((a,b) => a.day - b.day).map(x => `<b>${fmtD(julyIso(x.day))}</b> · ${esc(tr(x.desc))} · ${isIn(x.cat) ? "+" : "−"}${usd(x.amt)}`);
+    return {html:`<p>${es ? `Julio cierra con una posición neta proyectada de <b>${usdS(m.net)}</b> para los tres hogares. Hasta hoy entraron ${usd(m.inA)} y salieron ${usd(m.outA)}. Falta:` : `July is on track to close at <b>${usdS(m.net)}</b> net across the three households. So far ${usd(m.inA)} came in and ${usd(m.outA)} went out. Still to come:`}</p>${li(exp)}`, src:[`${t("v_money")} · ${state.tx.length}`]};
+  },
+  statement(){
+    const d = state.docs.find(x => x.id === "d1"), f = d.fields, es = L === "es";
+    return {html:`<p>${es ? `Extracto de julio de Gentros, Reyes Family Trust: saldo inicial ${usd(f.f_open)}, saldo final <b>${usd(f.f_close)}</b>. ${f.f_matched[0]} de ${f.f_matched[1]} movimientos conciliados, sin excepciones. Entrada mayor: nómina MLB de $1,166,650 (1 y 15 de julio).` : `Gentros July statement, Reyes Family Trust: opening ${usd(f.f_open)}, closing <b>${usd(f.f_close)}</b>. ${f.f_matched[0]} of ${f.f_matched[1]} transactions matched, no exceptions. Largest inflow: MLB payroll of $1,166,650 (July 1 and 15).`}</p>`, src:[`${t("v_docs")} · Gentros`]};
+  },
+  waiting(){
+    const w = byCol("waiting").slice().sort((a,b) => (a.since || "").localeCompare(b.since || "")), es = L === "es";
+    const rows = w.map(x => `<b>${esc(PARTIES[x.party] ? PARTIES[x.party].name : "")}</b> · ${esc(tr(x.title))}${x.since ? ` · ${dayDiff(x.since, TODAY)} ${esc(t("days"))}` : ""}`);
+    return {html:`<p>${es ? `${w.length} cosas esperan a terceros:` : `${w.length} items are waiting on others:`}</p>${li(rows)}`, src:[`${t("v_board")} · ${w.length}`]};
+  },
+  fallback(){ return {html:`<p>${esc(t("fallback"))}</p>`}; },
+  aierr(){ return {html:`<p>${esc(t("aiErr"))}</p>`}; }
+};
+function draftText(kind, arg, v){
+  const es = L === "es";
+  if (kind === "bank"){
+    const subj = es ? "Aprobación de transferencia · $250,000 a Solaris Capital Fund II (Reyes Family Trust)" : "Wire approval · $250,000 to Solaris Capital Fund II (Reyes Family Trust)";
+    const open = v ? (es ? "Hola Daniela, espero que tu semana vaya muy bien." : "Hi Daniela, I hope your week is off to a good start.") : (es ? "Hola Daniela:" : "Hi Daniela,");
+    const body = es
+      ? `${open}\n\nApruebo la transferencia saliente de hoy desde la cuenta del Reyes Family Trust terminada en 4471:\n• Monto: $250,000.00\n• Beneficiario: Solaris Capital Fund II LP\n• Concepto: capital call n.º 4, con vencimiento el 28 de julio\n\nLas instrucciones coinciden con las que tenemos en el expediente (verificadas en KYC, marzo de 2026). ${v ? "Te agradezco mucho si me confirmas por aquí cuando salga; y si algo necesita una segunda revisión, llámame sin problema." : "Por favor confírmame por este medio cuando se libere, y llámame si algo requiere una segunda verificación."}\n\n${v ? "Un abrazo," : "Gracias,"}\nJC`
+      : `${open}\n\nI approve today's outgoing wire from the Reyes Family Trust account ending in 4471:\n• Amount: $250,000.00\n• Beneficiary: Solaris Capital Fund II LP\n• Purpose: capital call #4, due July 28\n\nThe instructions match the ones on file (verified in KYC, March 2026). ${v ? "I'd be grateful if you could confirm here once it's released, and please call me if anything needs a second look." : "Please confirm by reply once it is released, and call me if anything needs a second check."}\n\n${v ? "Warm regards," : "Thank you,"}\nJC`;
+    return {to:"Daniela Ruiz · Harbor Private Bank", subj, body};
+  }
+  const x = tk(arg); if (!x || !x.party) return null;
+  const p = PARTIES[x.party], since = x.since ? fmtD(x.since,{day:"numeric", month:"long"}) : "", due = x.due ? fmtD(x.due,{day:"numeric", month:"long"}) : "";
+  const subj = es ? `Seguimiento · ${tr(x.title)}` : `Following up · ${tr(x.title)}`;
+  const body = es
+    ? `${v ? `Hola ${p.first}, espero que estés muy bien.` : `Hola ${p.first}:`}\n\nTe escribo para dar seguimiento a «${tr(x.title)}»${since ? `, que tenemos abierto desde el ${since}` : ""}. ¿Podrías compartirme una fecha estimada?${due ? ` Nos gustaría cerrarlo antes del ${due}.` : ""}\n\n${v ? "Mil gracias por la ayuda," : "Gracias,"}\nJC`
+    : `${v ? `Hi ${p.first}, I hope all is well.` : `Hi ${p.first},`}\n\nA quick follow-up on “${tr(x.title)}”${since ? `, open with you since ${since}` : ""}. Could you share an ETA?${due ? ` We'd like to close it before ${due}.` : ""}\n\n${v ? "Many thanks for your help," : "Thank you,"}\nJC`;
+  return {to:`${p.name}`, subj, body};
+}
+function aiMsg(m){
+  let inner = "", src = null;
+  if (m.kind === "draft" || m.kind === "nudge"){
+    const d = draftText(m.kind === "draft" ? "bank" : "nudge", m.arg, m.v);
+    if (!d) return "";
+    const es = L === "es";
+    inner = `<p>${m.kind === "draft" ? (es ? "Aquí tienes el borrador. Revísalo, ajústalo y envíalo tú." : "Here is the draft. Review it, adjust it, and send it yourself.") : (es ? "Borrador del recordatorio:" : "Draft follow-up:")}</p>
+      <div class="draft"><div class="subj"><span class="muted">${esc(t("to"))}:</span> ${esc(d.to)}<br><span class="muted">${esc(t("subject"))}:</span> <b>${esc(d.subj)}</b></div><pre id="draft-${m.id}">${esc(d.body)}</pre>
+      <div class="a"><button class="btn sm" data-act="copy" data-id="${m.id}">${icon("copy","sm")}${esc(t("copy"))}</button><button class="btn sm" data-act="tone" data-id="${m.id}">${esc(m.v ? t("formal") : t("soften"))}</button>${m.kind === "draft" || tk(m.arg) ? `<button class="btn sm" data-act="savedraft" data-id="${m.id}">${esc(t("saveDraft"))}</button>` : ""}<span class="muted" style="font-size:12px">${esc(t("youSend"))}</span></div></div>`;
+    src = [m.kind === "draft" ? `${t("v_board")} · Solaris` : `${t("v_board")} · 1`, m.kind === "draft" ? `${t("v_kyc")} · Solaris` : t("v_calendar")];
+  } else if (m.kind === "free"){
+    inner = m.st === "thinking" ? `<span class="thinking"><span></span><span></span><span></span></span> <button class="btn sm" data-act="stop" style="margin-left:8px">${icon("stop","sm")}${esc(t("stop"))}</button>`
+      : `<div class="free" id="ai-${m.id}">${esc(m.text)}</div>${m.st === "stream" ? ` <button class="btn sm" data-act="stop" style="margin-top:8px">${icon("stop","sm")}${esc(t("stop"))}</button>` : ""}${m.st === "error" ? `<p class="muted" style="margin-top:6px">${esc(t("aiErr"))}</p>` : ""}${m.st === "stopped" ? `<p class="muted" style="margin-top:6px">${esc(t("aiStopped"))}</p>` : ""}`;
+    src = m.st === "done" ? [t("aiLive")] : null;
+  } else {
+    const r = ANSWERS[m.kind](m.arg); inner = r.html; src = r.src;
+  }
+  return `<div class="msg ai">${inner}${src ? srcChips(src) : ""}<div class="ronote">${icon("eye","sm")}${esc(t("roNote"))}</div></div>`;
+}
+function vAssistant(){
+  const thread = state.asst.length ? state.asst.map(m => m.who === "me" ? `<div class="msg me">${esc(m.q ? t(m.q) : m.text)}</div>` : aiMsg(m)).join("") : `<p class="empty-note">${esc(t("emptyAsst"))}</p>`;
+  const live = AI ? `<span class="chip acc">${icon("spark","sm")}${esc(t("aiLive"))}</span>` : `<span class="chip">${esc(t("aiDemo"))}</span>`;
+  return ph("assistant", t("asstLede"), {ro:true, right:live}) + `
+  <div class="asst">
+    <div>
+      <div class="thread" id="thread">${thread}</div>
+      <div class="sugg">${["q1","q2","q3","q4","q5","q6"].map(q => `<button data-act="askq" data-q="${q}">${esc(t(q))}</button>`).join("")}</div>
+      <form class="composer" data-form="ask"><input id="askin" autocomplete="off" placeholder="${esc(t("askPh"))}" aria-label="${esc(t("askPh"))}"><button class="btn pri">${icon("send","sm")}${esc(t("ask"))}</button></form>
+    </div>
+    <aside class="stack">
+      <section class="card"><header><h2>${esc(t("canRead"))}</h2></header><ul class="can">${["cr1","cr2","cr3","cr4","cr5","cr6"].map(k => `<li>${icon("eye","sm")}<span>${esc(t(k))}</span></li>`).join("")}</ul></section>
+      <section class="card"><header><h2>${esc(t("cantDo"))}</h2></header><ul class="can no">${["cd1","cd2","cd3"].map(k => `<li>${icon("x","sm")}<span>${esc(t(k))}</span></li>`).join("")}</ul></section>
+    </aside>
+  </div>`;
+}
+const QMAP = {q1:["open","reyes"], q2:["legal"], q3:["draft","bank"], q4:["week"], q5:["cash"], q6:["party","lisa"]};
+function intentOf(q){
+  const s = norm(q);
+  const cl = /reyes/.test(s) ? "reyes" : /almanzar/.test(s) ? "almanzar" : /batista/.test(s) ? "batista" : null;
+  const party = Object.keys(PARTIES).find(k => s.includes(norm(PARTIES[k].first)) || s.includes(norm(PARTIES[k].name.split(",")[0])));
+  if (/(draft|redact|borrador|escrib|write)/.test(s)){
+    if (/(bank|banco|wire|transfer|aprob|approv|solaris)/.test(s)) return ["draft","bank"];
+    const w = byCol("waiting").find(x => (party && x.party === party) || (cl && x.c === cl));
+    if (w) return ["nudge", w.id];
+  }
+  if (/(legal|abogad|lawyer|attorney)/.test(s)) return ["legal"];
+  if (party && /(wait|esper|open|abiert|pend|owe|debe)/.test(s)) return ["party", party];
+  if (cl && /(open|abiert|pend|what.?s up|que hay|status|estado)/.test(s)) return ["open", cl];
+  if (/(waiting|esperando|esperan)/.test(s)) return ["waiting"];
+  if (/(this week|esta semana|due|vence|vencen|upcoming|proxim)/.test(s)) return ["week"];
+  if (/(cash|flujo|net position|posicion neta|money|dinero|caja)/.test(s)) return ["cash"];
+  if (/(statement|extracto|gentros)/.test(s)) return ["statement"];
+  return null;
+}
+function pushAnswer(intent, meText, qKey){
+  state.asst.push(qKey ? {who:"me", q:qKey} : {who:"me", text:meText});
+  const id = ++state.seq;
+  if (intent[0] === "draft" || intent[0] === "nudge") state.asst.push({who:"ai", kind:intent[0], arg:intent[1], v:0, id});
+  else state.asst.push({who:"ai", kind:intent[0], arg:intent[1], id});
+  audit("Assistant", {en:`Answered “${qKey ? S[qKey][0] : meText}” (read-only)`, es:`Respondió «${qKey ? S[qKey][1] : meText}» (solo lectura)`});
+}
+function aiContext(){
+  const m = {}; ["reyes","almanzar","batista"].forEach(h => { const r = money(h); m[h] = {in:Object.fromEntries(IN_CATS.map(c => [c, r.cat[c].a + r.cat[c].e])), out:Object.fromEntries(OUT_CATS.map(c => [c, r.cat[c].a + r.cat[c].e])), net:r.net, budget:BUDGET[h]}; });
+  return JSON.stringify({
+    today:"2026-07-28 (Tuesday)",
+    clients:Object.entries(CLIENTS).map(([k,c]) => ({id:k, name:c.name, athlete:c.person, role:c.role.en})),
+    thirdParties:Object.values(PARTIES).map(p => p.name),
+    followUps:state.tickets.map(x => ({title:tr(x.title), client:x.c, column:x.col, due:x.due || null, waitingOn:x.party ? PARTIES[x.party].name : null, since:x.since || null})),
+    julyByHousehold:m,
+    transactions:state.tx.map(x => ({client:x.hh, date:julyIso(x.day), category:x.cat, amount:x.amt, direction:isIn(x.cat) ? "in" : "out", description:tr(x.desc), status:x.st === "e" ? "expected" : "actual"})),
+    calendar:EV0.map(e => ({date:e.d, title:tr(e.title)})),
+    documents:state.docs.map(d => ({from:d.from, subject:tr(d.subj), filedTo:d.folder})),
+    kyc:state.kyc.map(k => ({name:k.name, status:k.status, nextReview:k.next})),
+    wealthPhase2Preview:{consolidatedNetWorth:WEALTH.total, ytdChangePct:WEALTH.ytd, byHousehold:Object.fromEntries(WEALTH.hh)}
+  });
+}
+async function askFree(q){
+  state.asst.push({who:"me", text:q});
+  const m = {who:"ai", kind:"free", text:"", st:"thinking", id:++state.seq};
+  state.asst.push(m); render();
+  const ctl = new AbortController(); CTL = ctl;
+  const prompt = `You are the read-only assistant inside Cumbre, the private system of JC, who runs a boutique single-family office for professional baseball players and their families. Today is Tuesday, July 28, 2026. Answer JC's question using only the JSON data below; it is everything the system holds.
+Rules:
+- You are strictly read-only. Never say you sent, booked, paid, moved or changed anything. If JC asks for an action, say what JC would need to do and offer to draft the message.
+- Be brief: at most 90 words, plain text, no headings or tables. Use "•" for list items.
+- Amounts are USD, written like $48,200.
+- If the data does not hold the answer, say so plainly.
+- Reply in ${L === "es" ? "Spanish" : "English"}.
+DATA: ${aiContext()}
+QUESTION: ${q}`;
+  try {
+    const r = await AI(prompt, {modelTier:"quick", signal:ctl.signal, cache:false, onText:({text}) => {
+      m.text = text;
+      if (m.st !== "stream"){ m.st = "stream"; if (state.view === "assistant") render(); }
+      else { const el = document.getElementById("ai-" + m.id); if (el) el.textContent = text; }
+    }});
+    m.text = r.text; m.st = "done";
+    audit("Assistant", {en:`Answered “${q}” (read-only)`, es:`Respondió «${q}» (solo lectura)`});
+  } catch(e){
+    const code = e && e.code;
+    if (["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(code)) AI = null;
+    m.text = (e && e.text) || ""; m.st = code === "cancelled" ? "stopped" : "error";
+    if (m.st === "error" && !m.text) m.kind = AI ? "aierr" : "fallback";
+  }
+  CTL = null; if (state.view === "assistant") render(); else renderChrome();
+}
+function ask(q){
+  q = String(q || "").trim(); if (!q) return;
+  const it = intentOf(q);
+  if (it) pushAnswer(it, q);
+  else if (AI){ askFree(q); return; }
+  else { state.asst.push({who:"me", text:q}); state.asst.push({who:"ai", kind:"fallback", id:++state.seq}); }
+  render();
+}
+
+/* ───────────── MONEY ───────────── */
+function scopeSeg(){
+  return `<span class="seg" role="group" aria-label="${esc(t("client"))}">${["all","reyes","almanzar","batista"].map(k => `<button data-act="scope" data-v="${k}" aria-pressed="${state.scope === k}">${esc(k === "all" ? t("allHouseholds") : CLIENTS[k].short)}</button>`).join("")}</span>`;
+}
+function hubRows(cats, m, max, side){
+  return cats.map(c => {
+    const a = m.cat[c].a, e = m.cat[c].e, wa = a / max * 100, we = e / max * 100;
+    return `<div class="hub-row" title="${esc(t("cat_" + c))}: ${usd(a)}${e ? " + " + usd(e) + " " + t("expected") : ""}"><span class="lbl">${esc(t("cat_" + c))}</span>
+      <span class="bar"><span class="${side}" style="width:${wa}%"></span>${e ? `<span class="exp" style="left:calc(${wa}% + 2px);width:${we}%"></span>` : ""}</span>
+      <span class="val">${usd(a + e)}${e ? `<small>${usdK(e)} ${esc(t("expected"))}</small>` : ""}</span></div>`;
+  }).join("");
+}
+function vMoney(){
+  const sc = state.scope, m = money(sc), b = budgetOf(sc);
+  const max = Math.max(...IN_CATS.concat(OUT_CATS).map(c => m.cat[c].a + m.cat[c].e), 1);
+  const exp = txOf(sc).filter(x => x.st === "e").sort((a,b2) => a.day - b2.day);
+  const expRows = exp.map(x => `<div class="row"><div class="row-main"><span class="row-title">${esc(tr(x.desc))}</span><span class="row-meta"><span>${esc(fmtD(julyIso(x.day)))}</span>${clientTag(x.hh)}<span class="chip">${esc(t("s_" + x.src))}</span></span></div><span class="num" style="font-weight:700;color:${isIn(x.cat) ? "var(--accent-strong)" : "var(--ink)"}">${isIn(x.cat) ? "+" : "−"}${usd(x.amt)}</span></div>`).join("");
+  const buds = OUT_CATS.map(c => {
+    const a = m.cat[c].a, e = m.cat[c].e, cap = b[c] || 1, scale = Math.max(cap, a + e) * 1.08;
+    const over = a + e - cap;
+    return `<div class="bud"><div class="top"><b>${esc(t("cat_" + c))}</b><span class="num">${usd(a + e)} <span class="muted">/ ${usd(cap)}</span></span></div>
+      <div class="track"><span class="a" style="width:${a/scale*100}%"></span><span class="e" style="left:${a/scale*100}%;width:${e/scale*100}%"></span><span class="cap" style="left:${cap/scale*100}%"></span></div>
+      <div class="note">${over > 0 ? `<span class="status"><span class="dot warn"></span>${icon("alert","sm")} ${esc(t("over"))} ${usd(over)}</span>` : `<span class="status"><span class="dot good"></span>${esc(t("within"))} · ${usd(cap - a - e)} ${esc(t("left"))}</span>`}</div></div>`;
+  }).join("");
+  const recent = txOf(sc).filter(x => x.st === "a").sort((a,b2) => b2.day - a.day || (b2.id > a.id ? 1 : -1)).slice(0, 9).map(x => `<tr><td class="num">${esc(fmtD(julyIso(x.day),{day:"numeric", month:"short"}))}</td><td>${esc(tr(x.desc))}</td><td>${clientTag(x.hh)}</td><td>${esc(t("cat_" + x.cat))}</td><td><span class="chip ${x.src === "chat" || x.src === "app" ? "acc" : ""}">${esc(t("s_" + x.src))}</span></td><td class="amt ${isIn(x.cat) ? "pos" : ""}">${isIn(x.cat) ? "+" : "−"}${usd(x.amt)}</td></tr>`).join("");
+  return ph("money", t("moneyLede")) + `
+  <div class="scopebar">${scopeSeg()}${sc !== "all" ? `<span class="muted" style="font-size:12.5px">${esc(CLIENTS[sc].person)} · ${esc(tr(CLIENTS[sc].role))}</span>` : ""}</div>
+  <section class="card">
+    <div class="hub">
+      <div class="hub-side in-side"><div class="eyebrow">${esc(t("moneyIn"))} · ${usd(m.inT)}</div>${hubRows(IN_CATS, m, max, "in")}</div>
+      <div class="hub-core"><span class="eyebrow">${esc(t("julyNet"))}</span><span class="big num">${usdK(m.net, true)}</span><small>${usdS(m.netA)} ${esc(t("soFar"))}<br>${usdS(m.inE - m.outE)} ${esc(t("expected"))}</small></div>
+      <div class="hub-side out-side"><div class="eyebrow">${esc(t("moneyOut"))} · ${usd(m.outT)}</div>${hubRows(OUT_CATS, m, max, "out")}</div>
+    </div>
+    <div class="legend mt"><span><i class="sw-a"></i>${esc(t("actual"))}</span><span><i class="sw-e"></i>${esc(t("expectedRest"))}</span></div>
+  </section>
+  <section class="card mt"><header><div><h2>${esc(t("cashTitle"))}</h2><p class="muted" style="font-size:12.5px;margin-top:2px">${esc(t("cashSub"))}</p></div><div class="legend"><span><i class="ln-a"></i>${esc(t("actual"))}</span><span><i class="ln-e"></i>${esc(t("expected"))}</span></div></header><div class="chart" data-chart="cash"></div></section>
+  <div class="grid-2 mt">
+    <section class="card"><header><h2>${esc(t("restTitle"))}</h2><span class="num muted">${usdS(m.inE - m.outE)}</span></header><div class="rows">${expRows || `<p class="empty-note">—</p>`}</div></section>
+    <section class="card"><header><div><h2>${esc(t("budgets"))}</h2><p class="muted" style="font-size:12.5px;margin-top:2px">${esc(t("budgetsSub"))}</p></div></header><div class="budget">${buds}</div></section>
+  </div>
+  <section class="card mt"><header><h2>${esc(t("captureExp"))}</h2></header>
+    <form class="quick" data-form="exp"><input id="expin" autocomplete="off" placeholder="${esc(t("expPh"))}" aria-label="${esc(t("captureExp"))}"><button class="btn pri">${icon("plus","sm")}${esc(t("add"))}</button></form>
+    <div class="parsed" id="exp-preview">${esc(t("expHint"))}</div>
+  </section>
+  <section class="card mt"><header><h2>${esc(t("recent"))}</h2></header>
+    <div class="table-wrap"><table><thead><tr><th>${esc(t("date"))}</th><th>${esc(t("desc"))}</th><th>${esc(t("client"))}</th><th>${esc(t("cat"))}</th><th>${esc(t("via"))}</th><th style="text-align:right">${esc(t("amount"))}</th></tr></thead><tbody>${recent}</tbody></table></div>
+    <p class="muted mt" style="font-size:12.5px">${icon("layers","sm")} ${esc(t("syncNote"))}</p>
+  </section>`;
+}
+function expPreview(raw){
+  const el = $("#exp-preview"); if (!el) return;
+  if (!raw.trim()){ el.textContent = t("expHint"); return; }
+  const p = parseCapture(raw.match(/(spent|paid|gast|pagu)/i) ? raw : "spent " + raw), s = norm(raw);
+  const am = s.match(/\$?\s?(\d{1,3}(?:[.,]\d{3})+|\d{2,})(?![\d-])/);
+  const amount = am ? parseInt(am[1].replace(/[.,]/g,""), 10) : null;
+  el.innerHTML = `${amount ? `<span class="chip cor">−${usd(amount)}</span>` : `<span class="chip">${esc(t("needAmount"))}</span>`}<span class="chip">${esc(t("cat_" + catOf(s)))}</span>${p.client ? clientTag(p.client) : `<span class="chip">${esc(t("needClient"))}</span>`}<span class="chip">${esc(t("today"))}</span>`;
+}
+function addExpense(raw){
+  const s = norm(raw), am = s.match(/\$?\s?(\d{1,3}(?:[.,]\d{3})+|\d{2,})(?![\d-])/);
+  const client = /reyes/.test(s) ? "reyes" : /almanzar/.test(s) ? "almanzar" : /batista/.test(s) ? "batista" : null;
+  if (!am){ toast(t("needAmount")); return; }
+  if (!client){ toast(t("needClient")); return; }
+  const amount = parseInt(am[1].replace(/[.,]/g,""), 10);
+  let title = raw.replace(am[0].trim(), "").replace(/\b(reyes|alm[aá]nzar|batista)\b/ig, "").replace(/\s{2,}/g," ").replace(/[\s,.;:—–-]+$/,"").replace(/^[\s,.;:—–-]+/,"").trim();
+  title = title ? title.charAt(0).toUpperCase() + title.slice(1) : (L === "es" ? "Gasto capturado" : "Captured expense");
+  const id = "x" + (++state.seq);
+  state.tx.push({id, hh:client, day:TODAY_DAY, cat:catOf(s), amt:amount, desc:{en:title, es:title}, st:"a", src:"app", tag:null});
+  audit("JC", {en:`Captured an expense in the app · ${usd(amount)}`, es:`Capturó un gasto en la app · ${usd(amount)}`});
+  toast(t("expAdded") + " · " + usd(amount)); render();
+}
+
+/* ───────────── charts ───────────── */
+const CHARTS = {};
+function niceTicks(min, max, n){
+  const span = max - min || 1, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / mag;
+  const step = (f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10) * mag;
+  const out = []; for (let v = Math.floor(min / step) * step; v < max + step - 1e-9; v += step) out.push(+v.toFixed(6));
+  return out;
+}
+function lineSvg(id, c){
+  const {w, h} = c, pad = c.pad || {l:58, r:14, t:16, b:26};
+  const X = v => pad.l + (v - c.xs[0]) / (c.xs[1] - c.xs[0]) * (w - pad.l - pad.r);
+  const Y = v => pad.t + (1 - (v - c.ys[0]) / (c.ys[1] - c.ys[0])) * (h - pad.t - pad.b);
+  let g = "";
+  c.yTicks.forEach(v => { g += `<line class="${v === 0 ? "base" : "gl"}" x1="${pad.l}" x2="${w - pad.r}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/><text class="tk-l" x="${pad.l - 8}" y="${(Y(v) + 4).toFixed(1)}" text-anchor="end">${c.fmtY(v)}</text>`; });
+  c.xTicks.forEach(([v, l]) => { g += `<text class="tk-l" x="${X(v).toFixed(1)}" y="${h - 6}" text-anchor="middle">${esc(l)}</text>`; });
+  if (c.todayX != null){ g += `<line class="today-l" x1="${X(c.todayX)}" x2="${X(c.todayX)}" y1="${pad.t - 4}" y2="${h - pad.b}"/><text class="today-t" x="${X(c.todayX) + 5}" y="${pad.t + 4}">${esc(t("today").toUpperCase())}</text>`; }
+  c.lines.forEach(Ln => {
+    const d = Ln.pts.map((p, i) => (i ? "L" : "M") + X(p[0]).toFixed(1) + " " + Y(p[1]).toFixed(1)).join(" ");
+    if (Ln.area){ const y0 = Y(Math.max(c.ys[0], 0)).toFixed(1); g += `<path class="ar" d="${d} L${X(Ln.pts[Ln.pts.length - 1][0]).toFixed(1)} ${y0} L${X(Ln.pts[0][0]).toFixed(1)} ${y0} Z"/>`; }
+    g += `<path class="ln ${Ln.cls || ""}" d="${d}"/>`;
+    if (Ln.end){ const p = Ln.pts[Ln.pts.length - 1]; g += `<circle class="end" cx="${X(p[0]).toFixed(1)}" cy="${Y(p[1]).toFixed(1)}" r="4.5"/>`; }
+  });
+  if (c.endLabel && w >= 520){ const p = c.endLabel; g += `<text class="pl" x="${(X(p[0]) - 8).toFixed(1)}" y="${(Y(p[1]) - 10).toFixed(1)}" text-anchor="end">${esc(p[2])}</text>`; }
+  CHARTS[id] = {X, Y, pts:c.hover, pad, w, h};
+  return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(c.label)}">${g}<g class="hover-layer"><line class="xh" x1="0" x2="0" y1="${pad.t}" y2="${h - pad.b}"/><circle class="hd" cx="0" cy="0" r="5"/></g></svg>`;
+}
+const CHART_SPECS = {
+  cash(w){
+    const txs = txOf(state.scope); let cum = 0; const act = [];
+    for (let d = 1; d <= TODAY_DAY; d++){ txs.filter(x => x.day === d && x.st === "a").forEach(x => cum += sgn(x)); act.push([d, cum]); }
+    const exp = [[TODAY_DAY, cum]]; let c2 = cum;
+    for (let d = TODAY_DAY; d <= 31; d++){ const e = txs.filter(x => x.day === d && x.st === "e"); if (e.length || d > TODAY_DAY){ e.forEach(x => c2 += sgn(x)); exp.push([d, c2]); } }
+    const all = act.concat(exp).map(p => p[1]);
+    const lo = Math.min(0, ...all), hi = Math.max(...all) * 1.12 || 1;
+    const yt = niceTicks(lo, hi, 4);
+    const hover = [];
+    for (let d = 1; d <= 31; d++){
+      const isA = d <= TODAY_DAY, v = isA ? act[d - 1][1] : (exp.find(p => p[0] === d) || exp[exp.length - 1])[1];
+      const items = txs.filter(x => x.day === d);
+      hover.push({x:d, y:v, html:`<b>${esc(fmtD(julyIso(d)))}</b>${esc(t("netPos"))}: ${usdS(v)}${items.length ? "<br>" + items.slice(0,3).map(x => `${isIn(x.cat) ? "+" : "−"}${usdK(x.amt)} · ${esc(tr(x.desc))}${x.st === "e" ? " (" + esc(t("expected")) + ")" : ""}`).join("<br>") : ""}`});
+    }
+    return {w, h:Math.max(200, Math.min(260, w * .36)), xs:[1,31], ys:[yt[0], yt[yt.length - 1]], yTicks:yt, fmtY:v => usdK(v),
+      xTicks:[[1,"1"],[8,"8"],[15,"15"],[22,"22"],[31,"31"]].map(([v,l]) => [v, (L === "es" ? l + " jul" : "Jul " + l)]),
+      todayX:TODAY_DAY, lines:[{pts:act, area:true}, {pts:exp, cls:"e", end:true}], endLabel:[31, exp[exp.length - 1][1], usdK(exp[exp.length - 1][1], true)],
+      hover, label:t("cashTitle")};
+  },
+  wealth(w){
+    const pts = WEALTH.months.map((m, i) => [i, m[1] * 1e6]);
+    const lo = 210e6, hi = 255e6, yt = niceTicks(lo, hi, 3);
+    const lab = i => new Intl.DateTimeFormat(L === "es" ? "es-DO" : "en-GB", {month:"short", timeZone:"UTC"}).format(D(WEALTH.months[i][0] + "-15"));
+    return {w, h:Math.max(180, Math.min(230, w * .34)), xs:[0,11], ys:[yt[0], yt[yt.length - 1]], yTicks:yt, fmtY:v => usdK(v),
+      xTicks:[0,3,6,9,11].map(i => [i, lab(i)]), lines:[{pts, area:true, end:true}],
+      hover:pts.map((p, i) => ({x:p[0], y:p[1], html:`<b>${esc(lab(i))} ${WEALTH.months[i][0].slice(0,4)}</b>${usd(p[1])}`})), label:t("trend12")};
+  },
+  feas(w){
+    const h = Math.max(260, Math.min(340, w * .62)), pad = {l:30, r:12, t:12, b:28};
+    const X = v => pad.l + v / 100 * (w - pad.l - pad.r), Y = v => pad.t + (1 - v / 100) * (h - pad.t - pad.b);
+    const P = [["f_board",86,93,1],["f_chat",92,80,1],["f_hub",70,86,1],["f_intake",62,73,1],["f_ask",50,65,1],["f_kyc",42,55,1],["f_cal",80,48,1],["f_bank",26,81,2],["f_aleta",16,95,2]];
+    const short = {f_board:{en:"Ticket board",es:"Tablero"}, f_chat:{en:"Chat capture",es:"Captura chat"}, f_hub:{en:"Financial hub",es:"Centro financiero"}, f_intake:{en:"Doc intake",es:"Documentos"}, f_ask:{en:"Assistant",es:"Asistente"}, f_kyc:{en:"KYC",es:"KYC"}, f_cal:{en:"Calendar",es:"Calendario"}, f_bank:{en:"Bank connectivity",es:"Conectividad bancaria"}, f_aleta:{en:"Aleta backbone",es:"Backbone Aleta"}};
+    let g = `<rect class="q" x="${X(55)}" y="${Y(100)}" width="${X(100) - X(55)}" height="${Y(60) - Y(100)}" rx="10"/><text class="ql" x="${X(100) - 8}" y="${Y(100) + 16}" text-anchor="end">${esc(t("doFirst"))}</text>`;
+    g += `<line class="base" x1="${pad.l}" x2="${w - pad.r}" y1="${Y(0)}" y2="${Y(0)}"/><line class="base" x1="${pad.l}" x2="${pad.l}" y1="${Y(100)}" y2="${Y(0)}"/>`;
+    g += `<text class="ax" x="${w - pad.r}" y="${h - 8}" text-anchor="end">${esc(t("easeAx"))}</text><text class="ax" transform="translate(${pad.l - 12} ${Y(0)}) rotate(-90)">${esc(t("valueAx"))}</text>`;
+    P.forEach(([k, x, y, p]) => {
+      const right = x < 70;
+      g += `<circle class="${p === 1 ? "pt1" : "pt2"}" cx="${X(x)}" cy="${Y(y)}" r="7"/><text class="pl" x="${X(x) + (right ? 12 : -12)}" y="${Y(y) + 4}" text-anchor="${right ? "start" : "end"}">${esc(tr(short[k]))}</text>`;
+    });
+    return {svg:`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(t("feas"))}">${g}</svg>`};
+  }
+};
+function drawCharts(){
+  document.querySelectorAll(".chart[data-chart]").forEach(el => {
+    const id = el.dataset.chart, w = Math.max(280, Math.round(el.clientWidth));
+    const spec = CHART_SPECS[id](w);
+    el.innerHTML = spec.svg || lineSvg(id, spec);
+  });
+}
+function chartHover(e){
+  const el = e.target.closest(".chart[data-chart]"); if (!el) return;
+  const c = CHARTS[el.dataset.chart]; if (!c || !c.pts) return;
+  const svg = el.querySelector("svg"), r = svg.getBoundingClientRect();
+  const vx = (e.clientX - r.left) / r.width * c.w;
+  let best = c.pts[0], bd = 1e9; c.pts.forEach(p => { const d = Math.abs(c.X(p.x) - vx); if (d < bd){ bd = d; best = p; } });
+  const xh = svg.querySelector(".xh"), hd = svg.querySelector(".hd");
+  xh.setAttribute("x1", c.X(best.x)); xh.setAttribute("x2", c.X(best.x)); hd.setAttribute("cx", c.X(best.x)); hd.setAttribute("cy", c.Y(best.y));
+  el.classList.add("hovering");
+  const tip = $("#tip"); tip.innerHTML = best.html; tip.hidden = false;
+  const tx = Math.min(window.innerWidth - tip.offsetWidth - 12, e.clientX + 14), ty = Math.max(8, e.clientY - tip.offsetHeight - 12);
+  tip.style.left = tx + "px"; tip.style.top = ty + "px";
+}
+function chartLeave(e){
+  const el = e.target && e.target.matches && e.target.matches(".chart[data-chart]") ? e.target : null;
+  if (e.type === "pointerleave" && !el) return;
+  document.querySelectorAll(".chart.hovering").forEach(c => c.classList.remove("hovering"));
+  $("#tip").hidden = true;
+}
+
+/* ───────────── DOCUMENTS ───────────── */
+function docTime(d){
+  if (d.at === "now") return nowHM();
+  if (d.at[0] === "y") return t("yesterday") + " " + d.at.slice(1);
+  return d.at;
+}
+function docSteps(d){ return d.type === "statement" ? STEPS_ST : STEPS_DOC; }
+function docStatus(d){
+  const steps = docSteps(d), done = d.step >= steps.length;
+  return done ? `<span class="status"><span class="dot good"></span>${esc(t("st_" + steps[steps.length - 1]))}</span>` : `<span class="status"><span class="dot warn"></span>${esc(t("st_" + steps[Math.max(0, d.step)]))}…</span>`;
+}
+function fieldVal(k, v){
+  if (k === "f_open" || k === "f_close" || k === "f_premium") return usd(v);
+  if (k === "f_matched") return `${v[0]} / ${v[1]}`;
+  if (k === "f_renewal") return fmtD(v,{day:"numeric", month:"long", year:"numeric"});
+  return tr(v);
+}
+function vDocs(){
+  const sel = state.docs.find(d => d.id === state.selDoc) || state.docs[0];
+  const list = state.docs.map(d => {
+    const steps = docSteps(d);
+    return `<button class="mail" data-act="open-doc" data-id="${d.id}" aria-current="${d.id === sel.id}">
+      <span class="ico">${icon(d.type === "statement" ? "bank" : d.type === "contract" ? "doc" : "mail")}</span>
+      <span class="b"><span class="f"><span>${esc(d.from)}</span><span class="num">${esc(docTime(d))}</span></span><span class="s" style="display:block">${esc(tr(d.subj))}</span>
+      <span class="pipe">${steps.map((s, i) => `${i ? '<span class="sep"></span>' : ""}<span class="${i < d.step ? "on" : i === d.step ? "cur" : ""}">${i < d.step ? icon("check","sm") : ""}${esc(t("st_" + s))}</span>`).join("")}</span></span></button>`;
+  }).join("");
+  const steps = docSteps(sel);
+  const links = (sel.links || []).map(l => l.startsWith("kyc:") ? `<button class="chip" data-act="open-kyc" data-id="${l.slice(4)}">${icon("shield","sm")}KYC · ${esc((state.kyc.find(k => k.id === l.slice(4)) || {}).name || "")}</button>` : tk(l) ? `<button class="chip acc" data-act="open-ticket" data-id="${l}">${icon("board","sm")}${esc(tr(tk(l).title))}</button>` : "").join("");
+  const showFields = sel.step >= 2;
+  const fields = Object.entries(sel.fields).map(([k, v]) => `<dt>${esc(t(k))}</dt><dd class="num">${esc(fieldVal(k, v))}${k === "f_matched" && v[0] < v[1] && sel.step >= 4 ? ` <span class="chip cor">1 ${esc(t("exception"))}</span>` : ""}</dd>`).join("");
+  return ph("docs", t("docsLede")) + `
+  <div class="docs">
+    <section class="card">
+      <div class="inbox-head"><h2 style="display:flex;gap:8px;align-items:center">${icon("inbox")}${esc(t("inboxName"))}</h2><button class="btn sm" data-act="simulate" ${state.simRunning || state.docs.some(d => d.id === "d5") ? "disabled" : ""}>${icon("mail","sm")}${esc(t("simulate"))}</button></div>
+      <div class="rows" style="gap:4px">${list}</div>
+      <p class="muted mt" style="font-size:12.5px">${icon("search","sm")} ${esc(t("instant"))}</p>
+    </section>
+    <section class="card">
+      <div class="eyebrow">${esc(sel.from)} · ${esc(clientName(sel.c))}</div>
+      <h2 class="display" style="font-size:22px;margin-top:6px;font-weight:500">${esc(tr(sel.subj))}</h2>
+      <div class="steps-big" style="grid-template-columns:repeat(${steps.length},minmax(0,1fr))">${steps.map((s, i) => `<div class="${i < sel.step ? "on" : i === sel.step ? "cur" : ""}">${icon(i < sel.step ? "check" : "clock","sm")}${esc(t("st_" + s))}</div>`).join("")}</div>
+      ${showFields ? `<div class="eyebrow" style="margin-bottom:8px">${esc(t("extracted"))}</div><dl class="facts" style="grid-template-columns:150px minmax(0,1fr)">${fields}</dl>` : `<p class="empty-note"><span class="thinking"><span></span><span></span><span></span></span></p>`}
+      ${sel.step >= 3 ? `<div class="eyebrow" style="margin:16px 0 6px">${esc(t("filedTo"))}</div><div class="path">${esc(sel.folder)}</div>` : ""}
+      ${sel.exception && sel.step >= 4 ? `<div class="except">${icon("alert")}<span>${esc(t("excText"))}</span></div>` : ""}
+      ${links ? `<div class="eyebrow" style="margin:16px 0 6px">${esc(t("linked"))}</div><div class="channels">${links}</div>` : ""}
+    </section>
+  </div>`;
+}
+function simulate(){
+  if (state.simRunning || state.docs.some(d => d.id === "d5")) return;
+  const d = clone(DOC_SIM); state.docs.unshift(d); state.selDoc = "d5"; state.simRunning = true; render();
+  let i = 0;
+  const tick = () => {
+    i++; d.step = i;
+    if (i === 4){
+      state.simRunning = false;
+      const id = "t" + (++state.seq);
+      state.tickets.push({id, c:"batista", col:"inbox", title:{en:S.receiptTicket[0], es:S.receiptTicket[1]}, src:"intake", created:TODAY, fresh:true});
+      d.links = [id];
+      audit("System", {en:"Read, filed and reconciled the Batista July statement · 1 exception", es:"Leyó, archivó y concilió el extracto de julio de Batista · 1 excepción"});
+      toast(t("simDone"));
+    }
+    if (state.view === "docs") render(); else renderChrome();
+    if (i < 4) setTimeout(tick, 900);
+  };
+  setTimeout(tick, 900);
+}
+
+/* ───────────── CALENDAR ───────────── */
+function eventsOn(iso){
+  const out = EV0.filter(e => e.d === iso).map(e => ({kind:e.kind, title:tr(e.title), learned:e.learned}));
+  state.tickets.filter(x => x.due === iso && x.col !== "done").forEach(x => out.push({kind:"task", title:tr(x.title), id:x.id}));
+  return out;
+}
+function vCalendar(){
+  const wds = []; for (let i = 0; i < 7; i++) wds.push(new Intl.DateTimeFormat(L === "es" ? "es-DO" : "en-GB", {weekday:"short", timeZone:"UTC"}).format(D(addDays("2026-07-06", i))));
+  let cells = wds.map(w => `<div class="wd">${esc(w)}</div>`).join("");
+  for (let i = 0; i < 2; i++) cells += `<div class="day blank"></div>`;      // July 1, 2026 is a Wednesday
+  for (let d = 1; d <= 31; d++){
+    const iso = julyIso(d), ev = eventsOn(iso);
+    cells += `<button class="day ${iso === TODAY ? "today" : ""} ${iso < TODAY ? "past" : ""} ${iso === state.selDay ? "sel" : ""}" data-act="day" data-d="${iso}" aria-label="${esc(fmtD(iso,{weekday:"long", day:"numeric", month:"long"}))}">
+      <span class="n">${d}</span>${ev.slice(0,3).map(e => `<span class="ev ${e.kind}">${esc(e.title)}</span>`).join("")}${ev.length > 3 ? `<span class="muted" style="font-size:10.5px">+${ev.length - 3}</span>` : ""}
+      <span class="dots">${ev.map(e => `<i class="${e.kind}"></i>`).join("")}</span></button>`;
+  }
+  const sel = eventsOn(state.selDay);
+  const agenda = upcoming(14).map(e => `<li><span class="when">${esc(e.d === TODAY ? t("today") : fmtD(e.d))}</span><span class="kind ${e.kind}"></span><span>${e.id ? `<button class="linkbtn" style="color:var(--ink);text-decoration:none;text-align:left" data-act="open-ticket" data-id="${e.id}">${esc(e.title)}</button>` : esc(e.title)}${e.learned ? ` <span class="chip acc">${icon("repeat","sm")}</span>` : ""}</span></li>`).join("");
+  const learned = [["r1","r1d"],["r2","r2d"],["r3","r3d"],["r4","r4d"],["r5","r5d"]].map(([a,b]) => `<div class="learn">${icon("repeat")}<div><b>${esc(t(a))}</b><small>${esc(t(b))}</small></div></div>`).join("");
+  const monthName = new Intl.DateTimeFormat(L === "es" ? "es-DO" : "en-GB", {month:"long", year:"numeric", timeZone:"UTC"}).format(D(TODAY));
+  return ph("calendar", t("calLede")) + `
+  <div class="cal">
+    <section class="card"><header><h2 style="text-transform:capitalize">${esc(monthName)}</h2><div class="legend"><span><i style="background:var(--accent)"></i>${esc(t("k_in"))}</span><span><i style="background:var(--coral)"></i>${esc(t("k_out"))}</span><span><i style="background:var(--ink)"></i>${esc(t("k_task"))}</span></div></header>
+      <div class="month">${cells}</div>
+      <div class="mt"><div class="eyebrow" style="margin-bottom:6px">${esc(t("onDay"))} · ${esc(fmtD(state.selDay,{weekday:"long", day:"numeric", month:"long"}))}</div>
+      ${sel.length ? `<ul class="agenda">${sel.map(e => `<li><span class="kind ${e.kind}"></span><span>${e.id ? `<button class="linkbtn" style="color:var(--ink);text-decoration:none;text-align:left" data-act="open-ticket" data-id="${e.id}">${esc(e.title)}</button>` : esc(e.title)}${e.learned ? ` <span class="chip acc">${icon("repeat","sm")}${L === "es" ? "aprendido" : "learned"}</span>` : ""}</span></li>`).join("")}</ul>` : `<p class="empty-note">${esc(t("nothingDay"))}</p>`}</div>
+    </section>
+    <div class="stack">
+      <section class="card"><header><h2>${esc(t("next14"))}</h2></header><ul class="agenda">${agenda}</ul></section>
+      <section class="card"><header><h2>${esc(t("learned"))}</h2></header>${learned}</section>
+    </div>
+  </div>`;
+}
+
+/* ───────────── KYC ───────────── */
+function kycStatus(k){
+  if (k.status === "ok") return `<span class="status"><span class="dot good"></span>${esc(t("verified"))}</span>`;
+  if (k.status === "due") return `<span class="status"><span class="dot warn"></span>${esc(t("reviewDue"))}</span>`;
+  return `<span class="status"><span class="dot idle"></span>${esc(t("inReview"))} · ${k.items.filter(Boolean).length}/6</span>`;
+}
+function vKyc(){
+  const sel = state.kyc.find(k => k.id === state.selKyc) || state.kyc[0];
+  const list = state.kyc.map(k => `<button class="cp" data-act="open-kyc" data-id="${k.id}" aria-current="${k.id === sel.id}"><b>${esc(k.name)}</b>${kycStatus(k)}<span class="sub">${esc(tr(k.kind))}${k.next ? ` · ${esc(t("nextReview"))} ${esc(fmtD(k.next,{day:"numeric", month:"short", year:"numeric"}))}` : ""}</span><span class="sub">${k.used.map(c => clientTag(c)).join("")}</span></button>`).join("");
+  const checks = KYC_ITEMS.map((it, i) => { const v = sel.items[i]; return `<li><span class="ck ${v === 1 ? "on" : v === 2 ? "run" : ""}">${icon("check","sm")}</span><span>${esc(tr(it))}</span></li>`; }).join("");
+  return ph("kyc", t("kycLede")) + `
+  <div class="kyc">
+    <section class="card"><div class="rows" style="gap:4px">${list}</div>
+      <form class="newcp" data-form="kyc"><input id="kycin" autocomplete="off" placeholder="${esc(t("vetPh"))}" aria-label="${esc(t("vetNew"))}"><button class="btn">${icon("plus","sm")}${esc(t("vetNew"))}</button></form></section>
+    <section class="card">
+      <div class="eyebrow">${esc(tr(sel.kind))}</div>
+      <h2 class="display" style="font-size:24px;margin:6px 0 4px;font-weight:500">${esc(sel.name)}</h2>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px">${kycStatus(sel)}${sel.checked ? `<span class="muted" style="font-size:12.5px">${esc(t("checkedOn"))} ${esc(fmtD(sel.checked,{day:"numeric", month:"short", year:"numeric"}))}</span>` : ""}</div>
+      <ul class="checks">${checks}</ul>
+      <div class="mt" style="display:flex;gap:8px;flex-wrap:wrap">
+        ${sel.status === "review" ? `<button class="btn pri" data-act="kyc-run" ${state.kycRunning ? "disabled" : ""}>${icon("shield","sm")}${esc(t("runChecks"))}</button>` : ""}
+        ${sel.status === "due" ? `<button class="btn pri" data-act="kyc-refresh">${icon("mail","sm")}${esc(t("requestDocs"))}</button>` : ""}
+        ${sel.status === "ok" ? `<span class="chip acc">${icon("check","sm")}${esc(t("checksDone"))}</span>` : ""}
+      </div>
+      <div class="mt"><div class="eyebrow" style="margin-bottom:6px">${esc(t("usedBy"))}</div><div class="channels">${sel.used.map(c => clientTag(c)).join("")}</div></div>
+      <p class="muted mt" style="font-size:12.5px">${esc(t("onceNote"))}</p>
+    </section>
+  </div>`;
+}
+function kycRun(){
+  const k = state.kyc.find(x => x.id === state.selKyc); if (!k || state.kycRunning) return;
+  state.kycRunning = true;
+  const todo = k.items.map((v, i) => v ? -1 : i).filter(i => i >= 0);
+  let n = 0;
+  const step = () => {
+    if (n > 0) k.items[todo[n - 1]] = 1;
+    if (n < todo.length){ k.items[todo[n]] = 2; n++; render(); setTimeout(step, 700); return; }
+    k.status = "ok"; k.checked = TODAY; k.next = "2027-07-28"; state.kycRunning = false;
+    audit("JC", {en:`Completed KYC on ${k.name}`, es:`Completó el KYC de ${k.name}`});
+    toast(t("checksDone")); render();
+  };
+  step();
+}
+
+/* ───────────── WEALTH (phase 2 preview) ───────────── */
+function vWealth(){
+  const maxH = Math.max(...WEALTH.hh.map(h => h[1])), maxC = Math.max(...WEALTH.cls.map(c => c[1]));
+  const hh = WEALTH.hh.map(([c, v]) => `<div class="hbar"><span class="t">${esc(CLIENTS[c].name)}</span><span class="bar"><span style="width:${v/maxH*100}%"></span></span><span class="v">${usdK(v)}</span></div>`).join("");
+  const cls = WEALTH.cls.map(([k, v, nb]) => `<div class="hbar"><span class="t">${esc(t(k))}${nb ? ` <span class="mono-tag">· ${esc(t("nonBank"))}</span>` : ""}</span><span class="bar ${nb ? "nb" : ""}"><span style="width:${v/maxC*100}%"></span></span><span class="v">${usdK(v)}</span></div>`).join("");
+  const feed = [
+    ["card","AmEx Platinum ••1007 · Nobu Miami", "reyes", 1240, "lifestyle"],
+    ["bank","Harbor Private Bank · wire in · Bayside Holdings", "reyes", 85000, "distrib"],
+    ["card","AmEx Gold ••3321 · Delta Air Lines", "almanzar", 2860, "lifestyle"]
+  ].map(([ic, d, c, a, cat]) => `<li><span class="ico">${icon(ic)}</span><span><b style="font-weight:600">${esc(d)}</b><small>${esc(CLIENTS[c].short)} · ${esc(t("cat_" + cat))} · ${esc(t("autoVerified"))}</small></span><span class="num" style="font-weight:700">${isIn(cat) ? "+" : "−"}${usd(a)}</span></li>`).join("");
+  return ph("wealth", t("wealthLede"), {phase:2}) + `
+  <div class="p2band">${icon("layers")}<span>${esc(t("p2Note"))}</span></div>
+  <div class="g-21">
+    <section class="card"><div class="eyebrow">${esc(t("consolidated"))} · ${esc(t("positionsAsOf"))}</div>
+      <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:8px 0 14px"><span class="nw num">${usd(WEALTH.total)}</span><span class="delta">▲ ${WEALTH.ytd}% ${esc(t("ytd"))}</span></div>
+      <div class="chart" data-chart="wealth"></div></section>
+    <section class="card"><header><h2>${esc(t("byHousehold"))}</h2></header>${hh}
+      <div class="eyebrow" style="margin:16px 0 8px">${esc(t("custodians"))}</div><div class="channels">${WEALTH.sources.map(s => `<span class="chip">${esc(s)}</span>`).join("")}</div></section>
+  </div>
+  <div class="grid-2 mt">
+    <section class="card"><header><h2>${esc(t("byClass"))}</h2></header>${cls}</section>
+    <section class="card"><header><div><h2>${esc(t("bankFeed"))} <span class="phase p2" style="margin-left:6px">${esc(t("phase2"))}</span></h2><p class="muted" style="font-size:12.5px;margin-top:4px">${esc(t("bankFeedSub"))}</p></div></header><ul class="feed">${feed}</ul></section>
+  </div>`;
+}
+
+/* ───────────── SECURITY ───────────── */
+const ROLES = ["jc","ea","cpa","ai"];
+const PERMS = {
+  area_board:{jc:"full", ea:"edit", cpa:"assigned", ai:"ro"},
+  area_money:{jc:"full", ea:"view", cpa:"none", ai:"ro"},
+  area_docs:{jc:"full", ea:"edit", cpa:"assigned", ai:"ro"},
+  area_wealth:{jc:"full", ea:"none", cpa:"none", ai:"ro"},
+  area_kyc:{jc:"full", ea:"edit", cpa:"none", ai:"ro"},
+  area_audit:{jc:"view", ea:"none", cpa:"none", ai:"none"}
+};
+const PCLS = {full:"full", edit:"", view:"", assigned:"", none:"none", ro:"rd"};
+function vSecurity(){
+  const pillars = [["lock","pi1"],["key","pi2"],["server","pi3"],["users","pi4"],["eye","pi5"],["list","pi6"]].map(([ic, k]) => `<div class="pillar">${icon(ic)}<b>${esc(t(k))}</b><p>${esc(t(k + "d"))}</p></div>`).join("");
+  const va = state.viewAs;
+  const head = `<tr><th></th>${ROLES.map(r => `<th class="${r === va ? "sel" : ""}">${esc(t("role_" + r))}</th>`).join("")}</tr>`;
+  const rows = Object.keys(PERMS).map(a => `<tr><td>${esc(t(a))}</td>${ROLES.map(r => { const p = PERMS[a][r]; return `<td class="${r === va ? "sel" : ""}"><span class="perm ${PCLS[p]}">${esc(t("pm_" + p))}</span></td>`; }).join("")}</tr>`).join("");
+  const sees = Object.keys(PERMS).map(a => { const p = PERMS[a][va]; const on = p !== "none"; return `<li class="${on ? "" : "off"}">${icon(on ? "eye" : "lock","sm")}<span>${esc(t(a))}</span><span class="perm ${PCLS[p]}" style="margin-left:auto">${esc(t("pm_" + p))}</span></li>`; }).join("");
+  const seg = ROLES.map(r => `<button data-act="viewas" data-v="${r}" aria-pressed="${r === va}">${esc(t("role_" + r).split(" ·")[0].split(" (")[0])}</button>`).join("");
+  const auditRows = state.audit.slice(0, 14).map(a => `<li><time>${esc(a.t)}</time><span><b style="font-weight:600">${esc(a.who === "Assistant" ? t("v_assistant") : a.who === "System" ? "Cumbre" : a.who)}</b> · ${esc(tr(a.what))}</span></li>`).join("");
+  return ph("security", t("secLede")) + `
+  <div class="pillars">${pillars}</div>
+  <div class="g-21 mt">
+    <section class="card"><header><h2>${esc(t("access"))}</h2></header><div class="table-wrap"><table class="matrix">${head}${rows}</table></div></section>
+    <section class="card"><header><h2>${esc(t("viewAs"))}</h2></header><span class="seg" role="group" style="flex-wrap:wrap">${seg}</span><ul class="seen mt">${sees}</ul></section>
+  </div>
+  <section class="card mt"><header><div><h2>${esc(t("audit"))}</h2><p class="muted" style="font-size:12.5px;margin-top:2px">${esc(t("auditSub"))}</p></div><span class="chip">${state.audit.length}</span></header><ul class="log">${auditRows}</ul></section>`;
+}
+
+/* ───────────── ROADMAP ───────────── */
+function vPlan(){
+  const ph1 = ["f_chat","f_board","f_hub","f_ask","f_intake","f_cal","f_kyc"], ph2 = ["f_bank","f_aleta","f_across"], ph3 = ["f_auto","f_new","f_more"];
+  const pc = (n, k, w, d, items, now) => `<div class="phasecard ${now ? "now" : ""}"><div class="eyebrow" style="display:flex;justify-content:space-between;gap:8px"><span>${esc(t("phase" + n))}</span><span>${esc(t(w))}</span></div><h3>${esc(t(k))}</h3><p class="muted" style="font-size:13px">${esc(t(d))}</p><ul>${items.map(i => `<li>${icon("check","sm")}<span>${esc(t(i))}</span></li>`).join("")}</ul></div>`;
+  const team = [["users","tm1"],["key","tm2"],["layers","tm3"],["shield","tm4"]].map(([ic, k]) => `<div class="role">${icon(ic)}<div><b>${esc(t(k))}</b><p>${esc(t(k + "d"))}</p></div></div>`).join("");
+  const stack = [["Private cloud instance",0],["PostgreSQL · row-level access",0],["WhatsApp Business Platform",0],["Email intake + document parser",0],["Claude · read-only tools",0],["MFA + audit log",0],["Aleta API",1],["Bank & card APIs",1]].map(([s, p]) => `<span class="${p ? "p2" : ""}">${esc(s)}${p ? " · P2" : ""}</span>`).join("");
+  return ph("plan", t("planLede"), {phase:0}) + `
+  <div class="phases">${pc(1,"ph1t","ph1w","ph1d",ph1,true)}${pc(2,"ph2t","ph2w","ph2d",ph2)}${pc(3,"ph3t","ph3w","ph3d",ph3)}</div>
+  <div class="g-21 mt">
+    <section class="card"><header><div><h2>${esc(t("feas"))}</h2><p class="muted" style="font-size:12.5px;margin-top:2px">${esc(t("feasSub"))}</p></div><div class="legend"><span><i style="background:var(--accent);border-radius:50%;width:10px"></i>${esc(t("phase1"))}</span><span><i style="background:var(--coral);border-radius:50%;width:10px"></i>${esc(t("phase2"))}</span></div></header><div class="chart" data-chart="feas"></div></section>
+    <section class="card"><header><h2>${esc(t("under"))}</h2></header><div class="stackchips">${stack}</div>
+      <div class="eyebrow" style="margin:18px 0 8px">${esc(t("cadence"))}</div>
+      <div class="cadence"><div><b>${esc(t("cad1"))}</b>${esc(t("cad1d"))}</div><div><b>${esc(t("cad2"))}</b>${esc(t("cad2d"))}</div><div><b>${esc(t("cad3"))}</b>${esc(t("cad3d"))}</div></div></section>
+  </div>
+  <section class="card mt"><header><div><h2>${esc(t("howBuild"))}</h2><p class="muted" style="font-size:12.5px;margin-top:2px">${esc(t("howBuildSub"))}</p></div><span class="plate"><img src="assets/cooweb-logo.png" alt="CooWeb"></span></header><div class="team">${team}</div>
+    <p class="mt" style="font-family:var(--f-display);font-size:18px;line-height:1.45">${esc(t("nextStep"))}</p></section>`;
+}
+
+/* ───────────── render ───────────── */
+const VIEW_FN = {today:vToday, capture:vCapture, board:vBoard, assistant:vAssistant, money:vMoney, docs:vDocs, calendar:vCalendar, kyc:vKyc, wealth:vWealth, security:vSecurity, plan:vPlan};
+function render(){
+  document.documentElement.lang = L;
+  const q = document.activeElement && document.activeElement.id === "q" ? $("#q").value : null;
+  renderChrome();
+  if (q != null){ const el = $("#q"); el.value = q; el.focus(); }
+  const keep = document.activeElement && ["capin","askin","expin","kycin"].includes(document.activeElement.id) ? [document.activeElement.id, document.activeElement.value] : null;
+  $("#main").innerHTML = VIEW_FN[state.view]();
+  drawCharts();
+  if (keep){ const el = document.getElementById(keep[0]); if (el){ el.value = keep[1]; el.focus(); } }
+  const wb = $("#wabody"); if (wb) wb.scrollTop = wb.scrollHeight;
+  if (state.drawer){ const x = tk(state.drawer); if (x) $("#drawer").innerHTML = drawerTicket(x); }
+  state.tickets.forEach(x => { if (x.fresh) setTimeout(() => { x.fresh = false; }, 1200); });
+}
+function go(view){
+  state.view = view; closeAll();
+  try { history.replaceState(null, "", "#" + view); } catch(e) {}
+  render();
+  const sc = stagePhone() ? $("#scroller") : null;
+  if (sc) sc.scrollTop = 0; else window.scrollTo({top:0});
+  if (view === "assistant"){ const th = $("#thread"); if (th && state.asst.length) th.lastElementChild.scrollIntoView({block:"nearest"}); }
+}
+function openDrawer(id){
+  const x = tk(id); if (!x) return;
+  state.drawer = id; const d = $("#drawer");
+  d.innerHTML = drawerTicket(x); d.classList.add("open"); d.setAttribute("aria-hidden","false"); $("#scrim").classList.add("on");
+  setTimeout(() => { const c = d.querySelector(".close"); if (c) c.focus(); }, 50);
+}
+function closeAll(){
+  state.drawer = null;
+  $("#drawer").classList.remove("open"); $("#drawer").setAttribute("aria-hidden","true");
+  $("#sheet").classList.remove("open"); $("#sheet").setAttribute("aria-hidden","true");
+  $("#scrim").classList.remove("on");
+}
+function moveTicket(id, col){
+  const x = tk(id); if (!x || x.col === col) return;
+  x.col = col;
+  if (col === "waiting" && !x.since) x.since = TODAY;
+  if (col === "done") x.doneAt = TODAY;
+  logT(id, "Moved to " + S["c_" + col][0], "Movido a " + S["c_" + col][1]);
+  audit("JC", {en:`Moved “${tr(x.title)}” to ${S["c_" + col][0]}`, es:`Movió «${tr(x.title)}» a ${S["c_" + col][1]}`});
+  toast(t("movedTo") + " " + t("c_" + col));
+  render();
+}
+
+/* ───────────── search ───────────── */
+function searchIndex(){
+  const R = [];
+  state.tickets.forEach(x => R.push({k:"k_ticket", label:tr(x.title), hay:tr(x.title) + " " + clientName(x.c) + " " + (x.party ? PARTIES[x.party].name : ""), act:["open-ticket", x.id]}));
+  state.docs.forEach(d => R.push({k:"k_doc", label:tr(d.subj), hay:tr(d.subj) + " " + d.from + " " + d.folder, act:["open-doc", d.id]}));
+  Object.entries(CLIENTS).forEach(([k, c]) => R.push({k:"k_client", label:c.name + " · " + c.person, hay:c.name + " " + c.person, act:["ask-client", k]}));
+  Object.entries(PARTIES).forEach(([k, p]) => R.push({k:"k_party", label:p.name + " · " + tr(p.kind), hay:p.name + " " + tr(p.kind), act:["ask-party", k]}));
+  state.kyc.forEach(k => R.push({k:"k_kyc", label:k.name, hay:k.name + " " + tr(k.kind), act:["open-kyc", k.id]}));
+  EV0.forEach(e => R.push({k:"k_event", label:tr(e.title) + " · " + fmtD(e.d), hay:tr(e.title), act:["day-go", e.d]}));
+  state.tx.forEach(x => R.push({k:"k_tx", label:tr(x.desc) + " · " + usd(x.amt), hay:tr(x.desc) + " " + CLIENTS[x.hh].name, act:["go-money", x.hh]}));
+  return R;
+}
+function doSearch(q){
+  const box = $("#sres"); if (!box) return;
+  const toks = norm(q).split(/\s+/).filter(Boolean);
+  if (!toks.length){ box.hidden = true; return; }
+  const res = searchIndex().filter(r => { const h = norm(r.hay); return toks.every(tk2 => h.includes(tk2)); }).slice(0, 8);
+  box.innerHTML = res.length ? res.map(r => `<button data-act="sres" data-a="${r.act[0]}" data-id="${esc(r.act[1])}"><span class="k">${esc(t(r.k))}</span><span class="tx">${esc(r.label)}</span></button>`).join("") : `<div class="empty">${esc(t("noResults"))}</div>`;
+  box.hidden = false;
+}
+
+/* ───────────── actions ───────────── */
+const ACT = {
+  "go":el => go(el.dataset.view),
+  "lang":el => { L = el.dataset.v; store.set("lang", L); render(); if (state.drawer) openDrawer(state.drawer); },
+  "theme":() => { const r = document.documentElement; r.dataset.theme = r.dataset.theme === "dark" ? "light" : "dark"; store.set("theme", r.dataset.theme); render(); },
+  "frame":el => { $("#stage").classList.toggle("phone", el.dataset.v === "phone"); closeAll(); render(); },
+  "reset":() => { state = fresh(); state.view = "today"; closeAll(); render(); toast(t("resetDone")); },
+  "more":() => {
+    const s = $("#sheet");
+    s.innerHTML = `<div class="eyebrow">${esc(t("allViews"))}</div><div class="grid">${VIEWS.map(v => `<button data-act="go" data-view="${v.id}">${icon(v.ic)}${esc(t("v_" + v.id))}</button>`).join("")}</div><div class="mt" style="text-align:center"><button class="linkbtn" data-act="reset">${esc(t("reset"))}</button></div>`;
+    s.classList.add("open"); s.setAttribute("aria-hidden","false"); $("#scrim").classList.add("on");
+  },
+  "close-all":() => closeAll(),
+  "open-ticket":(el, e) => { if (e.target.closest("[data-act]") !== el) return; if (state.view !== "board" && state.view !== "today" && state.view !== "capture" && state.view !== "calendar" && state.view !== "docs"){ go("board"); } openDrawer(el.dataset.id); },
+  "move":el => moveTicket(el.dataset.id, el.dataset.col),
+  "reviewed":el => {
+    const x = tk(el.dataset.id); if (!x) return;
+    x.col = "done"; x.doneAt = TODAY;
+    logT(x.id, "Marked reviewed · approval sent by JC", "Marcado revisado · aprobación enviada por JC");
+    audit("JC", {en:`Marked “${tr(x.title)}” reviewed`, es:`Marcó «${tr(x.title)}» como revisado`});
+    toast(t("reviewed")); render();
+  },
+  "bfilter":el => { state.boardFilter = el.dataset.v; render(); },
+  "scope":el => { state.scope = el.dataset.v; render(); },
+  "go-money":el => { state.scope = el.dataset.hh || "all"; go("money"); },
+  "ask":el => {
+    const it = el.dataset.intent, arg = el.dataset.arg, es = L === "es";
+    const text = it === "draft" ? t("q3") : it === "nudge" ? (es ? "Redacta un recordatorio: " : "Draft a follow-up: ") + tr((tk(arg) || {title:""}).title) : (es ? "¿Qué hay abierto con " : "What's open with ") + clientName(arg) + "?";
+    pushAnswer([it, arg], text); go("assistant");
+  },
+  "askq":el => { const [k, a] = QMAP[el.dataset.q]; pushAnswer([k, a], null, el.dataset.q); render(); scrollThread(); },
+  "ask-client":el => { pushAnswer(["open", el.dataset.id], (L === "es" ? "¿Qué hay abierto con " : "What's open with ") + CLIENTS[el.dataset.id].name + "?"); go("assistant"); },
+  "ask-party":el => { pushAnswer(["party", el.dataset.id], (L === "es" ? "¿Qué está pendiente con " : "What's open with ") + PARTIES[el.dataset.id].name + "?"); go("assistant"); },
+  "stop":() => { if (CTL) CTL.abort(); },
+  "copy":el => {
+    const pre = document.getElementById("draft-" + el.dataset.id); if (!pre) return;
+    const text = pre.textContent;
+    const sel = () => { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast(t("copyFail")); };
+    try { navigator.clipboard.writeText(text).then(() => toast(t("copied")), sel); } catch(e){ sel(); }
+  },
+  "tone":el => { const m = state.asst.find(x => x.id === +el.dataset.id); if (m){ m.v = m.v ? 0 : 1; render(); } },
+  "savedraft":el => {
+    const m = state.asst.find(x => x.id === +el.dataset.id); if (!m) return;
+    const tid = m.kind === "draft" ? "t1" : m.arg;
+    logT(tid, "Draft saved from the assistant", "Borrador guardado desde el asistente");
+    audit("JC", {en:"Saved an assistant draft to a follow-up", es:"Guardó un borrador del asistente en un seguimiento"});
+    toast(t("draftSaved"));
+  },
+  "try":el => capSend(TRIES[L][+el.dataset.i], false),
+  "cap-client":el => { const m = state.chat[+el.dataset.i]; if (!m || !m.pending) return; const p = m.pending; p.client = el.dataset.c; state.chat.splice(+el.dataset.i, 1); finishCapture(p); },
+  "cap-undo":el => {
+    const r = el.dataset.ref;
+    if (r[0] === "t") state.tickets = state.tickets.filter(x => x.id !== r); else state.tx = state.tx.filter(x => x.id !== r);
+    state.captured = state.captured.filter(x => x !== r);
+    state.chat = state.chat.filter(m => m.ref !== r);
+    state.chat.push({who:"bot", k:"capUndone", at:nowHM()}); render();
+  },
+  "open-doc":el => { state.selDoc = el.dataset.id; if (state.view !== "docs") go("docs"); else render(); },
+  "simulate":() => simulate(),
+  "day":el => { state.selDay = el.dataset.d; render(); },
+  "day-go":el => { state.selDay = el.dataset.id; go("calendar"); },
+  "open-kyc":el => { state.selKyc = el.dataset.id; if (state.view !== "kyc") go("kyc"); else render(); },
+  "kyc-run":() => kycRun(),
+  "kyc-refresh":() => {
+    const k = state.kyc.find(x => x.id === state.selKyc); if (!k) return;
+    const id = "t" + (++state.seq);
+    state.tickets.push({id, c:k.used[0], col:"waiting", title:{en:`${S.kycRefresh[0]} · ${k.name}`, es:`${S.kycRefresh[1]} · ${k.name}`}, due:k.next, party:k.id === "costa" ? "costa" : null, src:"kyc", created:TODAY, since:TODAY, fresh:true});
+    audit("JC", {en:`Requested updated KYC documents from ${k.name}`, es:`Pidió documentos KYC actualizados a ${k.name}`});
+    toast(t("movedTo") + " " + t("c_waiting")); render();
+  },
+  "viewas":el => { state.viewAs = el.dataset.v; render(); },
+  "msearch":() => { const b = $("#searchbox"); b.classList.toggle("show"); if (b.classList.contains("show")) $("#q").focus(); },
+  "sres":el => {
+    const a = el.dataset.a, id = el.dataset.id; $("#sres").hidden = true; $("#q").value = ""; $("#searchbox").classList.remove("show");
+    const fake = {dataset:{id, hh:id}};
+    if (a === "open-ticket"){ if (!["board","today"].includes(state.view)) go("board"); openDrawer(id); }
+    else ACT[a](fake, {target:{closest:() => fake}});
+  }
+};
+function scrollThread(){ const th = $("#thread"); if (th && th.lastElementChild) th.lastElementChild.scrollIntoView({block:"nearest", behavior:"smooth"}); }
+
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-act]");
+  if (!el){ if (!e.target.closest("#searchbox")){ const b = $("#sres"); if (b) b.hidden = true; } return; }
+  if (el.tagName === "FORM") return;
+  const fn = ACT[el.dataset.act]; if (!fn) return;
+  if (el.closest(".tk") && el.dataset.act !== "open-ticket") e.stopPropagation();
+  fn(el, e);
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape"){ closeAll(); const b = $("#sres"); if (b) b.hidden = true; }
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k"){ e.preventDefault(); const q = $("#q"); if (q){ $("#searchbox").classList.add("show"); q.focus(); } }
+  if (e.key === "Enter" && e.target.classList && e.target.classList.contains("tk")) openDrawer(e.target.dataset.id);
+  if (e.key === "Enter" && e.target.id === "q"){ const f = document.querySelector("#sres button"); if (f){ e.preventDefault(); f.click(); } }
+});
+document.addEventListener("input", e => {
+  if (e.target.id === "q") doSearch(e.target.value);
+  if (e.target.id === "expin") expPreview(e.target.value);
+});
+document.addEventListener("submit", e => {
+  e.preventDefault();
+  const f = e.target.dataset.form;
+  if (f === "cap"){ const i = $("#capin"); const v = i.value; i.value = ""; capSend(v, true); }
+  if (f === "ask"){ const i = $("#askin"); const v = i.value; i.value = ""; ask(v); scrollThread(); }
+  if (f === "exp"){ const i = $("#expin"); const v = i.value; if (v.trim()){ i.value = ""; addExpense(v); } }
+  if (f === "kyc"){
+    const i = $("#kycin"), v = i.value.trim(); if (!v) return;
+    const id = "k" + (++state.seq);
+    state.kyc.unshift({id, name:v, kind:{en:"New counterparty", es:"Contraparte nueva"}, status:"review", checked:null, next:null, used:["all"], items:[0,0,0,0,0,0]});
+    state.selKyc = id; audit("JC", {en:`Started KYC on ${v}`, es:`Inició el KYC de ${v}`}); render();
+  }
+});
+/* drag & drop on the board */
+let dragId = null;
+document.addEventListener("dragstart", e => { const c = e.target.closest && e.target.closest("[data-drag]"); if (!c) return; dragId = c.dataset.drag; c.classList.add("dragging"); try { e.dataTransfer.setData("text/plain", dragId); e.dataTransfer.effectAllowed = "move"; } catch(x) {} });
+document.addEventListener("dragend", e => { const c = e.target.closest && e.target.closest("[data-drag]"); if (c) c.classList.remove("dragging"); document.querySelectorAll(".col.drop").forEach(x => x.classList.remove("drop")); });
+document.addEventListener("dragover", e => { const col = e.target.closest && e.target.closest("[data-drop]"); if (!col || !dragId) return; e.preventDefault(); document.querySelectorAll(".col.drop").forEach(x => { if (x !== col) x.classList.remove("drop"); }); col.classList.add("drop"); });
+document.addEventListener("drop", e => { const col = e.target.closest && e.target.closest("[data-drop]"); if (!col || !dragId) return; e.preventDefault(); const id = dragId; dragId = null; col.classList.remove("drop"); moveTicket(id, col.dataset.drop); });
+/* chart hover */
+document.addEventListener("pointermove", e => { if (e.target.closest && e.target.closest(".chart[data-chart]")) chartHover(e); else if (!$("#tip").hidden){ chartLeave(e); } });
+document.addEventListener("pointerleave", chartLeave, true);
+let rzT; let lastW = 0;
+window.addEventListener("resize", () => { clearTimeout(rzT); rzT = setTimeout(() => { if (window.innerWidth < 980 && stagePhone()){ $("#stage").classList.remove("phone"); render(); return; } const w = $("#main").clientWidth; if (Math.abs(w - lastW) > 30){ lastW = w; drawCharts(); } }, 180); });
+
+/* ───────────── boot ───────────── */
+(function boot(){
+  const saved = store.get("lang");
+  L = saved === "es" || saved === "en" ? saved : ((navigator.language || "en").toLowerCase().startsWith("es") ? "es" : "en");
+  const th = store.get("theme");
+  document.documentElement.dataset.theme = th === "dark" ? "dark" : "light";
+  const h = (location.hash || "").slice(1);
+  if (VIEW_FN[h]) state.view = h;
+  const app = $("#app");
+  const syncW = () => app.classList.toggle("narrow", app.clientWidth <= 900);
+  syncW();
+  if (window.ResizeObserver) new ResizeObserver(syncW).observe(app); else window.addEventListener("resize", syncW);
+  render(); lastW = $("#main").clientWidth;
+  (async () => {
+    try {
+      if (window.claude && typeof window.claude.use === "function"){
+        const s = await window.claude.use("sample");
+        if (typeof s === "function"){ AI = s; }
+      }
+    } catch(e){ AI = null; }
+    aiReady = true;
+    if (state.view === "assistant") render();
+  })();
+})();
+</script>
