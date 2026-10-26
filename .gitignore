@@ -1,6 +1,7 @@
-video/salida/tmp/
-video/salida/fotos/
-video/audio/*.wav
-video/produccion/palabras-crudo.json
+# Por propuesta: salidas intermedias regenerables
+**/video/salida/tmp/
+**/video/salida/fotos/
+**/video/salida/*-borrador.mp4
+**/video/audio/*.wav
+**/video/produccion/palabras-crudo.json
 node_modules/
-video/salida/*-borrador.mp4
