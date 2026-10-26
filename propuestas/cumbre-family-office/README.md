@@ -91,20 +91,25 @@ de Thraive. Plan indicativo: semana 0 arranque; semanas 1–4 Cumbre fase 1; 5�
 
 ## Oferta marco (`oferta-marco/`)
 
-`Oferta-Marco_Equipo-AI-Native_Thraive.pdf` y `.docx` (código PC-THRAIVE-02, una sola hoja), generados
-desde `oferta-marco/oferta-marco.json`. Agradece la confianza de Thiago, explica las dos líneas de
-perfiles de CooWeb (expertos que adoptaron la IA y desarrolladores AI Native) y recomienda el AI Native
-que trabaja con Luis hace dos años (unos 8 proyectos entregados).
+`Oferta-Marco_CooWeb_Thraive.pdf`: una sola hoja, tono cercano, sin cabecera formal. Se genera desde
+`oferta-marco/oferta-marco.html` (marca CooWeb: azules 1145A8 y 2B86E8, Carlito/Calibri) con Chromium a
+tamaño carta. Agradece la confianza de Thiago, explica las dos líneas de perfiles de CooWeb y por qué
+recomendamos AI Native (margen de crecimiento, ambición, se autoreta; 2 años con Luis y unos 8 proyectos).
 
-| Opción | USD / mes |
+| Modalidad | USD / mes |
 |---|---|
-| 1 · Full-stack con experiencia (4 a 5 años, IA que potencia; esquema híbrido tradicional) | 4.200 |
-| 2 · AI Product Engineer (1,5 a 2,5 años, AI Native, UI First, web y móvil, RAG) · recomendada | 3.200 |
-| Technical Lead · Luis, part-time (se suma a cualquiera) | desde 1.500 |
-| **Total** | **Opción 1 desde 5.700 · Opción 2 desde 4.700** |
+| Perfil AI Native dedicado · AI Product Engineer 1,5 a 2,5 años · **recomendado** | 3.200 (desde 4.700 con Technical Lead) |
+| Perfil dedicado con experiencia · Full-stack 4 a 5 años | 4.200 (desde 5.700 con Technical Lead) |
+| MVP funcional en 3 semanas · 2 a 3 perfiles AI Native + tokens de IA, un objetivo clave | Precio cerrado por objetivo |
+| Technical Lead · Luis, part-time, en cualquier modalidad | desde 1.500 |
 
-Metodología: ágil híbrido con dual track. Condiciones: mínimo 3 meses, facturación mensual anticipada,
-reemplazo sin costo en los primeros 30 días, propiedad intelectual de Thraive, vigencia de 30 días.
+El MVP arranca con documentación exhaustiva y roadmap, deja la base lista (manuales, CI/CD, seguridad,
+videos, harness de IA), entrega un release que resuelve el primer dolor clave y quien construyó la base
+sigue como perfil dedicado. Metodología: ágil híbrido con dual track. Incluye un aviso (oferta indicativa,
+USD sin impuestos, plazos sujetos a accesos del cliente, vigencia de 30 días).
+
+Para regenerar el PDF, abre `oferta-marco.html` en Chromium y exporta a PDF en tamaño carta sin márgenes
+(o usa Playwright `page.pdf({format: 'Letter', printBackground: true})`).
 
 ## Supuestos y riesgos
 
