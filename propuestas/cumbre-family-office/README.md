@@ -94,7 +94,8 @@ de Thraive. Plan indicativo: semana 0 arranque; semanas 1–4 Cumbre fase 1; 5�
 `Oferta-Marco_CooWeb_Thraive.pdf`: una sola hoja, tono cercano, sin cabecera formal. Se genera desde
 `oferta-marco/oferta-marco.html` (marca CooWeb: azules 1145A8 y 2B86E8, Carlito/Calibri) con Chromium a
 tamaño carta. Agradece la confianza de Thiago, explica las dos líneas de perfiles de CooWeb y por qué
-recomendamos AI Native (margen de crecimiento, ambición, se autoreta; 2 años con Luis y unos 8 proyectos).
+recomendamos AI Native: los perfiles AI Native de CooWeb ya traen la IA en el core y hoy Luis los
+prefiere (margen de crecimiento, ambición, se autoretan). No se nombra a ningún perfil en particular.
 
 | Modalidad | USD / mes |
 |---|---|
