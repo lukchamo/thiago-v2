@@ -1,0 +1,1039 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PoC Cumbre · Video para Thiago</title>
+<link rel="stylesheet" href="assets/fuentes.css">
+<style>
+:root{
+  --bg:#FFFFFF; --bg2:#F5F8F7; --bg3:#EAF0EE; --line:#DCE5E2; --line2:#E9EFEC;
+  --ink:#0E2A2C; --ink2:#425658; --ink3:#7A8C8E;
+  --acc:#12806B; --acc2:#2FA88A; --accbg:#DCF0EA; --accdk:#0A5E4F;
+  --cor:#BC4F2B; --corbg:#FAE7DE;
+  --amber:#A86B00; --amberbg:#FFF1D6; --green:#0B8A3C; --greenbg:#E2F4E8; --wa:#1FA855;
+  --hilo:linear-gradient(90deg,#0A5E4F,#2FA88A);
+  --shadow:0 1px 2px rgba(14,42,44,.05),0 18px 40px -22px rgba(14,42,44,.30);
+  --disp:'Newsreader',Georgia,serif; --ui:'Hanken Grotesk',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#E7EDEB;height:100%;overflow:hidden}
+body{display:grid;place-items:center;font-family:var(--ui);color:var(--ink);-webkit-font-smoothing:antialiased}
+#stage{position:relative;width:1920px;height:1080px;background:var(--bg);overflow:hidden;transform-origin:0 0}
+body.render{background:#fff;display:block}
+body.render #stage{transform:none!important}
+.abs{position:absolute}
+.mono{font-family:var(--mono)}
+.num{font-variant-numeric:tabular-nums}
+.disp{font-family:var(--disp);font-weight:500;letter-spacing:-.015em}
+svg{overflow:visible}
+.ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* fondo */
+.bgdots{position:absolute;inset:0;background-image:radial-gradient(#D5E2DE 1.4px,transparent 1.5px);background-size:36px 36px;opacity:.55;
+  -webkit-mask-image:radial-gradient(120% 90% at 50% 40%,#000 30%,transparent 85%);mask-image:radial-gradient(120% 90% at 50% 40%,#000 30%,transparent 85%)}
+.blob{position:absolute;border-radius:50%;pointer-events:none}
+.blob.b1{width:1100px;height:1100px;left:-260px;top:-520px;background:radial-gradient(closest-side,rgba(18,128,107,.09),transparent)}
+.blob.b2{width:1000px;height:1000px;right:-300px;bottom:-560px;background:radial-gradient(closest-side,rgba(188,79,43,.06),transparent)}
+
+/* chrome */
+#chrome{position:absolute;left:0;right:0;top:0;height:96px;display:flex;align-items:center;gap:22px;padding:0 80px;z-index:30}
+#chrome img{height:36px;display:block}
+#chrome .sep{width:1px;height:30px;background:var(--line)}
+#chrome .ct{font-size:19px;color:var(--ink2)}
+#chrome .ct b{color:var(--ink);font-weight:600}
+#chrome .cr{margin-left:auto;display:flex;gap:10px}
+.chip{display:inline-flex;align-items:center;gap:8px;font-size:17px;font-weight:500;padding:6px 14px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);color:var(--ink2);white-space:nowrap;line-height:1.2}
+.chip.amber{background:var(--amberbg);border-color:transparent;color:var(--amber)}
+.chip.acc{background:var(--accbg);border-color:transparent;color:var(--accdk)}
+.chip.green{background:var(--greenbg);border-color:transparent;color:var(--green)}
+.chip.cor{background:var(--corbg);border-color:transparent;color:var(--cor)}
+.chip.ink{background:var(--ink);border-color:transparent;color:#fff}
+.chip .d{width:9px;height:9px;border-radius:50%;background:currentColor}
+#chapters{position:absolute;left:120px;right:120px;bottom:26px;height:34px;display:grid;grid-template-columns:repeat(15,1fr);gap:10px;z-index:30}
+#chapters div{font-size:14px;color:var(--ink3);position:relative;padding-top:12px;white-space:nowrap}
+#chapters div::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;border-radius:2px;background:var(--line)}
+#chapters div i{position:absolute;left:0;top:0;height:3px;border-radius:2px;background:var(--hilo);width:0}
+#chapters div.on{color:var(--ink);font-weight:600}
+#chapters div.done{color:var(--ink2)}
+#caption{position:absolute;left:0;right:0;bottom:84px;display:flex;justify-content:center;z-index:31;pointer-events:none}
+#caption span{max-width:1500px;text-align:center;font-size:31px;line-height:1.3;font-weight:500;color:var(--ink);background:rgba(255,255,255,.95);border:1px solid var(--line);padding:9px 24px 10px;border-radius:14px;box-shadow:0 10px 30px -18px rgba(14,42,44,.35)}
+
+/* comunes */
+.sc{position:absolute;inset:0;display:none}
+.eyebrow{font-family:var(--mono);font-size:19px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:12px}
+.eyebrow.cor{color:var(--cor)}
+.h2{font-family:var(--disp);font-size:62px;line-height:1.04;font-weight:500;letter-spacing:-.02em}
+.lead{font-size:26px;line-height:1.4;color:var(--ink2)}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}
+.grad{background:var(--hilo);-webkit-background-clip:text;background-clip:text;color:transparent}
+.thlogo{display:block;border-radius:12px;box-shadow:0 14px 30px -18px rgba(0,0,0,.55)}
+.mark{display:block}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.pill.ok{background:var(--greenbg);color:var(--green)} .pill.warn{background:var(--amberbg);color:var(--amber)}
+.pill.cor{background:var(--corbg);color:var(--cor)} .pill.acc{background:var(--accbg);color:var(--accdk)} .pill.mute{background:var(--bg3);color:var(--ink2)}
+.cli{display:inline-flex;align-items:center;gap:7px;font-size:16px;color:var(--ink2);white-space:nowrap}
+.cli i{font-style:normal;width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ink);color:#fff}
+.mlabel{font-family:var(--mono);font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.win{overflow:hidden}
+.win .bar{height:50px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;padding:0 20px;background:var(--bg2)}
+.win .bar i{width:13px;height:13px;border-radius:50%;background:#D3DEDA;display:block}
+.win .bar span{margin-left:14px;font-size:17px;color:var(--ink2)}
+.ro{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--accdk);border:1.5px solid var(--acc);border-radius:999px;padding:3px 11px}
+
+/* intro */
+#s-intro .h1{font-family:var(--disp);font-size:104px;line-height:1.0;font-weight:500;letter-spacing:-.03em}
+.lock{display:flex;align-items:center;gap:22px;padding:22px 26px;width:560px;height:150px}
+.lock .lt{font-size:15px;color:var(--ink3);font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.lock .ld{font-size:22px;color:var(--ink);font-weight:500;margin-top:4px}
+.avatar{width:58px;height:58px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:600;font-size:21px}
+.cword{font-family:var(--disp);font-size:46px;font-weight:600;letter-spacing:-.01em;line-height:1}
+.cword small{display:block;font-family:var(--mono);font-size:13px;letter-spacing:.16em;color:var(--ink3);font-weight:400;margin-top:6px}
+
+/* contexto */
+.ath{width:420px;height:190px;padding:24px 26px;display:flex;flex-direction:column;gap:10px}
+.ath .mono2{width:58px;height:58px;border-radius:16px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:700;font-size:20px}
+.ath b{font-size:26px;font-weight:600}
+.ath p{font-size:18px;color:var(--ink2)}
+.quote{font-family:var(--disp);font-style:italic;font-size:31px;line-height:1.3;color:var(--ink)}
+
+/* reto */
+.party{position:absolute;width:200px;height:50px;margin:-25px 0 0 -100px;display:flex;align-items:center;justify-content:center;gap:9px;background:#fff;border:1.5px solid var(--line);border-radius:999px;font-size:19px;font-weight:600;color:var(--ink2);box-shadow:var(--shadow)}
+.party .ic{color:var(--cor);width:20px;height:20px}
+#jcHalo{position:absolute;left:0;top:0;width:250px;height:250px;border-radius:50%;background:radial-gradient(closest-side,rgba(188,79,43,.22),rgba(188,79,43,0));transform:translate(-50%,-50%);opacity:0}
+#jcNode{position:absolute;left:0;top:0;width:160px;height:160px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;text-align:center;transform:translate(-50%,-50%);box-shadow:0 24px 50px -24px rgba(14,42,44,.7)}
+#jcNode b{font-family:var(--disp);font-size:54px;font-weight:500;line-height:.9;display:block}
+#jcNode small{font-family:var(--mono);font-size:13px;letter-spacing:.14em;opacity:.8}
+.notif{display:flex;gap:14px;align-items:center;padding:12px 16px;border-top:1px solid var(--line2);font-size:17px}
+.notif:first-of-type{border-top:0}
+.notif .ap{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex:none;color:#fff}
+.notif b{display:block;font-size:16px;font-weight:600}
+.notif span{color:var(--ink2);font-size:16px}
+.notif time{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--ink3)}
+.fail{position:absolute;left:1270px;width:520px;padding:18px 22px;background:#fff;border:1px solid var(--line);border-left:5px solid var(--cor);border-radius:0 18px 18px 0;box-shadow:var(--shadow);display:flex;gap:16px;align-items:flex-start}
+.fail .ico{width:46px;height:46px;border-radius:13px;background:var(--corbg);color:var(--cor);display:grid;place-items:center;flex:none}
+.fail h5{font-size:23px;font-weight:600}
+.fail p{font-size:18px;color:var(--ink2);margin-top:4px;line-height:1.35}
+
+/* pide */
+.idea{position:absolute;width:525px;height:250px;padding:26px 28px;display:flex;flex-direction:column;gap:10px}
+.idea .n{font-family:var(--mono);font-size:16px;color:var(--ink3)}
+.idea .ico{width:58px;height:58px;border-radius:16px;background:var(--bg3);color:var(--ink2);display:grid;place-items:center}
+.idea .ico .ic{width:30px;height:30px}
+.idea .t{font-family:var(--disp);font-size:36px;font-weight:500;letter-spacing:-.01em;line-height:1.1}
+.idea .d{font-size:19px;color:var(--ink2);line-height:1.35}
+.idea.on{border:2px solid var(--acc);box-shadow:0 26px 50px -28px rgba(18,128,107,.55)}
+.idea.on .ico{background:var(--accbg);color:var(--acc)}
+
+/* sistema */
+.layer{position:absolute;left:140px;width:1640px;border-radius:20px;padding:0 28px;display:flex;align-items:center;gap:16px}
+.layer .lbl{font-family:var(--mono);font-size:16px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);white-space:nowrap}
+.box2{position:absolute;top:560px;width:810px;height:190px;border-radius:20px;padding:22px 26px}
+.box2 .lbl{font-family:var(--mono);font-size:16px;letter-spacing:.14em;text-transform:uppercase}
+.box2 .cs{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.arr{position:absolute;left:950px;width:20px;color:var(--ink3);font-size:26px;text-align:center}
+
+/* hoy */
+.panel{position:absolute;border:1px solid var(--line);border-radius:18px;background:#fff;padding:16px 20px}
+.panel h4{font-size:20px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.panel h4 small{margin-left:auto;font-size:15px;color:var(--ink3);font-weight:400}
+.trow{display:flex;align-items:center;gap:12px;padding:12px 10px;border-top:1px solid var(--line2);border-radius:10px;position:relative}
+.trow:first-of-type{border-top:0}
+.trow .tt{font-size:18px;font-weight:600;line-height:1.25}
+.trow .mt{display:flex;gap:12px;align-items:center;margin-top:6px;font-size:15px;color:var(--ink3)}
+.trow .btn{margin-left:auto;font-size:14px;font-weight:600;border:1px solid var(--line);border-radius:9px;padding:6px 10px;white-space:nowrap;color:var(--ink)}
+.trow.on{background:var(--corbg)}
+.trow.on::before{content:"";position:absolute;left:-2px;top:12px;bottom:12px;width:4px;border-radius:2px;background:var(--cor)}
+.trow.acc.on{background:var(--accbg)}
+.trow.acc.on::before{background:var(--acc)}
+.pulse{display:flex;gap:10px}
+.pulse span{display:flex;align-items:baseline;gap:8px;padding:9px 14px;border-radius:12px;border:1px solid var(--line);font-size:16px;color:var(--ink2);background:#fff}
+.pulse b{font-size:22px;color:var(--ink);font-weight:700}
+.pulse .hot b{color:var(--cor)}
+.callout{position:absolute;width:440px;padding:20px 24px;background:#fff;border-radius:18px;box-shadow:0 26px 50px -26px rgba(14,42,44,.5)}
+.callout .v{font-family:var(--disp);font-size:64px;font-weight:500;line-height:1;letter-spacing:-.02em}
+.callout .l{font-size:18px;color:var(--ink2);margin-top:6px}
+
+/* captura */
+.phone{position:absolute;border-radius:48px;background:#0E2A2C;padding:11px;box-shadow:0 40px 70px -36px rgba(14,42,44,.7),inset 0 0 0 2px #24474A}
+.scr{width:100%;height:100%;border-radius:38px;overflow:hidden;background:#E9EFEC;position:relative}
+.wah{height:84px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:30px 18px 0}
+.wah b{font-size:17px;display:block}
+.wah small{font-size:13px;color:var(--accdk)}
+.wab{padding:14px 12px;display:flex;flex-direction:column;gap:10px}
+.bub{max-width:270px;padding:9px 12px;border-radius:14px;font-size:16px;line-height:1.38;background:#fff;box-shadow:0 1px 1px rgba(0,0,0,.06)}
+.bub.me{align-self:flex-end;background:#D5F2E6;border-bottom-right-radius:4px}
+.bub.bot{border-bottom-left-radius:4px}
+.bub small{display:block;text-align:right;color:var(--ink3);font-size:11px;margin-top:3px}
+.ccard{margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--bg2);font-size:14px}
+.parse{position:absolute;left:640px;width:470px;height:88px;padding:14px 20px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.parse .k{font-family:var(--mono);font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.parse .v{font-size:24px;font-weight:600;display:flex;align-items:center;gap:10px}
+.col{position:absolute;background:var(--bg2);border-radius:20px;border:1.5px solid transparent}
+.col.on{border-color:var(--acc);background:#F0F7F4}
+.col h6{position:absolute;left:18px;top:14px;font-size:19px;font-weight:600}
+.col h6 small{font-weight:400;color:var(--ink3);font-size:15px;margin-left:8px}
+.col .hint{position:absolute;left:18px;top:42px;font-size:14px;color:var(--ink3)}
+.kc{position:absolute;width:375px;height:92px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 14px;box-shadow:0 1px 2px rgba(14,42,44,.05);display:flex;flex-direction:column;gap:7px}
+.kc .t{font-size:16px;font-weight:600;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kc .m{display:flex;gap:10px;align-items:center;font-size:14px;color:var(--ink3)}
+.kc.new{border:2px solid var(--acc);box-shadow:0 18px 30px -18px rgba(18,128,107,.6)}
+.kc.hot .due{color:var(--cor);font-weight:600}
+.kc.done .t{color:var(--ink3);text-decoration:line-through;text-decoration-color:var(--line)}
+.kc .ok{display:none}
+.kc.on .ok{display:inline-flex}
+.kc.on .btnr{display:none}
+
+/* finanzas */
+.hrow{display:grid;grid-template-columns:140px 1fr 130px;gap:14px;align-items:center;height:52px;font-size:19px}
+.hrow .l{color:var(--ink2);font-weight:500}
+.hrow .v{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.hb{height:14px;border-radius:0 6px 6px 0;background:var(--bg3);overflow:hidden;position:relative}
+.hb span{position:absolute;left:0;top:0;bottom:0;border-radius:0 6px 6px 0;display:block}
+.hb .in{background:var(--acc)} .hb .out{background:var(--cor)}
+.netc{position:absolute;width:280px;height:280px;border-radius:50%;border:2px solid var(--acc);box-shadow:0 0 0 14px var(--accbg);background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.netc .v{font-family:var(--disp);font-size:46px;font-weight:500;letter-spacing:-.02em;line-height:1.05}
+.bud{margin-bottom:16px}
+.bud .top{display:flex;justify-content:space-between;font-size:16px;margin-bottom:6px}
+.bud .top b{font-weight:600}
+.bud .tr{height:10px;background:var(--bg3);border-radius:5px;position:relative}
+.bud .tr span{position:absolute;left:0;top:0;bottom:0;border-radius:5px;background:var(--ink2);display:block}
+.bud .tr i{position:absolute;top:-4px;bottom:-4px;width:3px;background:var(--ink);border-radius:2px}
+
+/* asistente */
+.msg{position:absolute;border-radius:18px;padding:14px 18px;font-size:19px;line-height:1.45}
+.msg.me{background:var(--ink);color:#fff;border-bottom-right-radius:5px;font-weight:500}
+.msg.ai{background:#fff;border:1px solid var(--line);border-bottom-left-radius:5px}
+.msg ul{list-style:none;margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.msg li{display:flex;gap:10px;font-size:18px}
+.msg li::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--acc);margin-top:10px;flex:none}
+.msg .src{display:flex;gap:8px;margin-top:12px}
+.can{display:flex;flex-direction:column;gap:12px;margin-top:10px}
+.can div{display:flex;gap:12px;align-items:center;font-size:18px;color:var(--ink2)}
+.can .ic{color:var(--acc)}
+.can.no .ic{color:var(--cor)}
+.draft{position:absolute;border:1px solid var(--line);border-radius:16px;background:var(--bg2);overflow:hidden}
+.draft .hd{padding:12px 18px;border-bottom:1px solid var(--line);font-size:16px;line-height:1.6;background:#fff}
+.draft pre{font-family:var(--ui);font-size:18px;line-height:1.55;white-space:pre-wrap;padding:16px 18px;color:var(--ink);height:262px}
+.draft .ft{position:absolute;left:0;right:0;bottom:0;padding:12px 18px;border-top:1px solid var(--line);background:#fff;display:flex;gap:10px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;border-radius:10px;font-weight:600;font-size:15px;border:1px solid #C5D3CF;background:#fff;color:var(--ink);white-space:nowrap}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.sent{display:none}
+.on>.btn.sent{display:inline-flex}
+.on>.btn.tosend{display:none}
+
+/* operación */
+.op{position:absolute;top:260px;width:525px;height:560px;padding:24px 26px}
+.op h4{font-size:22px;font-weight:600;display:flex;align-items:center;gap:10px}
+.steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:18px 0}
+.steps4 div{padding:10px 8px;border-radius:10px;background:var(--bg3);font-size:14px;font-weight:600;color:var(--ink3);text-align:center}
+.steps4 div.on{background:var(--accbg);color:var(--accdk)}
+.kv{display:grid;grid-template-columns:auto auto;justify-content:space-between;gap:10px 14px;font-size:18px}
+.kv dt{color:var(--ink3)} .kv dd{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.path{font-family:var(--mono);font-size:14px;color:var(--ink2);background:var(--bg2);padding:9px 12px;border-radius:9px;margin-top:16px}
+.mini{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:16px}
+.mini span{height:46px;border-radius:9px;background:var(--bg2);font-size:14px;font-weight:600;color:var(--ink2);padding:5px 7px;position:relative}
+.mini span.b{background:none}
+.mini span.today{border:2px solid var(--cor);color:var(--cor);background:#fff}
+.mini span.x{background:var(--bg2)}
+.mini span.x.on{background:var(--cor);color:#fff}
+.mini .w{font-family:var(--mono);font-size:11px;color:var(--ink3);height:auto;background:none;text-align:center;letter-spacing:.06em}
+.learn{display:flex;gap:12px;align-items:flex-start;font-size:16px;padding:9px 0;border-top:1px solid var(--line2)}
+.learn .ic{color:var(--acc);width:20px;height:20px;margin-top:2px}
+.learn small{display:block;color:var(--ink3);font-size:14px}
+.chk{display:flex;align-items:center;gap:12px;font-size:18px;height:46px;border-top:1px solid var(--line2)}
+.chk:first-of-type{border-top:0}
+.chk i{width:26px;height:26px;border-radius:8px;border:2px solid #C5D3CF;display:grid;place-items:center;flex:none;color:transparent}
+.chk i svg{width:15px;height:15px;stroke:currentColor;stroke-width:3.2;fill:none}
+.chk.on i{background:var(--acc);border-color:var(--acc);color:#fff}
+
+/* seguridad */
+.loglines div{display:flex;gap:12px;font-size:16px;padding:10px 0;border-top:1px solid var(--line2);line-height:1.35}
+.loglines div:first-child{border-top:0}
+.loglines time{font-family:var(--mono);font-size:14px;color:var(--ink3);width:52px;flex:none;padding-top:2px}
+.perm{display:grid;grid-template-columns:1fr auto;align-items:center;height:56px;border-top:1px solid var(--line2);font-size:18px}
+.perm:first-of-type{border-top:0}
+
+/* poc */
+.laptop{position:absolute;left:140px;top:226px;width:1080px}
+.laptop .lid{background:#0E2A2C;border-radius:22px 22px 0 0;padding:16px 16px 18px}
+.laptop .lid .sc2{width:1048px;height:655px;border-radius:6px;overflow:hidden;position:relative;background:#fff}
+.laptop .base{height:20px;background:linear-gradient(#CBD6D3,#AEBDB9);border-radius:0 0 18px 18px;margin:0 -40px}
+.shotimg{position:absolute;left:0;top:0;width:100%;height:auto;display:block}
+
+/* fases */
+.ph{position:absolute;top:350px;width:525px;height:450px;padding:26px 28px}
+.ph.now{border:2px solid var(--acc);box-shadow:0 26px 50px -28px rgba(18,128,107,.55)}
+.ph .tg{display:flex;justify-content:space-between;font-family:var(--mono);font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.ph h3{font-family:var(--disp);font-size:40px;font-weight:500;margin-top:12px;letter-spacing:-.01em}
+.ph .d{font-size:18px;color:var(--ink2);margin-top:6px}
+.ph ul{list-style:none;margin-top:16px;display:flex;flex-direction:column;gap:9px}
+.ph li{display:flex;gap:10px;font-size:18px;color:var(--ink2)}
+.ph li .ic{color:var(--acc);width:20px;height:20px;margin-top:2px}
+
+/* oferta */
+.who{position:absolute;padding:24px 26px;display:flex;gap:20px;align-items:flex-start}
+.who .av{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:24px;flex:none}
+.who b{display:block;font-size:27px;font-weight:600;letter-spacing:-.01em}
+.who p{font-size:18px;color:var(--ink2);margin-top:4px;line-height:1.35}
+.who .cs{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.prod{position:absolute;left:1180px;width:600px;height:130px;padding:20px 24px;display:flex;align-items:center;gap:18px}
+.prod b{display:block;font-size:26px;font-weight:600}
+.prod p{font-size:17px;color:var(--ink2);margin-top:3px}
+.fword{font-weight:700;color:#0064BF;letter-spacing:-.02em;line-height:1;font-size:21px;width:66px;height:66px;border-radius:16px;background:#E8F2FC;display:grid;place-items:center}
+.dash{width:62px;height:62px;border-radius:50%;border:2.5px dashed var(--acc2);color:var(--accdk);display:grid;place-items:center;font-weight:700;font-size:15px}
+
+/* cierre */
+#s-cierre .q{font-family:var(--disp);font-size:84px;font-weight:500;letter-spacing:-.025em;color:var(--acc)}
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <linearGradient id="gh" x1="0" x2="1"><stop offset="0" stop-color="#0A5E4F"/><stop offset="1" stop-color="#2FA88A"/></linearGradient>
+      <linearGradient id="gvI" gradientUnits="userSpaceOnUse" x1="0" y1="305" x2="0" y2="725"><stop offset="0" stop-color="#0A5E4F"/><stop offset="1" stop-color="#2FA88A"/></linearGradient>
+      <linearGradient id="ga" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#12806B" stop-opacity=".22"/><stop offset="1" stop-color="#12806B" stop-opacity="0"/></linearGradient>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+      <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+      <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
+      <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+      <symbol id="i-board" viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="11" rx="1.5"/><rect x="17" y="4" width="4" height="7" rx="1.5"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+      <symbol id="i-step" viewBox="0 0 24 24"><path d="M4 18h5v-5h5V8h6"/><path d="M16 4h4v4"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></symbol>
+      <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/></symbol>
+      <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M5 7l-3 7h6zM19 7l-3 7h6z"/></symbol>
+      <symbol id="i-calc" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h2M12 12h2M8 16h2M12 16h2"/></symbol>
+      <symbol id="i-bank" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6"/><path d="M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18"/></symbol>
+      <symbol id="i-umb" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 18 0z"/><path d="M12 12v6a2 2 0 0 0 4 0"/></symbol>
+      <symbol id="i-badge" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="13" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M8.5 17a3.5 3.5 0 0 1 7 0M9 6V4h6v2"/></symbol>
+      <symbol id="i-hammer" viewBox="0 0 24 24"><path d="M14 4l6 6-3 3-6-6z"/><path d="M11 7l-8 8 3 3 8-8"/></symbol>
+      <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></symbol>
+      <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M17 2l3 3-3 3"/><path d="M4 11V9a4 4 0 0 1 4-4h12"/><path d="M7 22l-3-3 3-3"/><path d="M20 13v2a4 4 0 0 1-4 4H4"/></symbol>
+      <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-2.5-6.5z"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.5l9.5 16.5h-19z"/><path d="M12 10v4.5M12 17.5h.01"/></symbol>
+      <symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0z"/><path d="M12 17v4"/></symbol>
+      <symbol id="i-code" viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></symbol>
+      <symbol id="mark" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#0E2A2C"/><path d="M4.5 24 L12.5 11 L16.5 17 L19.5 13 L27.5 24 Z" fill="#12806B"/><path d="M12.5 11 L15 15 L13.4 16.1 L12.2 14.7 L10.6 15.6 Z" fill="#fff"/></symbol>
+    </defs>
+  </svg>
+  <div class="bgdots"></div>
+  <div class="blob b1" id="blob1"></div>
+  <div class="blob b2" id="blob2"></div>
+
+  <!-- =============== INTRO =============== -->
+  <section class="sc" id="s-intro">
+    <svg class="abs" style="left:0;top:0" width="1920" height="1080">
+      <path data-in="@0.15" data-fx="draw" data-dur="1.6" d="M-40 905 C 360 905, 560 990, 900 930 S 1180 860, 1180 725" stroke="url(#gh)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path data-in="@1.2" data-fx="draw" data-dur="2.4" d="M1190 305 L1190 725" stroke="url(#gvI)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <circle cx="1190" cy="325" r="9" fill="#fff" stroke="#0A5E4F" stroke-width="4" data-in="@0.6" data-fx="pop"/>
+      <circle cx="1190" cy="515" r="9" fill="#fff" stroke="#12806B" stroke-width="4" data-in="v01.propuesta+0.2" data-fx="pop"/>
+      <circle cx="1190" cy="705" r="9" fill="#fff" stroke="#2FA88A" stroke-width="4" data-in="v01.jc-0.1" data-fx="pop"/>
+    </svg>
+    <div class="abs" style="left:140px;top:200px;width:1000px">
+      <div class="eyebrow" data-in="@0.35">Prueba de concepto · CooWeb</div>
+      <div class="h1" style="margin-top:26px">
+        <div data-in="@0.7">Todo lo que JC lleva,</div>
+        <div data-in="@1.0">en un solo <span class="grad">lugar.</span></div>
+      </div>
+      <p class="lead" style="margin-top:34px;max-width:880px;font-size:30px" data-in="v01.entendimos-0.2">Nuestro entendimiento de la propuesta de Thraive para el family office de JC, convertido en algo que se puede ver.</p>
+      <div style="display:flex;align-items:center;gap:16px;margin-top:40px" data-in="v01.tiago-0.1">
+        <div class="avatar">TD</div>
+        <div style="font-size:24px;color:var(--ink2)">Preparado para <b style="color:var(--ink);font-weight:600">Thiago Da Cunha</b></div>
+        <span class="chip acc" style="margin-left:10px" data-in="v01.segunda-0.1" data-fx="pop">Segunda propuesta · después de Farmaconal</span>
+      </div>
+    </div>
+    <div class="abs card lock" style="left:1220px;top:250px" data-in="@0.55" data-fx="left">
+      <img src="assets/cooweb-logo.png" style="height:60px">
+      <div><div class="lt">Construye</div><div class="ld">La prueba de concepto</div></div>
+    </div>
+    <div class="abs card lock" style="left:1220px;top:440px" data-in="v01.propuesta+0.2" data-fx="left">
+      <img src="assets/thraive-wordmark.png" alt="ThrAIve" class="thlogo" style="height:60px">
+      <div><div class="lt">Propone</div><div class="ld">The Family Office OS</div></div>
+    </div>
+    <div class="abs card lock" style="left:1220px;top:630px" data-in="v01.jc-0.1" data-fx="left">
+      <svg class="mark" width="66" height="66"><use href="#mark"/></svg>
+      <div class="cword">Cumbre<small>FAMILY OFFICE · JC</small></div>
+      <div style="margin-left:auto;text-align:right"><div class="lt">Cliente</div><div class="ld">Single-family office</div></div>
+    </div>
+    <div class="abs" style="left:140px;top:850px" data-in="v01.preferimos"><span class="chip amber"><span class="d"></span>Nombres y cifras ficticios · ejemplos para explicar la propuesta</span></div>
+  </section>
+
+  <!-- =============== CONTEXTO =============== -->
+  <section class="sc" id="s-contexto">
+    <div class="abs" style="left:140px;top:140px">
+      <div class="eyebrow" data-in="contexto+0.1">El cliente</div>
+    </div>
+    <div class="abs" style="left:140px;top:200px;display:flex;align-items:center;gap:34px">
+      <div style="width:150px;height:150px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-family:var(--disp);font-size:62px;font-weight:500" data-in="v02.jc-0.2" data-fx="pop">JC</div>
+      <div>
+        <div class="h2" data-in="v02.casi-0.2">Casi en solitario.</div>
+        <div class="lead" style="margin-top:10px;max-width:760px" data-in="v02.finanzas-0.2">Lleva las finanzas y los proyectos personales de varios peloteros, y de sus familias.</div>
+      </div>
+    </div>
+    <div class="abs card" style="left:1240px;top:170px;width:540px;padding:26px 30px" data-in="v02.proyectos" data-fx="left">
+      <div class="mlabel">En sus palabras · JC</div>
+      <div class="quote" style="margin-top:12px">“This helps me a lot, especially working solo.”</div>
+      <div style="font-size:16px;color:var(--ink3);margin-top:12px">Cita de la propuesta de Thraive</div>
+    </div>
+    <div class="abs card ath" style="left:140px;top:450px" data-in="v02.varios-0.1">
+      <div style="display:flex;gap:16px;align-items:center"><div class="mono2">AR</div><div><b>Adrián Reyes</b><p>Lanzador derecho · 8.ª temporada</p></div></div>
+      <div style="margin-top:auto"><span class="chip">Reyes Family Trust</span></div>
+    </div>
+    <div class="abs card ath" style="left:600px;top:450px" data-in="v02.peloteros-0.2">
+      <div style="display:flex;gap:16px;align-items:center"><div class="mono2">TA</div><div><b>Tomás Almánzar</b><p>Campocorto · 4.ª temporada</p></div></div>
+      <div style="margin-top:auto"><span class="chip">Almánzar Holdings LLC</span></div>
+    </div>
+    <div class="abs card ath" style="left:1060px;top:450px" data-in="v02.peloteros+0.15">
+      <div style="display:flex;gap:16px;align-items:center"><div class="mono2">EB</div><div><b>Elías Batista</b><p>Jardinero central · novato</p></div></div>
+      <div style="margin-top:auto"><span class="chip">Hogar Batista</span></div>
+    </div>
+    <div class="abs" style="left:1520px;top:520px;width:260px;font-size:18px;color:var(--ink3);line-height:1.4" data-in="v02.peloteros+0.5">Clientes de ejemplo.<br>Cada uno, un hogar con sus finanzas, su gente y sus pendientes.</div>
+    <div class="abs" style="left:140px;top:700px;display:flex;gap:12px;align-items:center">
+      <span style="font-size:20px;color:var(--ink3);margin-right:6px" data-in="v02.oficina-0.2">Una oficina boutique</span>
+      <span class="chip acc" data-in="v02.pequena-0.1" data-fx="pop">Pequeña a propósito</span>
+      <span class="chip acc" data-in="v02.premium-0.1" data-fx="pop">Premium por diseño</span>
+      <span class="chip" data-in="v02.diseno" data-fx="pop">Confidencialidad extrema</span>
+      <span class="chip" data-in="v02.diseno+0.25" data-fx="pop">Cada cliente, conocido</span>
+    </div>
+  </section>
+
+  <!-- =============== RETO =============== -->
+  <section class="sc" id="s-reto">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow cor" data-in="v03.pero-0.2">El reto · hoy</div>
+      <div class="h2" style="margin-top:14px" data-in="v03.es#2-0.2">Sostenerlo <span style="color:var(--cor)">todo junto</span></div>
+    </div>
+    <svg class="abs" style="left:0;top:0" width="1920" height="1080" id="ringSvg">
+      <line x1="700" y1="335" x2="700" y2="585" stroke="#E7D6CE" stroke-width="2" stroke-dasharray="5 6" data-in="v04.clientes" data-fx="fade" data-dur="0.4"/>
+      <line x1="983" y1="408" x2="700" y2="585" stroke="#E7D6CE" stroke-width="2" stroke-dasharray="5 6" data-in="v04.familias" data-fx="fade" data-dur="0.4"/>
+      <line x1="1100" y1="585" x2="700" y2="585" stroke="#E7D6CE" stroke-width="2" stroke-dasharray="5 6" data-in="v04.abogados" data-fx="fade" data-dur="0.4"/>
+      <line x1="983" y1="762" x2="700" y2="585" stroke="#E7D6CE" stroke-width="2" stroke-dasharray="5 6" data-in="v04.contadores" data-fx="fade" data-dur="0.4"/>
+      <line x1="700" y1="835" x2="700" y2="585" stroke="#E7D6CE" stroke-width="2" stroke-dasharray="5 6" data-in="v04.bancos" data-fx="fade" data-dur="0.4"/>
+      <line x1="417" y1="762" x2="700" y2="585" stroke="#E7D6CE" stroke-width="2" stroke-dasharray="5 6" data-in="v04.aseguradoras" data-fx="fade" data-dur="0.4"/>
+      <line x1="300" y1="585" x2="700" y2="585" stroke="#E7D6CE" stroke-width="2" stroke-dasharray="5 6" data-in="v04.agentes" data-fx="fade" data-dur="0.4"/>
+      <line x1="417" y1="408" x2="700" y2="585" stroke="#E7D6CE" stroke-width="2" stroke-dasharray="5 6" data-in="v04.contratistas" data-fx="fade" data-dur="0.4"/>
+    </svg>
+    <div id="ring">
+      <div class="party" style="left:700px;top:335px" data-in="v04.clientes-0.1" data-fx="pop"><svg class="ic"><use href="#i-users"/></svg>Clientes</div>
+      <div class="party" style="left:983px;top:408px" data-in="v04.familias-0.1" data-fx="pop"><svg class="ic"><use href="#i-home"/></svg>Familias</div>
+      <div class="party" style="left:1100px;top:585px" data-in="v04.abogados-0.1" data-fx="pop"><svg class="ic"><use href="#i-scale"/></svg>Abogados</div>
+      <div class="party" style="left:983px;top:762px" data-in="v04.contadores-0.1" data-fx="pop"><svg class="ic"><use href="#i-calc"/></svg>Contadores</div>
+      <div class="party" style="left:700px;top:835px" data-in="v04.bancos-0.1" data-fx="pop"><svg class="ic"><use href="#i-bank"/></svg>Bancos</div>
+      <div class="party" style="left:417px;top:762px" data-in="v04.aseguradoras-0.1" data-fx="pop"><svg class="ic"><use href="#i-umb"/></svg>Aseguradoras</div>
+      <div class="party" style="left:300px;top:585px" data-in="v04.agentes-0.1" data-fx="pop"><svg class="ic"><use href="#i-badge"/></svg>Agentes</div>
+      <div class="party" style="left:417px;top:408px" data-in="v04.contratistas-0.1" data-fx="pop"><svg class="ic"><use href="#i-hammer"/></svg>Contratistas</div>
+    </div>
+    <div class="abs" style="left:700px;top:585px;width:0;height:0" data-in="v03.sostenerlo" data-fx="pop">
+      <div id="jcHalo"></div>
+      <div id="jcNode"><div><b>JC</b><small>LA PRINCIPAL</small></div></div>
+    </div>
+    <div class="abs" style="left:560px;top:680px;width:280px;text-align:center" data-in="v04.persona-0.1" data-fx="pop"><span class="chip cor">Todo pasa por una persona</span></div>
+    <!-- notificaciones -->
+    <div class="abs card" style="left:1270px;top:300px;width:520px;overflow:hidden" data-in="v04.decenas-0.3" data-fx="left" data-out="v05.un" data-outop="0">
+      <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line);background:var(--bg2)">
+        <b style="font-size:19px">Hoy, antes de las 8:00</b>
+        <span class="pill cor" style="margin-left:auto"><span data-count="0:47" data-in="v04.decenas" data-dur="2.4">0</span>&nbsp;sin atender</span>
+      </div>
+      <div class="notif" data-in="v04.decenas+0.1"><span class="ap" style="background:var(--wa)"><svg class="ic"><use href="#i-chat"/></svg></span><div><b>Lisa Moreno, CPA</b><span>¿Te llegó lo del K-1 de Almánzar?</span></div><time>07:58</time></div>
+      <div class="notif" data-in="v04.hilos+0.1"><span class="ap" style="background:#3F6E8C"><svg class="ic"><use href="#i-mail"/></svg></span><div><b>Harbor Private Bank</b><span>Transferencia pendiente de aprobación</span></div><time>07:51</time></div>
+      <div class="notif" data-in="v04.abiertos+0.1"><span class="ap" style="background:var(--cor)"><svg class="ic"><use href="#i-phone"/></svg></span><div><b>Diamond Line Sports</b><span>Llamada perdida · 2</span></div><time>07:44</time></div>
+      <div class="notif" data-in="v04.todos"><span class="ap" style="background:var(--wa)"><svg class="ic"><use href="#i-chat"/></svg></span><div><b>Costa Builders</b><span>Factura n.º 2 de la villa</span></div><time>07:30</time></div>
+      <div class="notif" data-in="v04.pasan"><span class="ap" style="background:#3F6E8C"><svg class="ic"><use href="#i-mail"/></svg></span><div><b>Meridian Insurance</b><span>Cotización de renovación · Miami</span></div><time>07:12</time></div>
+    </div>
+    <div class="fail" style="top:300px" data-in="v05.olvida-0.3" data-fx="left"><div class="ico"><svg class="ic"><use href="#i-clock"/></svg></div><div><h5>Un pendiente se olvida</h5><p>K-1 del fideicomiso Reyes · 14 días sin seguimiento</p></div></div>
+    <div class="fail" style="top:450px" data-in="v05.aparece-0.3" data-fx="left"><div class="ico"><svg class="ic"><use href="#i-search"/></svg></div><div><h5>Un documento no aparece</h5><p>¿Dónde quedó la póliza de la residencia de Miami?</p></div></div>
+    <div class="fail" style="top:600px" data-in="v05.perseguir-0.5" data-fx="left"><div class="ico"><svg class="ic"><use href="#i-repeat"/></svg></div><div><h5>El día se va en perseguir</h5><p>Llamadas, correos y recordatorios, a mano</p></div></div>
+  </section>
+
+  <!-- =============== PIDE =============== -->
+  <section class="sc" id="s-pide">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="v06.lo-0.2">Lo que pidió JC</div>
+      <div class="h2" style="margin-top:14px" data-in="v06.seis-0.3">Seis ideas, una y otra vez</div>
+    </div>
+    <div class="abs" style="left:1180px;top:140px;width:600px;font-family:var(--disp);font-style:italic;font-size:24px;line-height:1.35;color:var(--ink2)" data-in="v06.ideas">“The challenge isn't doing the work. It's having a system to organize, prioritize and follow up.” <span style="font-style:normal;font-family:var(--ui);font-size:16px;color:var(--ink3)">· JC</span></div>
+    <div class="idea card" style="left:140px;top:300px" data-in="v06.lugar-0.35" data-on="v06.lugar-0.35"><div style="display:flex;justify-content:space-between"><div class="ico"><svg class="ic"><use href="#i-layers"/></svg></div><span class="n">01</span></div><div class="t">Un solo lugar</div><div class="d">Cada cliente, documento y conversación, en una sola casa.</div></div>
+    <div class="idea card" style="left:698px;top:300px" data-in="v06.encontrarlo-0.3" data-on="v06.encontrarlo-0.3"><div style="display:flex;justify-content:space-between"><div class="ico"><svg class="ic"><use href="#i-search"/></svg></div><span class="n">02</span></div><div class="t">Encontrarlo al instante</div><div class="d">Cualquier documento o conversación, en segundos.</div></div>
+    <div class="idea card" style="left:1256px;top:300px" data-in="v06.ningun-0.3" data-on="v06.ningun-0.3"><div style="display:flex;justify-content:space-between"><div class="ico"><svg class="ic"><use href="#i-board"/></svg></div><span class="n">03</span></div><div class="t">Ningún seguimiento perdido</div><div class="d">Nada pendiente con un tercero se escapa.</div></div>
+    <div class="idea card" style="left:140px;top:580px" data-in="v06.saber-0.3" data-on="v06.saber-0.3"><div style="display:flex;justify-content:space-between"><div class="ico"><svg class="ic"><use href="#i-sun"/></svg></div><span class="n">04</span></div><div class="t">Lo urgente, primero</div><div class="d">Lo de hoy, separado de lo que espera a otros.</div></div>
+    <div class="idea card" style="left:698px;top:580px" data-in="v06.ir-0.3" data-on="v06.ir-0.3"><div style="display:flex;justify-content:space-between"><div class="ico"><svg class="ic"><use href="#i-step"/></svg></div><span class="n">05</span></div><div class="t">Un paso adelante</div><div class="d">Recordatorios y resúmenes, sin pedirlos.</div></div>
+    <div class="idea card" style="left:1256px;top:580px" data-in="v06.desde-0.3" data-on="v06.desde-0.3"><div style="display:flex;justify-content:space-between"><div class="ico"><svg class="ic"><use href="#i-phone"/></svg></div><span class="n">06</span></div><div class="t">Desde el teléfono</div><div class="d">Capturar y consultar desde cualquier lugar.</div></div>
+  </section>
+
+  <!-- =============== SISTEMA =============== -->
+  <section class="sc" id="s-sistema">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="sistema+0.1"><img src="assets/thraive-wordmark.png" alt="ThrAIve" class="thlogo" style="height:30px;border-radius:7px;box-shadow:none">La propuesta · Thraive</div>
+      <div class="h2" style="margin-top:14px" data-in="v07.sistema-0.3">Un sistema. Dos capas. <span class="grad">Una puerta.</span></div>
+    </div>
+    <div class="layer card" style="top:282px;height:84px" data-in="v07.chat-0.3">
+      <span class="lbl">Acceso · chat primero</span>
+      <span class="chip" style="margin-left:auto"><svg class="ic" style="width:18px;height:18px"><use href="#i-phone"/></svg>App Cumbre</span>
+      <span class="chip green"><svg class="ic" style="width:18px;height:18px"><use href="#i-chat"/></svg>WhatsApp</span>
+      <span class="chip">Escritorio</span>
+      <span style="font-family:var(--disp);font-style:italic;font-size:22px;color:var(--ink2);margin-left:10px">una sola puerta</span>
+    </div>
+    <div class="arr" style="top:370px" data-in="v07.entrada">↓</div>
+    <div class="layer" style="top:404px;height:82px;background:#F0F7F4;border:2px solid var(--acc)" data-in="v07.entrada">
+      <span style="width:46px;height:46px;border-radius:13px;background:var(--acc);color:#fff;display:grid;place-items:center"><svg class="ic"><use href="#i-spark"/></svg></span>
+      <div><b style="font-size:22px">Asistente de IA de solo lectura</b><div style="font-size:17px;color:var(--ink2)">Lee todo · responde en lenguaje natural · nunca cambia nada</div></div>
+      <span class="ro" style="margin-left:auto"><svg class="ic" style="width:16px;height:16px"><use href="#i-eye"/></svg>Solo lectura</span>
+    </div>
+    <div class="arr" style="top:494px" data-in="v07.capas-0.4">↓</div>
+    <div class="box2 card" style="left:140px" data-in="v07.operacion-0.3">
+      <div class="lbl" style="color:var(--acc)">Capa operativa · hecha para JC</div>
+      <div class="cs"><span class="chip acc">Centro financiero</span><span class="chip acc">Seguimientos</span><span class="chip acc">Calendario</span><span class="chip acc">KYC de terceros</span><span class="chip acc">Lectura de documentos</span><span class="chip">Conectividad bancaria</span></div>
+    </div>
+    <div class="box2 card" style="left:970px" data-in="v07.patrimonio-0.3">
+      <div class="lbl" style="color:var(--cor)">Backbone patrimonial · plataforma probada</div>
+      <div class="cs"><span class="chip cor">Consolidación</span><span class="chip cor">Reportes</span><span class="chip cor">Documentos</span><span class="chip cor">Cada activo en una foto</span></div>
+      <div style="font-size:17px;color:var(--ink3);margin-top:16px">Aleta · se conecta en la fase 2</div>
+    </div>
+    <div class="layer" style="top:780px;height:76px;background:var(--ink);color:#fff" data-in="v07.seguridad-0.3">
+      <span class="lbl" style="color:#A9C9C1">Base · seguridad y datos privados</span>
+      <span style="margin-left:auto;font-size:19px;letter-spacing:.02em">Cifrado · MFA · Instancia privada · Acceso granular · Trazabilidad</span>
+    </div>
+  </section>
+
+  <!-- =============== HOY =============== -->
+  <section class="sc" id="s-hoy">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="hoy+0.1">Cada mañana</div>
+    </div>
+    <div class="abs card win" style="left:140px;top:190px;width:1640px;height:690px" data-in="v08.cada-0.2">
+      <div class="bar"><i></i><i></i><i></i><span>Cumbre · Hoy</span><span style="margin-left:auto">mar, 28 jul 2026 · día de demo</span></div>
+      <div class="abs" style="left:34px;top:76px;width:1060px">
+        <div style="display:flex;gap:12px;align-items:center"><span class="mlabel">Resumen de la mañana · 06:30</span><span class="ro"><svg class="ic" style="width:15px;height:15px"><use href="#i-eye"/></svg>Solo lectura</span></div>
+        <div class="disp" style="font-size:58px;margin-top:10px" data-in="v08.manana-0.2">Buenos días, JC.</div>
+        <p style="font-family:var(--disp);font-size:24px;line-height:1.45;color:var(--ink2);margin-top:10px" data-in="v08.abre-0.2">Una cosa te necesita hoy: <b style="color:var(--ink);font-weight:600">aprobar la transferencia de $250,000 a Solaris Capital Fund II</b>. El jueves sale la distribución del fideicomiso Reyes ($40,000).</p>
+        <div class="pulse" style="margin-top:18px" data-in="v08.cumbre-0.1"><span class="hot"><b>3</b>te necesitan</span><span><b>5</b>esperando a terceros</span><span><b>2</b>por clasificar</span><span><b>+$1.49M</b>neto de julio</span></div>
+      </div>
+      <div class="panel" style="left:34px;top:405px;width:770px;height:250px" data-in="v08.urgente-0.2">
+        <h4>Lo que te necesita ahora</h4>
+        <div class="trow" data-on="v08.aprobar-0.1"><div><div class="tt">Aprobar transferencia · $250,000 a Solaris Capital Fund II</div><div class="mt"><span class="cli"><i>AR</i>Reyes</span><span style="color:var(--cor);font-weight:600">Hoy</span></div></div><span class="btn">Redactar aprobación</span></div>
+        <div class="trow"><div><div class="tt">Aprobar el presupuesto del hogar de agosto</div><div class="mt"><span class="cli"><i>EB</i>Batista</span><span>jue, 30 jul</span></div></div></div>
+        <div class="trow"><div><div class="tt">Revisar el borrador del K-1 · Almánzar Holdings</div><div class="mt"><span class="cli"><i>TA</i>Almánzar</span><span>mié, 5 ago</span></div></div></div>
+      </div>
+      <div class="panel" style="left:834px;top:405px;width:770px;height:250px" data-in="v08.espera-0.2">
+        <h4>Esperando a terceros<small>5</small></h4>
+        <div class="trow acc" data-on="v08.k-0.1"><div><div class="tt">K-1 2025 · Reyes Family Trust</div><div class="mt"><span class="cli"><i>AR</i>Reyes</span><span>Lisa Moreno, CPA · hace 14 días</span></div></div><span class="btn">Redactar recordatorio</span></div>
+        <div class="trow"><div><div class="tt">Enmienda del fideicomiso · fiduciario sucesor</div><div class="mt"><span class="cli"><i>AR</i>Reyes</span><span>Ortega &amp; Asociados · hace 8 días</span></div></div></div>
+        <div class="trow"><div><div class="tt">Renovación del seguro de hogar · Miami</div><div class="mt"><span class="cli"><i>AR</i>Reyes</span><span>Meridian Insurance · hace 5 días</span></div></div></div>
+      </div>
+    </div>
+    <div class="callout" style="left:1300px;top:270px;border:2px solid var(--cor)" data-in="v08.doscientos-0.2" data-fx="pop">
+      <div class="mlabel" style="color:var(--cor)">Aprobar hoy</div>
+      <div class="v num">$<span data-count="0:250000" data-in="v08.doscientos" data-dur="1.4">0</span></div>
+      <div class="l">Capital call · Solaris Capital Fund II</div>
+    </div>
+    <div class="callout" style="left:1300px;top:440px;border:2px solid var(--acc)" data-in="v08.catorce-0.3" data-fx="pop">
+      <div class="mlabel" style="color:var(--acc)">Esperando a la contadora</div>
+      <div class="v num"><span data-count="0:14" data-in="v08.catorce-0.2" data-dur="0.9">0</span> días</div>
+      <div class="l">K-1 · Reyes Family Trust</div>
+    </div>
+  </section>
+
+  <!-- =============== CAPTURA =============== -->
+  <section class="sc" id="s-captura">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="captura+0.1">Captura por chat</div>
+      <div class="h2" style="margin-top:14px" data-in="v09.capturar-0.2">Escribir como se habla</div>
+    </div>
+    <div class="phone" style="left:160px;top:250px;width:360px;height:640px" data-in="v09.escribir-0.2" data-fx="up">
+      <div class="scr">
+        <div class="wah"><svg width="36" height="36"><use href="#mark"/></svg><div><b>Cumbre OS</b><small>instancia privada · cifrado</small></div></div>
+        <div class="wab">
+          <div class="bub bot">Hola JC. Mándame lo que sea: una tarea, una idea, un gasto. Lo archivo donde va.<small>07:58</small></div>
+          <div class="bub me" data-in="v09.mensaje-0.25" data-fx="pop"><span data-type="v09.mensaje-0.1" data-tdur="1.5">Lisa todavía nos debe el K-1 de Almánzar, dale seguimiento el próximo martes</span><small>08:02 ✓✓</small></div>
+          <div class="bub bot" data-in="v09.cumbre-0.1" data-fx="pop">Listo. Lo puse en el tablero:
+            <div class="ccard"><b style="font-size:14px">Lisa todavía nos debe el K-1 de Almánzar</b><div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap"><span class="pill acc" style="font-size:12px">Esperando a terceros</span><span class="pill mute" style="font-size:12px">mar, 4 ago</span></div></div>
+            <small>08:02</small></div>
+        </div>
+      </div>
+    </div>
+    <svg class="abs" style="left:0;top:0" width="1920" height="1080">
+      <path d="M530 560 C 580 560, 590 360, 640 360" stroke="#BFD9D1" stroke-width="2.5" fill="none" stroke-dasharray="6 6" data-in="v09.cliente-0.4" data-fx="fade" data-dur="0.4"/>
+      <path d="M530 560 C 580 560, 590 480, 640 480" stroke="#BFD9D1" stroke-width="2.5" fill="none" stroke-dasharray="6 6" data-in="v09.fecha-0.4" data-fx="fade" data-dur="0.4"/>
+      <path d="M530 560 C 580 560, 590 600, 640 600" stroke="#BFD9D1" stroke-width="2.5" fill="none" stroke-dasharray="6 6" data-in="v09.quien-0.4" data-fx="fade" data-dur="0.4"/>
+      <path d="M530 560 C 580 560, 590 720, 640 720" stroke="#BFD9D1" stroke-width="2.5" fill="none" stroke-dasharray="6 6" data-in="v09.pelota" data-fx="fade" data-dur="0.4"/>
+      <path d="M1115 540 L1175 540" stroke="#12806B" stroke-width="3" fill="none" stroke-linecap="round" data-in="v09.sin-0.6" data-fx="draw" data-dur="0.4"/>
+    </svg>
+    <div class="parse card" style="top:316px" data-in="v09.cliente-0.3" data-fx="left"><span class="k">Cliente</span><span class="v"><span class="cli" style="font-size:22px;color:var(--ink)"><i>TA</i>Almánzar Holdings</span></span></div>
+    <div class="parse card" style="top:436px" data-in="v09.fecha-0.3" data-fx="left"><span class="k">Fecha</span><span class="v"><svg class="ic"><use href="#i-clock"/></svg>Martes, 4 de agosto</span></div>
+    <div class="parse card" style="top:556px" data-in="v09.quien-0.3" data-fx="left"><span class="k">Quién tiene la pelota</span><span class="v">Lisa Moreno, CPA</span></div>
+    <div class="parse card" style="top:676px;border:2px solid var(--acc)" data-in="v09.pelota" data-fx="left"><span class="k" style="color:var(--acc)">Columna</span><span class="v">Esperando a terceros</span></div>
+    <div class="col" style="left:1180px;top:250px;width:600px;height:540px" data-in="v09.entiende-0.2">
+      <h6>Esperando a terceros <small>6</small></h6>
+      <div class="kc" style="left:18px;top:82px;width:564px"><span class="t">K-1 2025 · Reyes Family Trust</span><span class="m"><span class="cli"><i>AR</i>Reyes</span>Lisa Moreno, CPA · 14d</span></div>
+      <div class="kc" style="left:18px;top:184px;width:564px"><span class="t">Enmienda del fideicomiso · fiduciario sucesor</span><span class="m"><span class="cli"><i>AR</i>Reyes</span>Ortega &amp; Asociados · 8d</span></div>
+      <div class="kc" style="left:18px;top:286px;width:564px"><span class="t">Renovación del seguro de hogar · Miami</span><span class="m"><span class="cli"><i>AR</i>Reyes</span>Meridian Insurance · 5d</span></div>
+      <div class="kc new" style="left:18px;top:388px;width:564px" data-in="v09.sin-0.4" data-fx="pop"><span class="t">Lisa todavía nos debe el K-1 de Almánzar</span><span class="m"><span class="cli"><i>TA</i>Almánzar</span><span>mar, 4 ago</span><span>Lisa Moreno, CPA</span><span class="pill acc" style="font-size:12px;margin-left:auto">Nuevo · WhatsApp</span></span></div>
+    </div>
+    <div class="abs" style="left:1180px;top:812px" data-in="v09.formularios-0.2" data-fx="pop"><span class="chip green"><svg class="ic" style="width:18px;height:18px"><use href="#i-check"/></svg>Sin formularios</span></div>
+  </section>
+
+  <!-- =============== TABLERO =============== -->
+  <section class="sc" id="s-tablero">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="tablero+0.1">Seguimientos</div>
+      <div class="h2" style="margin-top:14px" data-in="v10.solicitud-0.2">Cada solicitud, en un tablero</div>
+    </div>
+    <div class="abs" style="left:1460px;top:160px" data-in="v10.nada-0.2" data-fx="pop"><span class="chip acc">Nada se cae entre reuniones</span></div>
+    <div class="col" style="left:140px;top:270px;width:395px;height:610px" data-in="v10.tablero-0.3" data-on="v10.bandeja-0.15"><h6>Bandeja <small>2</small></h6><div class="hint">Nuevo, sin clasificar</div></div>
+    <div class="col" style="left:555px;top:270px;width:395px;height:610px" data-in="v10.tablero-0.15" data-on="v10.por-0.15"><h6>Por hacer <small>3</small></h6><div class="hint">Te necesita</div></div>
+    <div class="col" style="left:970px;top:270px;width:395px;height:610px" data-in="v10.tablero" data-on="v10.esperando-0.15"><h6>Esperando a terceros <small>6</small></h6><div class="hint">La pelota la tiene otro</div></div>
+    <div class="col" style="left:1385px;top:270px;width:395px;height:610px" data-in="v10.tablero+0.15" data-on="v10.hecho-0.15"><h6>Hecho <small>3</small></h6><div class="hint">Cerrado este mes</div></div>
+    <!-- bandeja -->
+    <div class="kc" style="left:150px;top:350px" data-in="v10.bandeja-0.1"><span class="t">Solicitud del agente · aparición en Santo Domingo</span><span class="m"><span class="cli"><i>EB</i>Batista</span><span>vie, 14 ago</span><svg class="ic" style="width:16px;height:16px"><use href="#i-chat"/></svg></span></div>
+    <div class="kc" style="left:150px;top:452px" data-in="v10.bandeja+0.05"><span class="t">Archivar el contrato de arriendo de Miami</span><span class="m"><span class="cli"><i>TA</i>Almánzar</span><svg class="ic" style="width:16px;height:16px"><use href="#i-mail"/></svg></span></div>
+    <!-- por hacer -->
+    <div class="kc" style="left:565px;top:452px" data-in="v10.hacer-0.1"><span class="t">Aprobar el presupuesto del hogar de agosto</span><span class="m"><span class="cli"><i>EB</i>Batista</span><span>jue, 30 jul</span></span></div>
+    <div class="kc" style="left:565px;top:554px" data-in="v10.hacer"><span class="t">Revisar el borrador del K-1 · Almánzar</span><span class="m"><span class="cli"><i>TA</i>Almánzar</span><span>mié, 5 ago</span></span></div>
+    <!-- esperando -->
+    <div class="kc" style="left:980px;top:350px" data-in="v10.esperando-0.1"><span class="t">K-1 2025 · Reyes Family Trust</span><span class="m"><span class="cli"><i>AR</i>Reyes</span><span>Lisa Moreno, CPA · 14d</span></span></div>
+    <div class="kc" style="left:980px;top:452px" data-in="v10.esperando"><span class="t">Enmienda del fideicomiso · fiduciario sucesor</span><span class="m"><span class="cli"><i>AR</i>Reyes</span><span>Ortega &amp; Asociados · 8d</span></span></div>
+    <div class="kc" style="left:980px;top:554px" data-in="v10.esperando+0.1"><span class="t">Renovación del seguro de hogar · Miami</span><span class="m"><span class="cli"><i>AR</i>Reyes</span><span>Meridian · 5d</span></span></div>
+    <div class="kc new" style="left:980px;top:656px" data-in="v10.a+0.1"><span class="t">Lisa todavía nos debe el K-1 de Almánzar</span><span class="m"><span class="cli"><i>TA</i>Almánzar</span><span>mar, 4 ago</span><span class="pill acc" style="font-size:12px;margin-left:auto">Nuevo</span></span></div>
+    <!-- hecho -->
+    <div class="kc done" style="left:1395px;top:350px" data-in="v10.hecho-0.1"><span class="t">Extractos del Q2 conciliados</span><span class="m"><span class="cli"><i style="background:var(--bg3);color:var(--ink2)">·</i>Todos</span></span></div>
+    <div class="kc done" style="left:1395px;top:452px" data-in="v10.hecho"><span class="t">Renovación de pasaportes · familia Batista</span><span class="m"><span class="cli"><i>EB</i>Batista</span></span></div>
+    <!-- la transferencia pasa de Por hacer a Hecho -->
+    <div class="kc hot" style="left:565px;top:350px;z-index:3" data-in="v10.por-0.2" data-move="v10.hecho+0.25" data-dx="830" data-dy="204" data-mdur="0.9" data-on="v10.nada-0.3">
+      <span class="t">Aprobar transferencia · $250,000 a Solaris</span>
+      <span class="m"><span class="cli"><i>AR</i>Reyes</span><span class="due btnr">Hoy</span><span class="ok pill ok" style="font-size:13px"><svg class="ic" style="width:14px;height:14px"><use href="#i-check"/></svg>Revisado</span></span>
+    </div>
+  </section>
+
+  <!-- =============== FINANZAS =============== -->
+  <section class="sc" id="s-finanzas">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="finanzas+0.1">Centro financiero</div>
+      <div class="h2" style="margin-top:14px" data-in="v11.centro-0.2">Lo que entra, lo que sale. <span class="grad">Una posición neta.</span></div>
+    </div>
+    <div class="abs" style="left:140px;top:246px;display:flex;gap:8px" data-in="v11.hogar-0.3">
+      <span class="chip ink">Todos los hogares</span><span class="chip">Reyes</span><span class="chip">Almánzar</span><span class="chip">Batista</span>
+    </div>
+    <div class="abs card" style="left:140px;top:310px;width:640px;height:320px;padding:22px 26px" data-in="v11.entra-0.3">
+      <div class="mlabel" style="color:var(--acc)">Entradas · julio · $3,954,960</div>
+      <div style="margin-top:14px">
+        <div class="hrow" data-in="v11.salario-0.2"><span class="l">Salario</span><div class="hb"><span class="in" style="width:100%" data-in="v11.salario-0.1" data-fx="grow" data-dur="0.9"></span></div><span class="v">$3,159,960</span></div>
+        <div class="hrow" data-in="v11.contratos-0.2"><span class="l">Contratos</span><div class="hb"><span class="in" style="width:5.1%" data-in="v11.contratos-0.1" data-fx="grow"></span></div><span class="v">$160,000</span></div>
+        <div class="hrow" data-in="v11.patrocinios-0.2"><span class="l">Patrocinios</span><div class="hb"><span class="in" style="width:17.4%" data-in="v11.patrocinios-0.1" data-fx="grow"></span></div><span class="v">$550,000</span></div>
+        <div class="hrow" data-in="v11.patrocinios+0.5"><span class="l">Distribuciones</span><div class="hb"><span class="in" style="width:2.7%" data-in="v11.patrocinios+0.6" data-fx="grow"></span></div><span class="v">$85,000</span></div>
+      </div>
+    </div>
+    <div class="netc" style="left:820px;top:330px" data-in="v11.posicion-0.4" data-fx="pop">
+      <div class="mlabel" style="font-size:13px">Posición neta · julio</div>
+      <div class="v num" style="margin-top:8px">+<span data-count="0:1488880" data-fmt="usd" data-in="v11.posicion-0.2" data-dur="1.5">$0</span></div>
+      <div style="font-size:15px;color:var(--ink3);margin-top:8px">tres hogares</div>
+    </div>
+    <div class="abs card" style="left:1140px;top:310px;width:640px;height:320px;padding:22px 26px" data-in="v11.sale-0.3">
+      <div class="mlabel" style="color:var(--cor)">Salidas · julio · $2,466,080</div>
+      <div style="margin-top:14px">
+        <div class="hrow" data-in="v11.impuestos-0.2"><span class="l">Impuestos</span><div class="hb"><span class="out" style="width:43.5%" data-in="v11.impuestos-0.1" data-fx="grow" data-dur="0.8"></span></div><span class="v">$1,375,000</span></div>
+        <div class="hrow" data-in="v11.deuda-0.2"><span class="l">Deuda</span><div class="hb"><span class="out" style="width:3.1%" data-in="v11.deuda-0.1" data-fx="grow"></span></div><span class="v">$99,500</span></div>
+        <div class="hrow" data-in="v11.deuda+0.3"><span class="l">Estilo de vida</span><div class="hb"><span class="out" style="width:7.6%" data-in="v11.deuda+0.4" data-fx="grow"></span></div><span class="v">$238,580</span></div>
+        <div class="hrow" data-in="v11.inversiones-0.2"><span class="l">Inversiones</span><div class="hb"><span class="out" style="width:23.8%" data-in="v11.inversiones-0.1" data-fx="grow"></span></div><span class="v">$753,000</span></div>
+      </div>
+    </div>
+    <div class="abs card" style="left:140px;top:656px;width:1000px;height:228px;padding:18px 26px" data-in="v11.flujo-0.4">
+      <div style="display:flex;align-items:center;gap:14px"><b style="font-size:19px">Flujo de caja de julio</b><span style="font-size:15px;color:var(--ink3)">neto acumulado · lo que falta, punteado</span><span class="pill cor" style="margin-left:auto">HOY · 28 jul</span></div>
+      <svg width="940" height="170" style="position:absolute;left:30px;top:52px">
+        <line x1="0" y1="170" x2="940" y2="170" stroke="#DCE5E2"/>
+        <line x1="846" y1="0" x2="846" y2="170" stroke="#BC4F2B" stroke-width="1.5"/>
+        <path d="M0.0 109.3 L31.3 109.6 L62.7 112.2 L94.0 113.7 L125.3 115.5 L156.7 118.4 L188.0 119.5 L219.3 121.5 L250.7 116.4 L282.0 96.0 L313.3 94.3 L344.7 86.1 L376.0 87.1 L407.3 88.4 L438.7 27.7 L470.0 28.7 L501.3 28.7 L532.7 52.5 L564.0 60.6 L595.3 54.9 L626.7 55.6 L658.0 56.3 L689.3 53.6 L720.7 53.6 L752.0 54.0 L783.3 54.2 L814.7 54.2 L846.0 54.2 L846.0 170 L0 170 Z" fill="url(#ga)" data-in="v11.flujo+0.6" data-fx="fade"/>
+        <path d="M0.0 109.3 L31.3 109.6 L62.7 112.2 L94.0 113.7 L125.3 115.5 L156.7 118.4 L188.0 119.5 L219.3 121.5 L250.7 116.4 L282.0 96.0 L313.3 94.3 L344.7 86.1 L376.0 87.1 L407.3 88.4 L438.7 27.7 L470.0 28.7 L501.3 28.7 L532.7 52.5 L564.0 60.6 L595.3 54.9 L626.7 55.6 L658.0 56.3 L689.3 53.6 L720.7 53.6 L752.0 54.0 L783.3 54.2 L814.7 54.2 L846.0 54.2" stroke="#12806B" stroke-width="3" fill="none" stroke-linejoin="round" data-in="v11.flujo-0.3" data-fx="draw" data-dur="1.3"/>
+        <path d="M846.0 54.2 L846.0 71.2 L877.3 71.2 L908.7 75.2 L940.0 68.8" stroke="#12806B" stroke-width="3" fill="none" stroke-dasharray="7 6" data-in="v11.mes" data-fx="fade"/>
+        <circle cx="940" cy="68.8" r="6" fill="#12806B" stroke="#fff" stroke-width="2" data-in="v11.mes+0.2" data-fx="pop"/>
+        <text x="930" y="50" text-anchor="end" style="font:600 16px var(--ui);fill:var(--ink)" data-in="v11.mes+0.2">+$1.49M</text>
+      </svg>
+    </div>
+    <div class="abs card" style="left:1170px;top:656px;width:610px;height:228px;padding:18px 26px" data-in="v11.presupuestos-0.4">
+      <b style="font-size:19px">Presupuestos · con lo que se debe</b>
+      <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:4px 26px">
+        <div class="bud"><div class="top"><b>Impuestos</b><span>100%</span></div><div class="tr"><span style="width:92%" data-in="v11.presupuestos-0.2" data-fx="grow"></span><i style="left:92%"></i></div></div>
+        <div class="bud"><div class="top"><b>Deuda</b><span>100%</span></div><div class="tr"><span style="width:92%" data-in="v11.presupuestos-0.1" data-fx="grow"></span><i style="left:92%"></i></div></div>
+        <div class="bud"><div class="top"><b>Estilo de vida</b><span>95%</span></div><div class="tr"><span style="width:88%" data-in="v11.presupuestos" data-fx="grow"></span><i style="left:92%"></i></div></div>
+        <div class="bud"><div class="top"><b>Inversiones</b><span>99%</span></div><div class="tr"><span style="width:91%" data-in="v11.presupuestos+0.1" data-fx="grow"></span><i style="left:92%"></i></div></div>
+      </div>
+      <div style="font-size:15px;color:var(--green);font-weight:600"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#0ca30c;margin-right:6px"></span>Todo dentro del presupuesto</div>
+    </div>
+  </section>
+
+  <!-- =============== ASISTENTE =============== -->
+  <section class="sc" id="s-asistente">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="asistente+0.1">El asistente</div>
+      <div class="h2" style="margin-top:14px;display:flex;align-items:center;gap:22px"><span data-in="v12.lee-0.3">Lo lee todo.</span> <span data-in="v12.toca-0.3" style="color:var(--cor)">No toca nada.</span></div>
+    </div>
+    <div class="abs card" style="left:140px;top:262px;width:1060px;height:620px" data-in="v12.asistente-0.3">
+      <div style="display:flex;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line)"><svg class="ic" style="color:var(--acc)"><use href="#i-spark"/></svg><b style="font-size:19px">Asistente</b><span class="ro" style="margin-left:auto" data-in="v12.nada-0.2" data-fx="pop"><svg class="ic" style="width:15px;height:15px"><use href="#i-eye"/></svg>Solo lectura</span></div>
+      <!-- capa A: pregunta y respuesta -->
+      <div data-in="v12.que#2-0.3" data-fx="fade" data-out="v13.redacta-0.35">
+        <div class="msg me" style="right:24px;top:90px;max-width:560px" data-in="v12.que#2-0.25" data-fx="pop"><span data-type="v12.que#2-0.1" data-tdur="1.1">¿Qué hay abierto con el fideicomiso Reyes?</span></div>
+        <div class="msg ai" style="left:24px;top:170px;width:880px" data-in="v12.responde-0.3">
+          <div>4 abiertos: <b>1 te necesita</b> y <b>3 esperan a terceros</b>:</div>
+          <ul>
+            <li><span><b>Aprobar transferencia · $250,000 a Solaris</b> · Por hacer · Hoy</span></li>
+            <li><span><b>K-1 2025 · Reyes Family Trust</b> · Lisa Moreno, CPA · vie, 7 ago</span></li>
+            <li><span><b>Enmienda del fideicomiso</b> · Ortega &amp; Asociados · mié, 12 ago</span></li>
+            <li><span><b>Renovación del seguro de hogar</b> · Meridian Insurance · vie, 31 jul</span></li>
+          </ul>
+          <div class="src"><span class="pill mute"><svg class="ic" style="width:14px;height:14px"><use href="#i-eye"/></svg>Lee: Seguimientos · 4</span><span class="pill mute">Solo lectura · no se cambió nada</span></div>
+        </div>
+      </div>
+      <!-- capa B: borrador -->
+      <div class="msg me" style="right:24px;top:90px;max-width:620px" data-in="v13.redacta-0.2" data-fx="pop">Redacta el correo de aprobación para el banco privado</div>
+      <div class="draft" style="left:24px;top:170px;width:1010px;height:430px" data-in="v13.correo-0.3">
+        <div class="hd"><span style="color:var(--ink3)">Para:</span> Daniela Ruiz · Harbor Private Bank<br><span style="color:var(--ink3)">Asunto:</span> <b>Aprobación de transferencia · $250,000 a Solaris Capital Fund II (Reyes Family Trust)</b></div>
+        <pre data-type="v13.aprobacion" data-tdur="2.6">Hola Daniela:
+
+Apruebo la transferencia saliente de hoy desde la cuenta del Reyes Family Trust terminada en 4471:
+• Monto: $250,000.00 · Beneficiario: Solaris Capital Fund II LP · capital call n.º 4
+Las instrucciones coinciden con las que tenemos verificadas en KYC. Confírmame cuando se libere.
+
+Gracias,
+JC</pre>
+        <div class="ft">
+          <span class="btn">Copiar</span><span class="btn">Tono más cálido</span>
+          <span class="pill ok" style="font-size:15px" data-in="v13.revisa-0.1" data-fx="pop"><svg class="ic" style="width:15px;height:15px"><use href="#i-check"/></svg>Revisado por JC</span>
+          <span style="margin-left:auto;display:flex" data-on="v13.envia-0.05"><span class="btn pri tosend"><svg class="ic" style="width:16px;height:16px"><use href="#i-send"/></svg>Enviar</span><span class="btn pri sent" style="background:var(--accdk)"><svg class="ic" style="width:16px;height:16px"><use href="#i-check"/></svg>Enviado por JC</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="abs card" style="left:1240px;top:262px;width:540px;height:330px;padding:22px 26px" data-in="v12.lee-0.2" data-fx="left">
+      <b style="font-size:20px">Lo que lee</b>
+      <div class="can">
+        <div data-in="v12.lee"><svg class="ic"><use href="#i-eye"/></svg>Seguimientos y su historial</div>
+        <div data-in="v12.lee+0.12"><svg class="ic"><use href="#i-eye"/></svg>Entradas, salidas y presupuestos</div>
+        <div data-in="v12.lee+0.24"><svg class="ic"><use href="#i-eye"/></svg>Documentos y lo que dicen</div>
+        <div data-in="v12.lee+0.36"><svg class="ic"><use href="#i-eye"/></svg>Calendario y recurrentes</div>
+        <div data-in="v12.lee+0.48"><svg class="ic"><use href="#i-eye"/></svg>Expedientes KYC</div>
+        <div data-in="v12.lee+0.6"><svg class="ic"><use href="#i-eye"/></svg>Patrimonio (fase 2)</div>
+      </div>
+    </div>
+    <div class="abs card" style="left:1240px;top:612px;width:540px;height:200px;padding:22px 26px" data-in="v12.toca-0.2" data-fx="left">
+      <b style="font-size:20px">Lo que nunca hace</b>
+      <div class="can no">
+        <div><svg class="ic"><use href="#i-x"/></svg>Enviar un correo o un mensaje</div>
+        <div><svg class="ic"><use href="#i-x"/></svg>Mover dinero o aprobar transferencias</div>
+        <div><svg class="ic"><use href="#i-x"/></svg>Agendar, editar o borrar</div>
+      </div>
+    </div>
+    <div class="abs" style="left:1240px;top:836px" data-in="v13.nunca-0.2" data-fx="pop"><span class="chip cor"><svg class="ic" style="width:18px;height:18px"><use href="#i-send"/></svg>El asistente nunca envía · lo envía JC</span></div>
+  </section>
+
+  <!-- =============== OPERACIÓN =============== -->
+  <section class="sc" id="s-operacion">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="operacion+0.1">Operación</div>
+      <div class="h2" style="margin-top:14px" data-in="v14.extractos-0.3">Lo repetitivo, <span class="grad">solo</span></div>
+    </div>
+    <div class="op card" style="left:140px" data-in="v14.extractos-0.2">
+      <h4><svg class="ic" style="color:var(--acc)"><use href="#i-mail"/></svg>Bandeja B27 Ops</h4>
+      <div style="margin-top:16px;padding:14px;border:1px solid var(--line);border-radius:14px">
+        <div style="display:flex;justify-content:space-between;font-size:15px;color:var(--ink3)"><span>Gentros · Statements</span><span class="mono">06:12</span></div>
+        <div style="font-size:19px;font-weight:600;margin-top:4px">Extracto de julio · Reyes Family Trust ••4471</div>
+      </div>
+      <div class="steps4">
+        <div class="on">Recibido</div><div data-on="v14.leen-0.1">Leído</div><div data-on="v14.archivan-0.1">Archivado</div><div data-on="v14.concilian-0.1">Conciliado</div>
+      </div>
+      <dl class="kv" data-in="v14.leen-0.1">
+        <dt>Saldo inicial</dt><dd>$8,412,330</dd>
+        <dt>Saldo final</dt><dd>$9,718,480</dd>
+        <dt>Movimientos conciliados</dt><dd><span data-count="0:14" data-in="v14.concilian-0.1" data-dur="0.8">0</span> / 14</dd>
+      </dl>
+      <div class="path" data-in="v14.archivan-0.1">Reyes Family Trust › Extractos › 2026-07</div>
+      <div style="margin-top:16px" data-in="v14.solos-0.1" data-fx="pop"><span class="chip green"><svg class="ic" style="width:18px;height:18px"><use href="#i-check"/></svg>Nadie volvió a digitar un número</span></div>
+    </div>
+    <div class="op card" style="left:698px" data-in="v14.calendario-0.3">
+      <h4><svg class="ic" style="color:var(--acc)"><use href="#i-clock"/></svg>Calendario · julio 2026</h4>
+      <div class="mini">
+        <span class="w">LUN</span><span class="w">MAR</span><span class="w">MIÉ</span><span class="w">JUE</span><span class="w">VIE</span><span class="w">SÁB</span><span class="w">DOM</span>
+        <span class="b"></span><span class="b"></span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+        <span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span>
+        <span>13</span><span>14</span><span>15</span><span>16</span><span>17</span><span>18</span><span>19</span>
+        <span>20</span><span>21</span><span>22</span><span>23</span><span>24</span><span>25</span><span>26</span>
+        <span>27</span><span class="today">28</span><span>29</span><span class="x" data-on="v14.repite-0.2">30</span><span>31</span><span class="b"></span><span class="b"></span>
+      </div>
+      <div style="margin-top:14px" data-in="v14.repite-0.1" data-fx="pop"><span class="chip cor"><svg class="ic" style="width:18px;height:18px"><use href="#i-repeat"/></svg>Día 30 · sale distribución · $40,000</span></div>
+      <div style="margin-top:10px" data-in="v14.repite+0.2">
+        <div class="learn"><svg class="ic"><use href="#i-repeat"/></svg><div>Aprendido de 6 meses<small>Aviso 2 días antes</small></div></div>
+        <div class="learn"><svg class="ic"><use href="#i-repeat"/></svg><div>Nómina · días 1 y 15<small>De abril a septiembre</small></div></div>
+      </div>
+    </div>
+    <div class="op card" style="left:1256px" data-in="v14.contraparte-0.3">
+      <h4><svg class="ic" style="color:var(--acc)"><use href="#i-shield"/></svg>KYC · Caribe Coast Realty</h4>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:10px">
+        <span class="pill warn" data-in="v14.contraparte-0.3" data-fx="fade" data-out="v14.vez-0.1">En revisión</span>
+        <span class="pill ok" style="position:absolute;left:26px" data-in="v14.vez-0.1" data-fx="pop">Verificado</span>
+        <span style="font-size:15px;color:var(--ink3);margin-left:auto">Vendedor inmobiliario · Batista</span>
+      </div>
+      <div style="margin-top:14px">
+        <div class="chk on"><i><svg viewBox="0 0 24 24"><use href="#i-check"/></svg></i>Certificado de constitución</div>
+        <div class="chk on"><i><svg viewBox="0 0 24 24"><use href="#i-check"/></svg></i>Beneficiarios finales</div>
+        <div class="chk" data-on="v14.pasa-0.1"><i><svg viewBox="0 0 24 24"><use href="#i-check"/></svg></i>Listas de sanciones y PEP</div>
+        <div class="chk on"><i><svg viewBox="0 0 24 24"><use href="#i-check"/></svg></i>Prensa negativa</div>
+        <div class="chk" data-on="v14.debida-0.1"><i><svg viewBox="0 0 24 24"><use href="#i-check"/></svg></i>Carta de referencia bancaria</div>
+        <div class="chk" data-on="v14.diligencia+0.2"><i><svg viewBox="0 0 24 24"><use href="#i-check"/></svg></i>Formulario fiscal (W-9 / W-8BEN-E)</div>
+      </div>
+      <div style="margin-top:16px" data-in="v14.vez-0.1" data-fx="pop"><span class="chip acc">Una sola vez · se reutiliza en cada hogar</span></div>
+    </div>
+  </section>
+
+  <!-- =============== SEGURIDAD =============== -->
+  <section class="sc" id="s-seguridad">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="seguridad+0.1">La base</div>
+      <div class="h2" style="margin-top:14px" data-in="v15.todo-0.2">Privado desde la primera línea</div>
+    </div>
+    <div class="abs card" style="left:140px;top:262px;width:520px;height:540px;padding:30px 32px;background:var(--ink);color:#fff;border-color:var(--ink)" data-in="v15.instancia-0.3">
+      <div style="width:92px;height:92px;border-radius:26px;background:rgba(255,255,255,.1);display:grid;place-items:center"><svg class="ic" style="width:50px;height:50px;color:#7FD3BC"><use href="#i-lock"/></svg></div>
+      <div class="disp" style="font-size:44px;margin-top:24px">Instancia privada</div>
+      <div style="font-size:20px;color:#B5CCC6;margin-top:8px;line-height:1.4">Un entorno propio y aislado. Nada compartido con nadie.</div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:30px">
+        <span class="chip" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#fff;align-self:flex-start" data-in="v15.cifrado-0.1" data-fx="pop"><svg class="ic" style="width:18px;height:18px;color:#7FD3BC"><use href="#i-check"/></svg>Cifrado en reposo y en tránsito</span>
+        <span class="chip" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#fff;align-self:flex-start" data-in="v15.doble-0.1" data-fx="pop"><svg class="ic" style="width:18px;height:18px;color:#7FD3BC"><use href="#i-check"/></svg>Doble factor · Face ID o llave</span>
+        <span class="chip" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#fff;align-self:flex-start" data-in="v15.cada-0.1" data-fx="pop"><svg class="ic" style="width:18px;height:18px;color:#7FD3BC"><use href="#i-check"/></svg>IA de solo lectura</span>
+      </div>
+    </div>
+    <div class="abs card" style="left:700px;top:262px;width:540px;height:540px;padding:26px 30px" data-in="v15.cada-0.3">
+      <b style="font-size:22px">Quién ve qué</b>
+      <div style="margin-top:14px">
+        <div class="perm" data-in="v15.cada-0.1"><span><b style="font-weight:600">JC</b> · principal</span><span class="pill acc">Todo</span></div>
+        <div class="perm" data-in="v15.quien-0.1"><span><b style="font-weight:600">Asistente de oficina</b></span><span class="pill mute">Operación</span></div>
+        <div class="perm" data-in="v15.ve-0.1"><span><b style="font-weight:600">Lisa Moreno</b> · CPA invitada</span><span class="pill mute">Solo lo asignado</span></div>
+        <div class="perm" data-in="v15.solo-0.1"><span><b style="font-weight:600">Asistente IA</b></span><span class="pill" style="background:var(--bg3);color:var(--ink)">Solo lectura</span></div>
+      </div>
+      <div style="margin-top:22px;padding:16px;border-radius:14px;background:var(--bg2);font-size:17px;color:var(--ink2);line-height:1.45" data-in="v15.suyo-0.1">Lisa entra como invitada: ve los K-1 que le tocan. No ve el centro financiero ni el patrimonio.</div>
+    </div>
+    <div class="abs card" style="left:1280px;top:262px;width:500px;height:540px;padding:26px 30px" data-in="v15.registro-0.4">
+      <b style="font-size:22px">Trazabilidad · hoy</b>
+      <div class="loglines" style="margin-top:12px">
+        <div data-in="v15.registro-0.1"><time>08:05</time><span><b>Lisa Moreno, CPA</b> vio Almánzar › Impuestos › K-1</span></div>
+        <div data-in="v15.registro+0.15"><time>07:41</time><span><b>JC</b> inició sesión · Face ID · iPhone</span></div>
+        <div data-in="v15.de-0.05"><time>06:30</time><span><b>Asistente</b> preparó el resumen · solo lectura</span></div>
+        <div data-in="v15.quien#2-0.05"><time>06:14</time><span><b>Cumbre</b> concilió 2 extractos de Gentros</span></div>
+        <div data-in="v15.vio-0.05"><time>06:12</time><span><b>Cumbre</b> leyó el extracto de julio · Reyes</span></div>
+      </div>
+      <div style="margin-top:16px" data-in="v15.que#1+0.1" data-fx="pop"><span class="chip acc">Nada pasa fuera del registro</span></div>
+    </div>
+  </section>
+
+  <!-- =============== PATRIMONIO =============== -->
+  <section class="sc" id="s-patrimonio">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow cor" data-in="patrimonio+0.1">Fase 2 · vista previa</div>
+      <div class="h2" style="margin-top:14px" data-in="v16.conectan-0.3">Todo el patrimonio, en una vista</div>
+    </div>
+    <div class="abs card" style="left:140px;top:262px;width:1000px;height:600px;padding:30px 36px" data-in="v16.patrimonio-0.4">
+      <div class="mlabel">Patrimonio neto consolidado · posiciones de ayer</div>
+      <div style="display:flex;align-items:baseline;gap:16px;margin-top:12px"><span class="disp num" style="font-size:78px"><span data-count="0:248610925" data-fmt="usd" data-in="v16.patrimonio-0.2" data-dur="1.6">$0</span></span><span style="color:var(--acc);font-weight:700;font-size:21px" data-in="v16.cliente">▲ 6.4% en el año</span></div>
+      <svg width="920" height="250" style="position:absolute;left:40px;top:250px">
+        <line x1="0" y1="250" x2="920" y2="250" stroke="#DCE5E2"/>
+        <path d="M0.0 206.8 L83.6 183.1 L167.3 202.0 L250.9 157.4 L334.5 123.9 L418.2 106.8 L501.8 116.2 L585.5 84.5 L669.1 74.3 L752.7 54.7 L836.4 38.5 L920.0 22.9 L920 250 L0 250 Z" fill="url(#ga)" data-in="v16.cada" data-fx="fade"/>
+        <path d="M0.0 206.8 L83.6 183.1 L167.3 202.0 L250.9 157.4 L334.5 123.9 L418.2 106.8 L501.8 116.2 L585.5 84.5 L669.1 74.3 L752.7 54.7 L836.4 38.5 L920.0 22.9" stroke="#12806B" stroke-width="3.2" fill="none" stroke-linejoin="round" data-in="v16.patrimonio" data-fx="draw" data-dur="1.6"/>
+        <circle cx="920" cy="22.9" r="7" fill="#12806B" stroke="#fff" stroke-width="2.5" data-in="v16.cliente" data-fx="pop"/>
+      </svg>
+      <div class="abs" style="left:40px;top:540px;width:920px;display:flex;justify-content:space-between;font-size:15px;color:var(--ink3)"><span>ago 2025</span><span>nov</span><span>feb 2026</span><span>may</span><span>jul</span></div>
+    </div>
+    <div class="abs card" style="left:1170px;top:262px;width:610px;height:270px;padding:24px 28px" data-in="v16.cliente-0.3">
+      <b style="font-size:20px">Por hogar</b>
+      <div style="margin-top:14px">
+        <div class="hrow" style="grid-template-columns:190px 1fr 96px"><span class="l">Reyes Family Trust</span><div class="hb"><span class="in" style="width:100%" data-in="v16.cliente-0.1" data-fx="grow"></span></div><span class="v">$158.42M</span></div>
+        <div class="hrow" style="grid-template-columns:190px 1fr 96px"><span class="l">Almánzar Holdings</span><div class="hb"><span class="in" style="width:52%" data-in="v16.cliente+0.05" data-fx="grow"></span></div><span class="v">$82.64M</span></div>
+        <div class="hrow" style="grid-template-columns:190px 1fr 96px"><span class="l">Hogar Batista</span><div class="hb"><span class="in" style="width:4.8%" data-in="v16.cliente+0.2" data-fx="grow"></span></div><span class="v">$7.55M</span></div>
+      </div>
+    </div>
+    <div class="abs card" style="left:1170px;top:552px;width:610px;height:310px;padding:24px 28px" data-in="v16.bancos-0.3">
+      <b style="font-size:20px">Fuentes conectadas</b>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px">
+        <span class="chip" data-in="v16.bancos-0.1" data-fx="pop"><svg class="ic" style="width:18px;height:18px"><use href="#i-plug"/></svg>Gentros</span>
+        <span class="chip" data-in="v16.bancos+0.1" data-fx="pop"><svg class="ic" style="width:18px;height:18px"><use href="#i-plug"/></svg>Harbor Private Bank</span>
+        <span class="chip" data-in="v16.bancos+0.3" data-fx="pop"><svg class="ic" style="width:18px;height:18px"><use href="#i-plug"/></svg>Atlas Securities</span>
+        <span class="chip" data-in="v16.bancos+0.5" data-fx="pop"><svg class="ic" style="width:18px;height:18px"><use href="#i-plug"/></svg>AmEx</span>
+        <span class="chip cor" data-in="v16.aleta-0.1" data-fx="pop"><svg class="ic" style="width:18px;height:18px"><use href="#i-layers"/></svg>Aleta · backbone patrimonial</span>
+      </div>
+      <div style="margin-top:22px;font-size:17px;color:var(--ink2);line-height:1.45" data-in="v16.vista-0.3">La fase 1 funciona sin esto. Aleta se conecta cuando la base esté probada.</div>
+    </div>
+  </section>
+
+  <!-- =============== POC =============== -->
+  <section class="sc" id="s-poc">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="poc+0.1">La prueba de concepto</div>
+      <div class="h2" style="margin-top:14px" data-in="v17.funciona-0.3">Ya <span class="grad">funciona</span></div>
+    </div>
+    <div class="abs" style="left:560px;top:152px;display:flex;gap:10px" data-in="v17.concepto-0.2">
+      <span class="chip">claude.ai · enlace privado</span><span class="chip acc">11 vistas</span>
+    </div>
+    <div class="laptop" data-in="v17.dibujo-0.2">
+      <div class="lid"><div class="sc2">
+        <img class="shotimg" src="assets/poc/d-hoy-es.jpg" alt="">
+        <img class="shotimg" src="assets/poc/d-asistente.jpg" alt="" data-in="v17.escritorio-0.3" data-fx="fade" data-dur="0.4" data-out="v17.ingles-0.2">
+        <img class="shotimg" src="assets/poc/d-hoy-en.jpg" alt="" data-in="v17.ingles-0.2" data-fx="fade" data-dur="0.3" data-out="v17.espanol-0.2">
+        <img class="shotimg" src="assets/poc/d-finanzas.jpg" alt="" data-in="v17.espanol-0.2" data-fx="fade" data-dur="0.3">
+      </div></div>
+      <div class="base"></div>
+    </div>
+    <div class="phone" style="left:1360px;top:200px;width:330px;height:680px" data-in="v17.telefono-0.4" data-fx="up">
+      <div class="scr" style="background:#fff">
+        <img class="shotimg" src="assets/poc/m-hoy.jpg" alt="">
+        <img class="shotimg" src="assets/poc/m-hoy-en.jpg" alt="" data-in="v17.ingles-0.2" data-fx="fade" data-dur="0.3" data-out="v17.espanol-0.2">
+        <img class="shotimg" src="assets/poc/m-captura.jpg" alt="" data-in="v17.espanol-0.2" data-fx="fade" data-dur="0.3">
+      </div>
+    </div>
+    <div class="abs" style="left:1360px;top:150px;display:flex;gap:6px;background:var(--bg3);border-radius:12px;padding:4px" data-in="v17.ingles-0.4">
+      <span class="chip" style="border:0;background:#fff" data-in="v17.ingles-0.3" data-fx="fade" data-out="v17.espanol-0.2" data-outop="0.35">EN</span>
+      <span class="chip" style="border:0;background:transparent" data-in="v17.espanol-0.2" data-fx="pop">ES</span>
+    </div>
+  </section>
+
+  <!-- =============== FASES =============== -->
+  <section class="sc" id="s-fases">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="fases+0.1">El camino</div>
+      <div class="h2" style="margin-top:14px" data-in="v18.fase-0.2">Valor en las manos de JC, <span class="grad">desde temprano</span></div>
+    </div>
+    <svg class="abs" style="left:0;top:0" width="1920" height="1080">
+      <path d="M402 300 L1518 300" stroke="#E3EAE7" stroke-width="5" stroke-linecap="round"/>
+      <path d="M402 300 L1518 300" stroke="url(#gh)" stroke-width="5" stroke-linecap="round" fill="none" data-in="v18.uno-0.2" data-fx="draw" data-dur="5.5"/>
+      <circle cx="402" cy="300" r="11" fill="#fff" stroke="#12806B" stroke-width="5" data-in="v18.uno-0.2" data-fx="pop"/>
+      <circle cx="960" cy="300" r="11" fill="#fff" stroke="#BC4F2B" stroke-width="5" data-in="v18.dos-0.2" data-fx="pop"/>
+      <circle cx="1518" cy="300" r="11" fill="#fff" stroke="#425658" stroke-width="5" data-in="v18.tres#2-0.2" data-fx="pop"/>
+    </svg>
+    <div class="ph card now" style="left:140px" data-in="v18.uno-0.3">
+      <div class="tg"><span>Fase 1</span><span style="color:var(--acc)"><span data-count="0:3" data-in="v18.tres#1-0.2" data-dur="0.4">0</span>–<span data-count="0:4" data-in="v18.cuatro-0.1" data-dur="0.4">0</span> semanas</span></div>
+      <h3>Tu centro de mando</h3>
+      <div class="d">Funcionando, sin dependencias externas.</div>
+      <ul>
+        <li data-in="v18.centro-0.1"><svg class="ic"><use href="#i-check"/></svg>Captura por chat (WhatsApp)</li>
+        <li data-in="v18.centro+0.1"><svg class="ic"><use href="#i-check"/></svg>Tablero de seguimientos</li>
+        <li data-in="v18.de-0.1"><svg class="ic"><use href="#i-check"/></svg>Centro financiero</li>
+        <li data-in="v18.mando-0.1"><svg class="ic"><use href="#i-check"/></svg>Asistente · preguntar y redactar</li>
+        <li data-in="v18.mando+0.1"><svg class="ic"><use href="#i-check"/></svg>Lectura de documentos</li>
+        <li data-in="v18.en-0.1"><svg class="ic"><use href="#i-check"/></svg>Calendario y recordatorios</li>
+        <li data-in="v18.en+0.1"><svg class="ic"><use href="#i-check"/></svg>KYC de terceros</li>
+      </ul>
+    </div>
+    <div class="ph card" style="left:698px" data-in="v18.dos-0.3">
+      <div class="tg"><span>Fase 2</span><span style="color:var(--cor)">Cuando la base esté probada</span></div>
+      <h3>Conectar todo</h3>
+      <div class="d">Se conectan terceros, sobre algo que ya funciona.</div>
+      <ul>
+        <li data-in="v18.conectar-0.1"><svg class="ic"><use href="#i-check"/></svg>Conectividad bancaria por API</li>
+        <li data-in="v18.conectar+0.1"><svg class="ic"><use href="#i-check"/></svg>Backbone patrimonial Aleta</li>
+        <li data-in="v18.todo-0.1"><svg class="ic"><use href="#i-check"/></svg>El asistente lee todo</li>
+      </ul>
+    </div>
+    <div class="ph card" style="left:1256px" data-in="v18.tres#2-0.3">
+      <div class="tg"><span>Fase 3</span><span>Continuo</span></div>
+      <h3>Afinar y crecer</h3>
+      <div class="d">Función por función, con la revisión de JC.</div>
+      <ul>
+        <li data-in="v18.afinar-0.1"><svg class="ic"><use href="#i-check"/></svg>Automatizar lo rutinario</li>
+        <li data-in="v18.afinar+0.2"><svg class="ic"><use href="#i-check"/></svg>Nuevas funciones con revisión</li>
+        <li data-in="v18.crecer-0.1"><svg class="ic"><use href="#i-check"/></svg>Más clientes, mismo equipo</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- =============== OFERTA =============== -->
+  <section class="sc" id="s-oferta">
+    <div class="abs" style="left:140px;top:132px">
+      <div class="eyebrow" data-in="oferta+0.1"><img src="assets/cooweb-logo.png" style="height:26px">Cómo lo construimos</div>
+      <div class="h2" style="margin-top:14px" data-in="v19.construimos-0.2">Un equipo dedicado para Thraive</div>
+    </div>
+    <div class="abs card" style="left:1180px;top:140px;width:600px;padding:16px 20px;display:flex;gap:14px;align-items:center" data-in="v19.pediste-0.2" data-fx="left">
+      <span style="width:40px;height:40px;border-radius:50%;background:var(--wa);color:#fff;display:grid;place-items:center;flex:none"><svg class="ic" style="width:20px;height:20px"><use href="#i-chat"/></svg></span>
+      <div style="font-size:17px;color:var(--ink2);line-height:1.35"><b style="color:var(--ink)">Lo que pidió Thiago:</b> un recurso fijo que construya las dos soluciones, con la consultoría de Luis.</div>
+    </div>
+    <svg class="abs" style="left:0;top:0" width="1920" height="1080">
+      <path d="M700 380 C 900 380, 960 335, 1180 335" stroke="#2FA88A" stroke-width="3" fill="none" stroke-dasharray="7 7" data-in="v19.soluciones-0.2" data-fx="draw" data-dur="0.6"/>
+      <path d="M700 380 C 900 380, 960 495, 1180 495" stroke="#2FA88A" stroke-width="3" fill="none" stroke-dasharray="7 7" data-in="v19.soluciones" data-fx="draw" data-dur="0.6"/>
+      <path d="M420 520 L420 556" stroke="#9FB7B1" stroke-width="3" fill="none" stroke-linecap="round" data-in="v20.acompana" data-fx="draw" data-dur="0.3"/>
+    </svg>
+    <div class="who card" style="left:140px;top:270px;width:560px;height:250px" data-in="v19.desarrollador-0.2">
+      <div class="av" style="background:var(--acc)">FS</div>
+      <div><b>Desarrollador full-stack senior</b><p>Construye el producto de punta a punta y se queda con él.</p>
+        <div class="cs"><span class="chip acc" data-in="v19.dedicado-0.1" data-fx="pop">Dedicado a Thraive</span><span class="chip" data-in="v19.senior-0.1" data-fx="pop">Recurso fijo</span></div></div>
+    </div>
+    <div class="prod card" style="top:270px" data-in="v19.cumbre-0.25" data-fx="left">
+      <svg width="66" height="66"><use href="#mark"/></svg>
+      <div><b>Cumbre · Family Office OS</b><p>Centro de mando de JC · fase 1 en 3–4 semanas</p></div>
+    </div>
+    <div class="prod card" style="top:430px" data-in="v19.farmaconal-0.25" data-fx="left">
+      <span class="fword">FQ</span>
+      <div><b>Farmaconal · el caso quirúrgico</b><p>Capa operativa sobre SAP · la ola 1 después</p></div>
+    </div>
+    <div class="who card" style="left:140px;top:556px;width:560px;height:240px" data-in="v20.lider-0.25">
+      <div class="av" style="background:var(--ink)">LC</div>
+      <div><b>Luis · Technical Lead, CooWeb</b><p>Part-time, acompaña al desarrollador.</p>
+        <div class="cs"><span class="chip" data-in="v20.arquitectura-0.1" data-fx="pop">Arquitectura</span><span class="chip" data-in="v20.seguridad-0.1" data-fx="pop">Seguridad</span><span class="chip acc" data-in="v20.revision-0.1" data-fx="pop">Revisión semanal con Thiago</span></div></div>
+    </div>
+    <div class="abs card" style="left:1180px;top:600px;width:600px;height:196px;padding:22px 26px" data-in="v20.si-0.2">
+      <b style="font-size:24px">Capacidad a demanda</b>
+      <div style="font-size:17px;color:var(--ink2);margin-top:4px">Por semanas, cuando un frente necesita velocidad.</div>
+      <div style="display:flex;gap:18px;margin-top:18px;align-items:center">
+        <div class="dash" data-in="v20.sumamos-0.1" data-fx="pop">+Dev</div>
+        <div class="dash" data-in="v20.capacidad-0.1" data-fx="pop">+QA</div>
+        <span style="font-size:17px;color:var(--ink3)" data-in="v20.demanda-0.1">y se liberan después</span>
+      </div>
+    </div>
+    <div class="abs card" style="left:140px;top:820px;width:1640px;height:72px;padding:0 26px;display:flex;align-items:center;gap:14px;border:2px solid var(--acc)" data-in="v21.codigo-0.3">
+      <svg class="ic" style="color:var(--acc);width:26px;height:26px"><use href="#i-shield"/></svg>
+      <b style="font-size:21px">Thraive es dueño de todo desde el primer día:</b>
+      <span class="chip acc" data-in="v21.codigo-0.1" data-fx="pop"><svg class="ic" style="width:18px;height:18px"><use href="#i-code"/></svg>Código</span>
+      <span class="chip acc" data-in="v21.codigo+0.25" data-fx="pop">Repositorios</span>
+      <span class="chip acc" data-in="v21.datos-0.1" data-fx="pop">Datos</span>
+      <span class="chip acc" data-in="v21.instancia-0.1" data-fx="pop">Instancia privada</span>
+    </div>
+  </section>
+
+  <!-- =============== CIERRE =============== -->
+  <section class="sc" id="s-cierre">
+    <div class="abs" style="left:0;right:0;top:160px;text-align:center">
+      <img src="assets/cooweb-logo.png" style="height:110px" data-in="cierre+0.15" data-fx="pop">
+      <div style="font-size:42px;font-weight:600;margin-top:34px;letter-spacing:-.01em" data-in="v22.prueba-0.2">Prueba de concepto de entendimiento</div>
+      <div style="font-size:26px;color:var(--ink2);margin-top:12px" data-in="v22.concepto">de la propuesta de Thraive para el family office de JC · enviada a <b style="color:var(--ink);font-weight:600">Thiago Da Cunha</b></div>
+    </div>
+    <div class="abs" style="left:0;right:0;top:500px;display:flex;justify-content:center;align-items:center;gap:34px" data-in="v22.cooweb-0.2">
+      <img src="assets/cooweb-logo.png" style="height:56px">
+      <div style="width:90px;height:5px;border-radius:3px;background:var(--hilo)"></div>
+      <img src="assets/thraive-wordmark.png" alt="ThrAIve" class="thlogo" style="height:64px">
+      <div style="width:90px;height:5px;border-radius:3px;background:var(--hilo)"></div>
+      <div style="display:flex;align-items:center;gap:14px"><svg width="60" height="60"><use href="#mark"/></svg><div class="cword" style="font-size:44px;text-align:left">Cumbre<small>FAMILY OFFICE OS</small></div></div>
+    </div>
+    <div class="abs" style="left:0;right:0;top:660px;text-align:center" data-in="v22.armamos-0.15" data-fx="pop">
+      <div class="q">¿Armamos el equipo?</div>
+      <svg width="700" height="16" style="display:block;margin:10px auto 0"><path d="M10 8 C 200 0, 500 16, 690 8" stroke="url(#gh)" stroke-width="6" fill="none" stroke-linecap="round" data-in="v22.equipo" data-fx="draw" data-dur="0.9"/></svg>
+    </div>
+    <div class="abs" style="left:0;right:0;top:880px;text-align:center;font-size:19px;color:var(--ink3)" data-in="v22.equipo+0.3">cooweb.co · Nombres, clientes y cifras ficticios</div>
+  </section>
+
+  <!-- =============== chrome =============== -->
+  <header id="chrome">
+    <img src="assets/cooweb-logo.png" alt="CooWeb">
+    <div class="sep"></div>
+    <div class="ct"><b>PoC de entendimiento</b> · Propuesta Thraive para el family office de JC</div>
+    <div class="cr"><span class="chip">Para Thiago Da Cunha</span><span class="chip amber">Datos ficticios</span></div>
+  </header>
+  <nav id="chapters"></nav>
+  <div id="caption"><span id="cap"></span></div>
+</div>
+
+<audio id="audio" src="audio/banda.m4a" preload="auto"></audio>
+<script src="timeline.js"></script>
+<script src="motor.js"></script>
+</body>
+</html>

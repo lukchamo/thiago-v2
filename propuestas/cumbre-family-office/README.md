@@ -8,6 +8,7 @@ interactivo que muestra cómo entendimos lo que JC espera.
 - **Para:** Thiago Da Cunha · **Propone:** Thraive (Thiago & Claudio) · **Cliente final:** JC, family office "Cumbre"
 - **Construye:** CooWeb (Cooweb LLC) · **Fecha:** 26 de octubre de 2026
 - **PoC publicado:** https://claude.ai/artifact/CwKRy8TY7q5Ukc1qsbVrpe (privado: compartir desde el menú *Compartir*)
+- **Video:** `video/salida/cumbre-poc-thiago.mp4` (3:40, voz dominicana, subtítulos quemados)
 
 ## Lo que pidió Thiago
 
@@ -118,6 +119,42 @@ de Thraive. Plan indicativo: semana 0 arranque; semanas 1–4 Cumbre fase 1; 5�
 | `oferta/Propuesta_Equipo-Dedicado_Thraive.pdf` / `.docx` | La oferta de CooWeb a Thraive |
 | `oferta/propuesta.json` | El contenido de la oferta, para regenerarla |
 | `poc/cumbre-os.html` | El PoC (HTML autocontenido; los logos están en `poc/assets/`) |
+| `video/salida/cumbre-poc-thiago.mp4` | El video (1920×1080, 30 fps, 3:40) con voz en off dominicana, música y subtítulos quemados |
+| `video/salida/subtitulos.srt` | Los mismos subtítulos, aparte |
+| `video/guion.md` | Guion de la locución por escenas, con tiempos |
+| `video/pieza.html` | La pieza de motion graphics. Se abre en el navegador: clic o espacio = reproducir/pausar, ← → = ±5 s, R = reinicio |
 
 Para actualizar el PoC publicado, edita `poc/cumbre-os.html` y vuelve a publicar el mismo archivo con
 la herramienta de artifacts: conserva el mismo enlace.
+
+## El video
+
+Mismo método que el de Farmaconal, con la identidad visual del PoC de Cumbre (Newsreader, Hanken
+Grotesk e IBM Plex Mono, verde azulado y coral sobre blanco). 17 escenas: apertura, el cliente, el
+reto, lo que pidió JC, el sistema de Thraive, Hoy, captura por chat, tablero, centro financiero,
+asistente, documentos/calendario/KYC, seguridad, patrimonio (fase 2), el PoC funcionando (capturas
+reales en escritorio y teléfono, en inglés y español), las tres fases, el equipo de CooWeb y el cierre.
+No muestra precios.
+
+1. **Locución** (`video/produccion/locucion.json`): 22 frases, ElevenLabs `eleven_v4`, voz
+   *Chaer – Locutor Latino Dominicano*, con etiquetas de intención. "CooWeb" y "Thraive" van en
+   fonética; "JC" se escribe "Jota Ce". La frase v19 se regeneró: "Como lo pediste" sonaba a pregunta
+   y quedó "Tal como lo pediste" (la toma descartada está en `produccion/descartes/`).
+2. **Marcas por palabra** (`produccion/marcas.py`): Whisper local (`faster-whisper`, modelo small)
+   transcribe cada toma con el guion como pista → `produccion/palabras.json`.
+3. **Línea de tiempo y subtítulos** (`produccion/timeline.py`, `produccion/subtitulos.py`).
+4. **Música**: ElevenLabs Music v2.5, instrumental de 222 s con toque caribeño; mezcla con ducking
+   (`produccion/mezclar.py final` → `audio/banda.m4a`, ≈ -16 LUFS).
+5. **Capturas del PoC** (`video/assets/poc/`): pantallas reales de `poc/cumbre-os.html` en escritorio
+   (1600×1000) y teléfono (390×844), en español e inglés.
+6. **Render** (`video/render.cjs`): Playwright cuadro a cuadro → H.264 + AAC.
+
+```bash
+cd propuestas/cumbre-family-office/video
+pip install faster-whisper                    # solo si cambian las tomas
+python3 produccion/marcas.py                  # marcas por palabra (si cambian las tomas)
+python3 produccion/timeline.py && python3 produccion/subtitulos.py
+python3 produccion/mezclar.py final
+node render.cjs                               # MP4 completo (≈ 6 min en 4 núcleos)
+node render.cjs --fotos 30,95,128             # fotos sueltas para revisar
+```

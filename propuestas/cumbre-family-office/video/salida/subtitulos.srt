@@ -1,0 +1,280 @@
+1
+00:00:01,388 --> 00:00:03,550
+Thiago… esta es la segunda.
+
+2
+00:00:03,780 --> 00:00:07,510
+Lo que entendimos de la propuesta de Thraive para el family office de JC.
+
+3
+00:00:07,900 --> 00:00:10,590
+Y otra vez, preferimos mostrártelo.
+
+4
+00:00:11,446 --> 00:00:14,309
+JC lleva, casi en solitario, las finanzas
+
+5
+00:00:14,329 --> 00:00:17,059
+y los proyectos personales de varios peloteros.
+
+6
+00:00:17,209 --> 00:00:20,469
+Una oficina boutique: pequeña a propósito…
+
+7
+00:00:20,489 --> 00:00:22,039
+premium por diseño.
+
+8
+00:00:22,700 --> 00:00:25,006
+Pero lo difícil no es el trabajo.
+
+9
+00:00:25,116 --> 00:00:27,186
+Es sostenerlo todo junto.
+
+10
+00:00:27,721 --> 00:00:33,741
+Clientes, familias, abogados, contadores, bancos, aseguradoras, agentes,
+
+11
+00:00:33,761 --> 00:00:37,161
+contratistas… decenas de hilos abiertos.
+
+12
+00:00:37,181 --> 00:00:39,691
+Y todos pasan por una sola persona.
+
+13
+00:00:40,035 --> 00:00:42,485
+Un pendiente con un tercero se olvida.
+
+14
+00:00:42,635 --> 00:00:44,505
+Un documento no aparece.
+
+15
+00:00:44,955 --> 00:00:48,165
+Y el día se va en perseguir.
+
+16
+00:00:48,980 --> 00:00:52,050
+Lo que JC pidió cabe en seis ideas.
+
+17
+00:00:52,360 --> 00:00:55,800
+Un solo lugar. Encontrarlo todo al instante.
+
+18
+00:00:55,820 --> 00:00:57,990
+Que ningún seguimiento se pierda.
+
+19
+00:00:58,060 --> 00:01:01,170
+Saber qué es urgente. Ir un paso adelante.
+
+20
+00:01:01,640 --> 00:01:03,590
+Y todo, desde el teléfono.
+
+21
+00:01:04,304 --> 00:01:05,704
+La propuesta de Thraive:
+
+22
+00:01:05,724 --> 00:01:08,914
+un sistema privado, con el chat como puerta de entrada.
+
+23
+00:01:08,964 --> 00:01:11,984
+Una base de seguridad, y encima, dos capas:
+
+24
+00:01:12,004 --> 00:01:14,514
+la operación del día a día, y el patrimonio.
+
+25
+00:01:15,214 --> 00:01:18,784
+Cada mañana, JC abre Cumbre y ve lo urgente:
+
+26
+00:01:18,814 --> 00:01:22,104
+aprobar una transferencia de doscientos cincuenta mil dólares.
+
+27
+00:01:22,314 --> 00:01:23,564
+Y lo que espera a otros:
+
+28
+00:01:23,794 --> 00:01:28,224
+el K-1 del fideicomiso Reyes, catorce días con la contadora.
+
+29
+00:01:28,923 --> 00:01:31,233
+Capturar es escribir como se habla:
+
+30
+00:01:31,343 --> 00:01:32,883
+un mensaje por WhatsApp…
+
+31
+00:01:32,903 --> 00:01:37,023
+y Cumbre entiende el cliente, la fecha y quién tiene la pelota.
+
+32
+00:01:37,043 --> 00:01:38,453
+Sin formularios.
+
+33
+00:01:39,027 --> 00:01:41,147
+Cada solicitud vive en un tablero:
+
+34
+00:01:41,167 --> 00:01:44,447
+bandeja, por hacer, esperando a terceros…
+
+35
+00:01:44,467 --> 00:01:47,997
+y hecho. Nada se cae entre una reunión y otra.
+
+36
+00:01:48,786 --> 00:01:51,065
+El centro financiero junta lo que entra:
+
+37
+00:01:51,155 --> 00:01:53,715
+salario, contratos, patrocinios.
+
+38
+00:01:53,735 --> 00:01:57,045
+Y lo que sale: impuestos, deuda, inversiones.
+
+39
+00:01:57,095 --> 00:02:01,345
+Una sola posición neta por hogar, con el flujo del mes y sus presupuestos.
+
+40
+00:02:02,126 --> 00:02:05,836
+Y un asistente que lo lee todo, pero no toca nada.
+
+41
+00:02:06,026 --> 00:02:08,256
+¿Qué hay abierto con el fideicomiso Reyes?
+
+42
+00:02:08,426 --> 00:02:09,736
+Responde en segundos.
+
+43
+00:02:10,232 --> 00:02:14,262
+Y redacta el correo de aprobación para el banco, como lo escribiría JC.
+
+44
+00:02:14,852 --> 00:02:17,322
+JC lo revisa y lo envía.
+
+45
+00:02:17,552 --> 00:02:19,242
+El asistente, nunca.
+
+46
+00:02:20,122 --> 00:02:23,482
+Los extractos que llegan por correo se leen, se archivan
+
+47
+00:02:23,502 --> 00:02:27,612
+y se concilian solos. El calendario aprende lo que se repite.
+
+48
+00:02:27,742 --> 00:02:30,822
+Y cada contraparte pasa su debida diligencia…
+
+49
+00:02:30,842 --> 00:02:31,972
+una sola vez.
+
+50
+00:02:32,802 --> 00:02:34,630
+Todo en una instancia privada:
+
+51
+00:02:34,650 --> 00:02:38,550
+cifrado, doble factor, cada quien ve solo lo suyo,
+
+52
+00:02:38,570 --> 00:02:40,880
+y queda registro de quién vio qué.
+
+53
+00:02:41,654 --> 00:02:45,504
+En la fase dos se conectan los bancos y la plataforma Aleta:
+
+54
+00:02:45,674 --> 00:02:48,764
+el patrimonio de cada cliente, en una sola vista.
+
+55
+00:02:49,611 --> 00:02:53,361
+Y no es un dibujo: la prueba de concepto ya funciona.
+
+56
+00:02:53,391 --> 00:02:56,581
+En escritorio y en teléfono, en inglés y en español.
+
+57
+00:02:57,624 --> 00:03:01,399
+Fase uno: el centro de mando, en tres a cuatro semanas.
+
+58
+00:03:01,549 --> 00:03:03,729
+Fase dos: conectar todo.
+
+59
+00:03:03,749 --> 00:03:06,639
+Fase tres: afinar… y crecer.
+
+60
+00:03:07,517 --> 00:03:10,270
+¿Cómo lo construimos? Tal como lo pediste:
+
+61
+00:03:10,380 --> 00:03:13,480
+un desarrollador full-stack senior, dedicado a Thraive,
+
+62
+00:03:13,500 --> 00:03:15,400
+que construye tus dos soluciones:
+
+63
+00:03:15,420 --> 00:03:17,130
+Cumbre y Farmaconal.
+
+64
+00:03:17,420 --> 00:03:19,600
+Lo acompaña un líder técnico de CooWeb:
+
+65
+00:03:19,620 --> 00:03:23,570
+arquitectura, seguridad y una revisión semanal contigo.
+
+66
+00:03:23,660 --> 00:03:27,770
+Y si un frente necesita velocidad, sumamos capacidad a demanda.
+
+67
+00:03:28,064 --> 00:03:29,468
+El código, los datos
+
+68
+00:03:29,488 --> 00:03:33,078
+y la instancia privada son de Thraive desde el primer día.
+
+69
+00:03:34,083 --> 00:03:36,446
+Esta es una prueba de concepto de CooWeb.
+
+70
+00:03:37,096 --> 00:03:38,666
+Thiago… ¿armamos el equipo?
+

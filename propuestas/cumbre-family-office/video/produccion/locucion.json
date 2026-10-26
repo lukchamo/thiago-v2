@@ -1,0 +1,163 @@
+{
+  "voz": {
+    "nombre": "Chaer - Locutor Latino Dominicano",
+    "voice_id": "6yJbRCDgjQDmHJ6NrRYG",
+    "modelo": "eleven_v4"
+  },
+  "segmentos": [
+    {
+      "id": "v01",
+      "escena": "intro",
+      "gap": 0.9,
+      "tts": "[warmly] Thiago… esta es la segunda. Lo que entendimos de la propuesta de /tɾaiv/ para el family office de Jota Ce. [short pause] Y otra vez… preferimos mostrártelo.",
+      "texto": "Thiago… esta es la segunda. Lo que entendimos de la propuesta de Thraive para el family office de JC. Y otra vez, preferimos mostrártelo."
+    },
+    {
+      "id": "v02",
+      "escena": "contexto",
+      "gap": 0.7,
+      "tts": "Jota Ce lleva, casi en solitario, las finanzas y los proyectos personales de varios peloteros. Una oficina boutique: pequeña a propósito… premium por diseño.",
+      "texto": "JC lleva, casi en solitario, las finanzas y los proyectos personales de varios peloteros. Una oficina boutique: pequeña a propósito… premium por diseño."
+    },
+    {
+      "id": "v03",
+      "escena": "reto",
+      "gap": 0.35,
+      "tts": "[serious] Pero lo difícil no es el trabajo. Es sostenerlo TODO junto.",
+      "texto": "Pero lo difícil no es el trabajo. Es sostenerlo todo junto."
+    },
+    {
+      "id": "v04",
+      "escena": "reto",
+      "gap": 0.35,
+      "tts": "[serious] Clientes, familias, abogados, contadores, bancos, aseguradoras, agentes, contratistas… decenas de hilos abiertos. Y todos pasan por una sola persona.",
+      "texto": "Clientes, familias, abogados, contadores, bancos, aseguradoras, agentes, contratistas… decenas de hilos abiertos. Y todos pasan por una sola persona."
+    },
+    {
+      "id": "v05",
+      "escena": "reto",
+      "gap": 0.9,
+      "tts": "Un pendiente con un tercero se olvida. Un documento no aparece. [sighs] Y el día se va… en perseguir.",
+      "texto": "Un pendiente con un tercero se olvida. Un documento no aparece. Y el día se va en perseguir."
+    },
+    {
+      "id": "v06",
+      "escena": "pide",
+      "gap": 0.8,
+      "tts": "Lo que Jota Ce pidió cabe en seis ideas. Un solo lugar. Encontrarlo todo al instante. Que ningún seguimiento se pierda. Saber qué es urgente. Ir un paso adelante. [short pause] Y todo… desde el teléfono.",
+      "texto": "Lo que JC pidió cabe en seis ideas. Un solo lugar. Encontrarlo todo al instante. Que ningún seguimiento se pierda. Saber qué es urgente. Ir un paso adelante. Y todo, desde el teléfono."
+    },
+    {
+      "id": "v07",
+      "escena": "sistema",
+      "gap": 0.8,
+      "tts": "[confident] La propuesta de /tɾaiv/: un sistema privado, con el chat como puerta de entrada. Una base de seguridad… y encima, dos capas: la operación del día a día, y el patrimonio.",
+      "texto": "La propuesta de Thraive: un sistema privado, con el chat como puerta de entrada. Una base de seguridad, y encima, dos capas: la operación del día a día, y el patrimonio."
+    },
+    {
+      "id": "v08",
+      "escena": "hoy",
+      "gap": 0.7,
+      "tts": "Cada mañana, Jota Ce abre Cumbre y ve lo urgente: aprobar una transferencia de doscientos cincuenta mil dólares. Y lo que espera a otros: el ka uno del fideicomiso Reyes… catorce días con la contadora.",
+      "texto": "Cada mañana, JC abre Cumbre y ve lo urgente: aprobar una transferencia de doscientos cincuenta mil dólares. Y lo que espera a otros: el K-1 del fideicomiso Reyes, catorce días con la contadora."
+    },
+    {
+      "id": "v09",
+      "escena": "captura",
+      "gap": 0.7,
+      "tts": "Capturar es escribir como se habla: un mensaje por WhatsApp… y Cumbre entiende el cliente, la fecha y quién tiene la pelota. Sin formularios.",
+      "texto": "Capturar es escribir como se habla: un mensaje por WhatsApp… y Cumbre entiende el cliente, la fecha y quién tiene la pelota. Sin formularios."
+    },
+    {
+      "id": "v10",
+      "escena": "tablero",
+      "gap": 0.8,
+      "tts": "Cada solicitud vive en un tablero: bandeja, por hacer, esperando a terceros… y hecho. Nada se cae entre una reunión y otra.",
+      "texto": "Cada solicitud vive en un tablero: bandeja, por hacer, esperando a terceros… y hecho. Nada se cae entre una reunión y otra."
+    },
+    {
+      "id": "v11",
+      "escena": "finanzas",
+      "gap": 0.8,
+      "tts": "El centro financiero junta lo que entra: salario, contratos, patrocinios. Y lo que sale: impuestos, deuda, inversiones. Una sola posición neta por hogar, con el flujo del mes y sus presupuestos.",
+      "texto": "El centro financiero junta lo que entra: salario, contratos, patrocinios. Y lo que sale: impuestos, deuda, inversiones. Una sola posición neta por hogar, con el flujo del mes y sus presupuestos."
+    },
+    {
+      "id": "v12",
+      "escena": "asistente",
+      "gap": 0.4,
+      "tts": "Y un asistente que lo lee todo… pero no toca nada. [curious] ¿Qué hay abierto con el fideicomiso Reyes? Responde en segundos.",
+      "texto": "Y un asistente que lo lee todo, pero no toca nada. ¿Qué hay abierto con el fideicomiso Reyes? Responde en segundos."
+    },
+    {
+      "id": "v13",
+      "escena": "asistente",
+      "gap": 0.8,
+      "tts": "Y redacta el correo de aprobación para el banco, como lo escribiría Jota Ce. Jota Ce lo revisa… y lo envía. El asistente, nunca.",
+      "texto": "Y redacta el correo de aprobación para el banco, como lo escribiría JC. JC lo revisa y lo envía. El asistente, nunca."
+    },
+    {
+      "id": "v14",
+      "escena": "operacion",
+      "gap": 0.8,
+      "tts": "Los extractos que llegan por correo se leen, se archivan y se concilian solos. El calendario aprende lo que se repite. Y cada contraparte pasa su debida diligencia… una sola vez.",
+      "texto": "Los extractos que llegan por correo se leen, se archivan y se concilian solos. El calendario aprende lo que se repite. Y cada contraparte pasa su debida diligencia… una sola vez."
+    },
+    {
+      "id": "v15",
+      "escena": "seguridad",
+      "gap": 0.8,
+      "tts": "[serious] Todo en una instancia privada: cifrado, doble factor, cada quien ve solo lo suyo… y queda registro de quién vio qué.",
+      "texto": "Todo en una instancia privada: cifrado, doble factor, cada quien ve solo lo suyo, y queda registro de quién vio qué."
+    },
+    {
+      "id": "v16",
+      "escena": "patrimonio",
+      "gap": 0.8,
+      "tts": "En la fase dos se conectan los bancos y la plataforma Aleta: el patrimonio de cada cliente, en una sola vista.",
+      "texto": "En la fase dos se conectan los bancos y la plataforma Aleta: el patrimonio de cada cliente, en una sola vista."
+    },
+    {
+      "id": "v17",
+      "escena": "poc",
+      "gap": 0.8,
+      "tts": "[excited] Y no es un dibujo: la prueba de concepto ya funciona. En escritorio y en teléfono… en inglés y en español.",
+      "texto": "Y no es un dibujo: la prueba de concepto ya funciona. En escritorio y en teléfono, en inglés y en español."
+    },
+    {
+      "id": "v18",
+      "escena": "fases",
+      "gap": 0.8,
+      "tts": "Fase uno: el centro de mando, en tres a cuatro semanas. Fase dos: conectar todo. Fase tres: afinar… y crecer.",
+      "texto": "Fase uno: el centro de mando, en tres a cuatro semanas. Fase dos: conectar todo. Fase tres: afinar… y crecer."
+    },
+    {
+      "id": "v19",
+      "escena": "oferta",
+      "gap": 0.4,
+      "tts": "[confident] ¿Cómo lo construimos? [short pause] Tal como lo pediste: un desarrollador full stack senior, dedicado a /tɾaiv/, que construye tus dos soluciones… Cumbre y Farmaconal.",
+      "texto": "¿Cómo lo construimos? Tal como lo pediste: un desarrollador full-stack senior, dedicado a Thraive, que construye tus dos soluciones: Cumbre y Farmaconal."
+    },
+    {
+      "id": "v20",
+      "escena": "oferta",
+      "gap": 0.4,
+      "tts": "Lo acompaña un líder técnico de /koˈweb/: arquitectura, seguridad y una revisión semanal contigo. Y si un frente necesita velocidad… sumamos capacidad a demanda.",
+      "texto": "Lo acompaña un líder técnico de CooWeb: arquitectura, seguridad y una revisión semanal contigo. Y si un frente necesita velocidad, sumamos capacidad a demanda."
+    },
+    {
+      "id": "v21",
+      "escena": "oferta",
+      "gap": 0.9,
+      "tts": "[confident] El código, los datos y la instancia privada son de /tɾaiv/ desde el primer día.",
+      "texto": "El código, los datos y la instancia privada son de Thraive desde el primer día."
+    },
+    {
+      "id": "v22",
+      "escena": "cierre",
+      "gap": 1.6,
+      "tts": "[warmly] Esta es una prueba de concepto de /koˈweb/. [short pause] Thiago… ¿armamos el equipo?",
+      "texto": "Esta es una prueba de concepto de CooWeb. Thiago… ¿armamos el equipo?"
+    }
+  ]
+}
