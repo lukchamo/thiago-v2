@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: mvp-fundacion-sin-precio
+expected_outcome: |
+  Un PDF de una hoja para Elena Martín de la Fundación Horizonte que recomienda el MVP en 3 semanas (con el proceso de 4 pasos) y el perfil AI Native como continuidad, sin inventar un precio para el MVP, en tono de usted.

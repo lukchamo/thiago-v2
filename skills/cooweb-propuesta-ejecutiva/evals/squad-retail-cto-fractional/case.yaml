@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: squad-retail-cto-fractional
+expected_outcome: |
+  Un PDF de una sola hoja carta, marca CooWeb, estilo consultora sin bordes redondeados ni franjas de color, para Marta Ruiz de Grupo Alba, con las dos opciones y sus precios (6.400 recomendada y 7.400), Luis como CTO fractional con la bolsa de 32 h destacada, aviso y pie de Cooweb LLC.

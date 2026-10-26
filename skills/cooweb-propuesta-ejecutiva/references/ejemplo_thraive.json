@@ -1,0 +1,100 @@
+{
+  "entidad": "llc",
+  "etiqueta": "Oferta marco · Thraive",
+  "para": "Thiago Da Cunha",
+  "fecha": "26 oct 2026",
+  "titulo": "Thiago, gracias por confiar en CooWeb.",
+  "intro": "Trabajamos con dos líneas de gente proactiva: **profesionales de gran experiencia que adoptaron la IA** y **desarrolladores AI Native**. Las equilibramos según lo que necesita cada cliente; para ti, recomendamos AI Native.",
+  "bloques": [
+    {
+      "tipo": "kpis",
+      "items": [
+        { "cifra": "+3 años con IA", "texto": "No somos nuevos: hace 2 y 3 años ya entregábamos proyectos con IA." },
+        { "cifra": "8–15 proyectos", "texto": "por perfil AI Native en 2 años: capacidad y calidad probadas." },
+        { "cifra": "Europa", "texto": "Se nota en el crecimiento: la expansión en Europa ya da resultados." }
+      ]
+    },
+    {
+      "tipo": "porque",
+      "titulo": "Por qué AI Native para ti",
+      "claim": "La IA en las venas",
+      "texto": "Los perfiles AI Native de CooWeb ya tienen la IA en el core de su trabajo. **Hoy Luis los prefiere.**",
+      "atributos": [
+        { "nombre": "Margen de crecimiento", "texto": "Crece contigo y con Thraive en el tiempo." },
+        { "nombre": "Ambición", "texto": "Lo mueve el resultado, no las horas." },
+        { "nombre": "Se autoreta", "texto": "Busca el siguiente reto sin que se lo pidan." }
+      ],
+      "nota": "**No crecieron solos:** trabajan junto a nuestros ingenieros tradicionales y absorbieron su conocimiento y know-how. Así somos en CooWeb: siempre avanzando de la mano con la tecnología."
+    },
+    {
+      "tipo": "opciones",
+      "titulo": "Tres formas de construir contigo",
+      "opciones": [
+        {
+          "etiqueta": "Recomendado para ti",
+          "nombre": "Perfil AI Native dedicado",
+          "recomendada": true,
+          "perfil": "AI Product Engineer · 1,5 a 2,5 años",
+          "enfoque": ["AI Native y UI First", "Producto de punta a punta, web y móvil", "IA aplicada y RAG"],
+          "ideal": "Empresas nuevas que buscan resultado sin dilatar tiempos.",
+          "precio": "USD 3.200",
+          "unidad": "/ mes",
+          "nota": "+ Technical Lead · **desde USD 4.700/mes**"
+        },
+        {
+          "etiqueta": "Perfil dedicado",
+          "nombre": "Full-stack con experiencia",
+          "perfil": "4 a 5 años · la IA potencia su trabajo",
+          "enfoque": ["Esquema híbrido tradicional", "Potenciado con IA en su día a día", "Paso más pausado y predecible"],
+          "ideal": "Consultoras grandes que prefieren un paso menos ágil.",
+          "precio": "USD 4.200",
+          "unidad": "/ mes",
+          "nota": "+ Technical Lead · **desde USD 5.700/mes**"
+        },
+        {
+          "etiqueta": "Por objetivo",
+          "nombre": "MVP funcional en 3 semanas",
+          "perfil": "2 a 3 perfiles AI Native + tokens de IA",
+          "enfoque": ["Un objetivo clave: el primer dolor", "Valor desde el primer release", "Después, iteramos mejoras"],
+          "ideal": "Proyectos claros y acotados: gana el cliente, ganamos todos.",
+          "precio": "Precio cerrado",
+          "nota": "Se cotiza según el objetivo y el alcance"
+        }
+      ],
+      "condiciones": "**Perfiles dedicados:** mínimo 3 meses · pago mensual anticipado · reemplazo sin costo en 30 días · código y datos de Thraive."
+    },
+    {
+      "tipo": "proceso",
+      "titulo": "Así es un MVP en 3 semanas",
+      "pasos": [
+        { "marca": "1", "etiqueta": "Primero", "nombre": "Documentación exhaustiva", "texto": "Roadmap claro y preciso: calidad, velocidad y forma." },
+        { "marca": "2", "etiqueta": "La base", "nombre": "Base perfecta", "texto": "Manuales, CI/CD, seguridad, videos y harness de IA." },
+        { "marca": "3", "etiqueta": "El hito", "nombre": "Release 1", "texto": "Resuelve el primer dolor clave: el hito del reto." },
+        { "marca": "→", "etiqueta": "Después", "nombre": "Continuidad", "texto": "Quien hizo la base sigue como perfil dedicado.", "continuidad": true }
+      ]
+    },
+    {
+      "tipo": "columnas",
+      "columnas": [
+        {
+          "titulo": "Technical Lead o CTO fractional · Luis",
+          "texto": "Part-time en cualquier modalidad: producto, arquitectura, calidad y revisión semanal.",
+          "paquetes": ["16 h", "32 h", "64 h"],
+          "paquetes_texto": "al mes",
+          "paquetes_precio": "desde USD 1.500",
+          "paquetes_unidad": "/ mes",
+          "nota": "La oferta se ajusta a la necesidad y al nivel de responsabilidad."
+        },
+        {
+          "titulo": "Cómo trabajamos: dual track",
+          "texto": "Ágil híbrido: ni Scrum perfecto ni Kanban. Un carril valida lo que sigue; el otro construye lo validado. Demo cada semana.",
+          "carriles": [
+            { "nombre": "Descubrir", "texto": "validar con el cliente → siguiente prioridad" },
+            { "nombre": "Construir", "texto": "desarrollar lo validado → release con calidad" }
+          ]
+        }
+      ]
+    }
+  ],
+  "aviso": "Oferta marco indicativa; no es un contrato ni un compromiso de entrega. Tarifas en USD, sin impuestos, retenciones ni costos bancarios, ajustables según alcance, dedicación y condiciones de la propuesta definitiva. Los plazos dependen de que el cliente entregue a tiempo información, accesos y validaciones; el MVP de 3 semanas aplica a un objetivo claro y acotado, acordado por escrito. Los perfiles pasan hoja de vida y entrevista técnica antes de asignarse. Vigencia: 30 días."
+}
