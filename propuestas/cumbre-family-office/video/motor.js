@@ -76,7 +76,7 @@ PARTIES.forEach((p, i) => {
 
 /* --- capítulos --- */
 const CH = [['contexto', 'Cliente'], ['reto', 'Reto'], ['pide', 'Pedido'], ['sistema', 'Sistema'], ['hoy', 'Hoy'], ['captura', 'Captura'], ['tablero', 'Tablero'],
-  ['finanzas', 'Finanzas'], ['asistente', 'Asistente'], ['operacion', 'Operación'], ['seguridad', 'Seguridad'], ['patrimonio', 'Patrimonio'], ['poc', 'PoC'], ['fases', 'Fases'], ['oferta', 'Equipo']];
+  ['finanzas', 'Finanzas'], ['asistente', 'Asistente'], ['operacion', 'Operación'], ['seguridad', 'Seguridad'], ['patrimonio', 'Patrimonio'], ['poc', 'Maqueta'], ['fases', 'Fases'], ['oferta', 'Equipo']];
 const chEls = CH.map(([id, l]) => { const d = document.createElement('div'); d.innerHTML = `${l}<i></i>`; $('#chapters').appendChild(d); return { d, i: $('i', d), e: SC[id] }; });
 
 /* ------------------------------------------------------------------ */

@@ -1,6 +1,8 @@
 # Guion · Video PoC Cumbre para Thiago Da Cunha
 
-Voz: Chaer - Locutor Latino Dominicano (ElevenLabs `eleven_v4`). Duración: 3:40.4.
+Voz: Chaer - Locutor Latino Dominicano (ElevenLabs `eleven_v4`). Duración: 3:46.9.
+
+Es un video demostrativo: muestra una maqueta, no una plataforma construida. La plataforma se construye por fases.
 
 "CooWeb" se pronuncia "Co-web" (en la locución va en fonética, /koˈweb/) y "Thraive" como /tɾaiv/. "JC" se escribe "Jota Ce" para la voz.
 Entre corchetes, la intención con la que se dirigió cada frase. Nombres, clientes y cifras son ficticios.
@@ -60,20 +62,20 @@ Entre corchetes, la intención con la que se dirigió cada frase. Nombres, clien
 
 - **2:41.7** En la fase dos se conectan los bancos y la plataforma Aleta: el patrimonio de cada cliente, en una sola vista.
 
-## La prueba de concepto ya funciona · 2:49.2–2:57.2
+## La maqueta (video demostrativo) · 2:49.2–3:03.7
 
-- **2:49.7** Y no es un dibujo: la prueba de concepto ya funciona. En escritorio y en teléfono, en inglés y en español.  _[excited]_
+- **2:49.7** Para que JC lo vea antes de construirlo, armamos una maqueta interactiva: en escritorio y en teléfono, en inglés y en español. Es solo una demostración: la plataforma se construye por fases.  _[short pause] [serious]_
 
-## Tres fases · 2:57.2–3:07.1
+## Tres fases · 3:03.7–3:13.6
 
-- **2:57.6** Fase uno: el centro de mando, en tres a cuatro semanas. Fase dos: conectar todo. Fase tres: afinar… y crecer.
+- **3:04.1** Fase uno: el centro de mando, en tres a cuatro semanas. Fase dos: conectar todo. Fase tres: afinar… y crecer.
 
-## Cómo lo construimos con CooWeb · 3:07.1–3:33.6
+## Cómo lo construimos con CooWeb · 3:13.6–3:40.1
 
-- **3:07.5** ¿Cómo lo construimos? Tal como lo pediste: un desarrollador full-stack senior, dedicado a Thraive, que construye tus dos soluciones: Cumbre y Farmaconal.  _[confident] [short pause]_
-- **3:17.5** Lo acompaña un líder técnico de CooWeb: arquitectura, seguridad y una revisión semanal contigo. Y si un frente necesita velocidad, sumamos capacidad a demanda.
-- **3:28.1** El código, los datos y la instancia privada son de Thraive desde el primer día.  _[confident]_
+- **3:14.0** ¿Cómo lo construimos? Tal como lo pediste: un desarrollador full-stack senior, dedicado a Thraive, que construye tus dos soluciones: Cumbre y Farmaconal.  _[confident] [short pause]_
+- **3:24.0** Lo acompaña un líder técnico de CooWeb: arquitectura, seguridad y una revisión semanal contigo. Y si un frente necesita velocidad, sumamos capacidad a demanda.
+- **3:34.6** El código, los datos y la instancia privada son de Thraive desde el primer día.  _[confident]_
 
-## Cierre · 3:33.6–3:40.4
+## Cierre · 3:40.1–3:46.9
 
-- **3:34.1** Esta es una prueba de concepto de CooWeb. Thiago… ¿armamos el equipo?  _[warmly] [short pause]_
+- **3:40.5** Esta es una prueba de concepto de CooWeb. Thiago… ¿armamos el equipo?  _[warmly] [short pause]_

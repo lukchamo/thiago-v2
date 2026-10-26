@@ -215,66 +215,74 @@ En la fase dos se conectan los bancos y la plataforma Aleta:
 el patrimonio de cada cliente, en una sola vista.
 
 55
-00:02:49,611 --> 00:02:53,361
-Y no es un dibujo: la prueba de concepto ya funciona.
+00:02:49,611 --> 00:02:54,321
+Para que JC lo vea antes de construirlo, armamos una maqueta interactiva:
 
 56
-00:02:53,391 --> 00:02:56,581
-En escritorio y en teléfono, en inglés y en español.
+00:02:54,391 --> 00:02:58,241
+en escritorio y en teléfono, en inglés y en español.
 
 57
-00:02:57,624 --> 00:03:01,399
-Fase uno: el centro de mando, en tres a cuatro semanas.
+00:02:59,031 --> 00:03:00,701
+Es solo una demostración:
 
 58
-00:03:01,549 --> 00:03:03,729
-Fase dos: conectar todo.
+00:03:00,951 --> 00:03:03,201
+la plataforma se construye por fases.
 
 59
-00:03:03,749 --> 00:03:06,639
-Fase tres: afinar… y crecer.
+00:03:04,102 --> 00:03:07,877
+Fase uno: el centro de mando, en tres a cuatro semanas.
 
 60
-00:03:07,517 --> 00:03:10,270
-¿Cómo lo construimos? Tal como lo pediste:
+00:03:08,027 --> 00:03:10,207
+Fase dos: conectar todo.
 
 61
-00:03:10,380 --> 00:03:13,480
-un desarrollador full-stack senior, dedicado a Thraive,
+00:03:10,227 --> 00:03:13,117
+Fase tres: afinar… y crecer.
 
 62
-00:03:13,500 --> 00:03:15,400
-que construye tus dos soluciones:
+00:03:13,995 --> 00:03:16,748
+¿Cómo lo construimos? Tal como lo pediste:
 
 63
-00:03:15,420 --> 00:03:17,130
-Cumbre y Farmaconal.
+00:03:16,858 --> 00:03:19,958
+un desarrollador full-stack senior, dedicado a Thraive,
 
 64
-00:03:17,420 --> 00:03:19,600
-Lo acompaña un líder técnico de CooWeb:
+00:03:19,978 --> 00:03:21,878
+que construye tus dos soluciones:
 
 65
-00:03:19,620 --> 00:03:23,570
-arquitectura, seguridad y una revisión semanal contigo.
+00:03:21,898 --> 00:03:23,608
+Cumbre y Farmaconal.
 
 66
-00:03:23,660 --> 00:03:27,770
-Y si un frente necesita velocidad, sumamos capacidad a demanda.
+00:03:23,899 --> 00:03:26,079
+Lo acompaña un líder técnico de CooWeb:
 
 67
-00:03:28,064 --> 00:03:29,468
-El código, los datos
+00:03:26,099 --> 00:03:30,049
+arquitectura, seguridad y una revisión semanal contigo.
 
 68
-00:03:29,488 --> 00:03:33,078
-y la instancia privada son de Thraive desde el primer día.
+00:03:30,139 --> 00:03:34,249
+Y si un frente necesita velocidad, sumamos capacidad a demanda.
 
 69
-00:03:34,083 --> 00:03:36,446
-Esta es una prueba de concepto de CooWeb.
+00:03:34,543 --> 00:03:35,947
+El código, los datos
 
 70
-00:03:37,096 --> 00:03:38,666
+00:03:35,967 --> 00:03:39,557
+y la instancia privada son de Thraive desde el primer día.
+
+71
+00:03:40,561 --> 00:03:42,924
+Esta es una prueba de concepto de CooWeb.
+
+72
+00:03:43,574 --> 00:03:45,144
 Thiago… ¿armamos el equipo?
 

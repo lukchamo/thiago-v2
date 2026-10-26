@@ -43,7 +43,10 @@ if modo == 'voz':
     print('ok voz', TOTAL)
     sys.exit()
 
-mus = leer(os.path.join(V, 'audio', 'musica.mp3'), 'loudnorm=I=-20:TP=-3:LRA=9')
+fm = os.path.join(V, 'audio', 'musica.mp3')
+dm = float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', fm], capture_output=True, text=True).stdout)
+tempo = f'atempo={dm / (TOTAL + 0.3):.5f},' if dm < TOTAL + 0.3 else ''   # si la locución creció, la música se estira un poco
+mus = leer(fm, tempo + 'loudnorm=I=-20:TP=-3:LRA=9')
 m = np.zeros((N, 2), np.float32)
 m[:min(N, len(mus))] = mus[:N]
 
