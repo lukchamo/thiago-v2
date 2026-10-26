@@ -96,6 +96,9 @@ de Thraive. Plan indicativo: semana 0 arranque; semanas 1–4 Cumbre fase 1; 5�
 tamaño carta. Agradece la confianza de Thiago, explica las dos líneas de perfiles de CooWeb y por qué
 recomendamos AI Native: los perfiles AI Native de CooWeb ya traen la IA en el core y hoy Luis los
 prefiere (margen de crecimiento, ambición, se autoretan). No se nombra a ningún perfil en particular.
+Trae una tira de trayectoria: más de 3 años con IA (proyectos con IA desde hace 2 y 3 años), 8 a 15
+proyectos por perfil AI Native en 2 años y la expansión en Europa; y explica que los AI Native crecieron
+junto a los ingenieros tradicionales de CooWeb y absorbieron su know-how.
 
 | Modalidad | USD / mes |
 |---|---|

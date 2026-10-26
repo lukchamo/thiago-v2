@@ -9,7 +9,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:8.5in;height:11in;background:#fff}
 body{font-family:Carlito,Calibri,'Segoe UI',Arial,sans-serif;color:var(--ink);font-size:10.5pt;line-height:1.35;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.page{position:relative;width:8.5in;height:11in;padding:0.34in 0.48in 0.3in;display:flex;flex-direction:column;gap:9px;overflow:hidden}
+.page{position:relative;width:8.5in;height:11in;padding:0.3in 0.48in 0.26in;display:flex;flex-direction:column;gap:8px;overflow:hidden}
 .page::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:linear-gradient(90deg,var(--blue),var(--acc))}
 b{font-weight:700}
 .top{display:flex;align-items:center;gap:14px}
@@ -25,8 +25,14 @@ h2{font-size:12.5pt;color:var(--blue);font-weight:700;display:flex;align-items:c
 h2::after{content:"";flex:1;height:1.5px;background:var(--line)}
 .ic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 
+/* trayectoria */
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.st{display:flex;flex-direction:column;gap:2px;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:10px;padding:5px 11px;background:#fff}
+.st .n{font-size:15pt;font-weight:700;color:var(--blue);white-space:nowrap;line-height:1}
+.st span{font-size:8.8pt;color:var(--ink2);line-height:1.25}
+.st span b{color:var(--ink)}
 /* por qué */
-.why{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:10px;background:var(--soft);border-radius:12px;padding:9px 14px;border-left:5px solid var(--acc)}
+.why{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:6px 10px;background:var(--soft);border-radius:12px;padding:8px 14px;border-left:5px solid var(--acc)}
 .why .proof{display:flex;flex-direction:column;justify-content:center;gap:4px;padding-right:10px;border-right:1px solid var(--line)}
 .why .big{font-size:17pt;font-weight:700;color:var(--blue);line-height:1.05}
 .why .lbl{font-size:9pt;color:var(--ink2);line-height:1.3}
@@ -34,6 +40,8 @@ h2::after{content:"";flex:1;height:1.5px;background:var(--line)}
 .why .it .ico{width:26px;height:26px;border-radius:8px;background:#fff;color:var(--acc);display:grid;place-items:center;border:1px solid var(--line)}
 .why .it b{font-size:10.5pt;color:var(--ink)}
 .why .it span{font-size:9pt;color:var(--ink2)}
+.why .also{grid-column:1/-1;font-size:9pt;color:var(--ink2);border-top:1px solid var(--line);padding-top:6px;line-height:1.3}
+.why .also b{color:var(--ink)}
 
 /* tarjetas */
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -71,7 +79,7 @@ h2::after{content:"";flex:1;height:1.5px;background:var(--line)}
 .box{border:1px solid var(--line);border-radius:12px;padding:9px 12px}
 .box h3{font-size:11pt;color:var(--blue);display:flex;align-items:center;gap:6px;margin-bottom:4px}
 .box p{font-size:9.5pt;color:var(--ink2)}
-.lanes{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.lanes{display:flex;flex-direction:column;gap:3px;margin-top:5px}
 .lane{display:flex;align-items:center;gap:6px;font-size:8.5pt;font-weight:700}
 .lane .bar{flex:1;height:14px;border-radius:7px;display:flex;align-items:center;padding:0 7px;color:#fff;font-size:8pt;font-weight:700}
 .lane .bar.d{background:var(--acc)}
@@ -84,7 +92,7 @@ h2::after{content:"";flex:1;height:1.5px;background:var(--line)}
 .conds{margin-top:6px;font-size:8.5pt;color:var(--ink2);background:var(--soft);border-radius:8px;padding:5px 8px;line-height:1.3}
 .conds b{color:var(--ink)}
 
-.disc{background:#F6F7F9;border-radius:10px;padding:8px 12px;font-size:8pt;line-height:1.35;color:var(--ink3)}
+.disc{background:#F6F7F9;border-radius:10px;padding:7px 12px;font-size:7.6pt;line-height:1.35;color:var(--ink3)}
 .disc b{color:var(--ink2)}
 .foot{display:flex;justify-content:space-between;font-size:8pt;color:var(--ink3);margin-top:auto}
 </style>
@@ -106,7 +114,13 @@ h2::after{content:"";flex:1;height:1.5px;background:var(--line)}
 
   <div>
     <h1>Thiago, gracias por confiar en CooWeb.</h1>
-    <p class="lead">Trabajamos con dos líneas de gente proactiva: <b>profesionales de gran experiencia que adoptaron la IA</b> y <b>desarrolladores AI Native</b>. Cada una tiene sus ventajas, y las equilibramos según lo que necesita cada cliente. Para ti, recomendamos AI Native.</p>
+    <p class="lead">Trabajamos con dos líneas de gente proactiva: <b>profesionales de gran experiencia que adoptaron la IA</b> y <b>desarrolladores AI Native</b>. Las equilibramos según lo que necesita cada cliente; para ti, recomendamos AI Native.</p>
+  </div>
+
+  <div class="stats">
+    <div class="st"><span class="n">+3 años con IA</span><span>No somos nuevos: hace 2 y 3 años ya entregábamos proyectos con IA.</span></div>
+    <div class="st"><span class="n">8–15 proyectos</span><span>por perfil AI Native en 2 años: capacidad y calidad probadas.</span></div>
+    <div class="st"><span class="n">Europa</span><span>Se nota en el crecimiento: la expansión en Europa ya da resultados.</span></div>
   </div>
 
   <h2>Por qué AI Native para ti</h2>
@@ -118,6 +132,7 @@ h2::after{content:"";flex:1;height:1.5px;background:var(--line)}
     <div class="it"><span class="ico"><svg class="ic"><use href="#grow"/></svg></span><b>Margen de crecimiento</b><span>Crece contigo y con Thraive en el tiempo.</span></div>
     <div class="it"><span class="ico"><svg class="ic"><use href="#flag"/></svg></span><b>Ambición</b><span>Lo mueve el resultado, no las horas.</span></div>
     <div class="it"><span class="ico"><svg class="ic"><use href="#bolt"/></svg></span><b>Se autoreta</b><span>Busca el siguiente reto sin que se lo pidan.</span></div>
+    <div class="also"><b>No crecieron solos:</b> trabajan junto a nuestros ingenieros tradicionales y absorbieron su conocimiento y know-how. Así somos en CooWeb: siempre avanzando de la mano con la tecnología.</div>
   </div>
 
   <h2>Tres formas de construir contigo</h2>
@@ -162,24 +177,23 @@ h2::after{content:"";flex:1;height:1.5px;background:var(--line)}
 
   <h2>Así es un MVP en 3 semanas</h2>
   <div class="steps">
-    <div class="step"><div class="n"><i>1</i><em>Primero</em></div><b>Documentación exhaustiva</b><span>Un roadmap claro y preciso. Aquí se inyecta calidad, velocidad y forma.</span></div>
-    <div class="step"><div class="n"><i>2</i><em>La base</em></div><b>Base perfecta</b><span>Manuales, CI/CD, seguridad, videos y el harness de IA configurado.</span></div>
-    <div class="step"><div class="n"><i>3</i><em>El hito</em></div><b>Release 1</b><span>Resuelve el primer dolor clave del cliente: el reto que marca el hito.</span></div>
-    <div class="step"><div class="n"><i><svg class="ic" style="width:13px;height:13px;stroke:#fff"><use href="#loop"/></svg></i><em>Después</em></div><b>Continuidad</b><span>Quien construyó la base se queda como perfil dedicado para iterar.</span></div>
+    <div class="step"><div class="n"><i>1</i><em>Primero</em></div><b>Documentación exhaustiva</b><span>Roadmap claro y preciso: calidad, velocidad y forma.</span></div>
+    <div class="step"><div class="n"><i>2</i><em>La base</em></div><b>Base perfecta</b><span>Manuales, CI/CD, seguridad, videos y harness de IA.</span></div>
+    <div class="step"><div class="n"><i>3</i><em>El hito</em></div><b>Release 1</b><span>Resuelve el primer dolor clave: el hito del reto.</span></div>
+    <div class="step"><div class="n"><i><svg class="ic" style="width:13px;height:13px;stroke:#fff"><use href="#loop"/></svg></i><em>Después</em></div><b>Continuidad</b><span>Quien hizo la base sigue como perfil dedicado.</span></div>
   </div>
 
   <div class="duo">
     <div class="box">
       <div class="tl">
         <span class="av">LC</span>
-        <div><h3 style="margin:0">Technical Lead · Luis</h3><p>Part-time en cualquier modalidad: producto, arquitectura, calidad y revisión semanal contigo.</p></div>
-        <div class="v">desde USD 1.500<small>/ mes</small></div>
+        <div style="flex:1"><h3 style="margin:0;display:flex;justify-content:space-between;align-items:baseline">Technical Lead · Luis<span style="font-size:11pt">desde USD 1.500<small style="font-size:8.5pt;color:var(--ink3);font-weight:400"> / mes</small></span></h3><p>Part-time en cualquier modalidad: producto, arquitectura, calidad y revisión semanal.</p></div>
       </div>
-      <div class="conds"><b>Perfiles dedicados:</b> mínimo 3 meses · facturación mensual anticipada · reemplazo sin costo en los primeros 30 días · el código y los datos son de Thraive.</div>
+      <div class="conds"><b>Perfiles dedicados:</b> mínimo 3 meses · pago mensual anticipado · reemplazo sin costo en 30 días · código y datos de Thraive.</div>
     </div>
     <div class="box">
       <h3>Cómo trabajamos: dual track</h3>
-      <p>Ágil híbrido: ni Scrum perfecto ni Kanban. Un carril descubre y valida lo que sigue; el otro construye lo ya validado. Demo contigo cada semana.</p>
+      <p>Ágil híbrido: ni Scrum perfecto ni Kanban. Un carril valida lo que sigue; el otro construye lo validado. Demo cada semana.</p>
       <div class="lanes">
         <div class="lane"><span class="lb">Descubrir</span><span class="bar d">validar con el cliente → siguiente prioridad</span></div>
         <div class="lane"><span class="lb">Construir</span><span class="bar b">desarrollar lo validado → release con calidad</span></div>
@@ -187,7 +201,7 @@ h2::after{content:"";flex:1;height:1.5px;background:var(--line)}
     </div>
   </div>
 
-  <div class="disc"><b>Aviso.</b> Esta oferta marco es indicativa y no constituye un contrato ni un compromiso de entrega. Las tarifas están en dólares (USD), no incluyen impuestos, retenciones ni costos bancarios, y pueden ajustarse según el alcance, la dedicación y las condiciones de la propuesta definitiva. Los plazos dependen de que el cliente entregue a tiempo información, accesos y validaciones; el MVP de 3 semanas aplica a un objetivo claro y acotado, acordado por escrito. Los perfiles se presentan con hoja de vida y entrevista técnica antes de asignarse. Vigencia: 30 días.</div>
+  <div class="disc"><b>Aviso.</b> Oferta marco indicativa; no es un contrato ni un compromiso de entrega. Tarifas en USD, sin impuestos, retenciones ni costos bancarios, ajustables según alcance, dedicación y condiciones de la propuesta definitiva. Los plazos dependen de que el cliente entregue a tiempo información, accesos y validaciones; el MVP de 3 semanas aplica a un objetivo claro y acotado, acordado por escrito. Los perfiles pasan hoja de vida y entrevista técnica antes de asignarse. Vigencia: 30 días.</div>
 
   <div class="foot"><span>Cooweb LLC (Delaware, EE. UU.) · cooweb.co</span><span>Luis, CEO de CooWeb · Documento confidencial</span></div>
 </div>
