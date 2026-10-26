@@ -89,6 +89,23 @@ Condiciones: mínimo 3 meses, luego mes a mes con aviso de 30 días; facturació
 de Thraive. Plan indicativo: semana 0 arranque; semanas 1–4 Cumbre fase 1; 5–12 Farmaconal ola 1;
 13–20 Farmaconal ola 2 + Cumbre fase 2; después, continuo.
 
+## Oferta marco (`oferta-marco/`)
+
+`Oferta-Marco_Equipo-AI-Native_Thraive.pdf` y `.docx` (código PC-THRAIVE-02, una sola hoja), generados
+desde `oferta-marco/oferta-marco.json`. Agradece la confianza de Thiago, explica las dos líneas de
+perfiles de CooWeb (expertos que adoptaron la IA y desarrolladores AI Native) y recomienda el AI Native
+que trabaja con Luis hace dos años (unos 8 proyectos entregados).
+
+| Opción | USD / mes |
+|---|---|
+| 1 · Full-stack con experiencia (4 a 5 años, IA que potencia; esquema híbrido tradicional) | 4.200 |
+| 2 · AI Product Engineer (1,5 a 2,5 años, AI Native, UI First, web y móvil, RAG) · recomendada | 3.200 |
+| Technical Lead · Luis, part-time (se suma a cualquiera) | desde 1.500 |
+| **Total** | **Opción 1 desde 5.700 · Opción 2 desde 4.700** |
+
+Metodología: ágil híbrido con dual track. Condiciones: mínimo 3 meses, facturación mensual anticipada,
+reemplazo sin costo en los primeros 30 días, propiedad intelectual de Thraive, vigencia de 30 días.
+
 ## Supuestos y riesgos
 
 - **Tarifas a demanda** (3.500 y 2.800) son una propuesta nuestra; Luis no las fijó.
