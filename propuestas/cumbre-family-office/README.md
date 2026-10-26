@@ -92,8 +92,19 @@ de Thraive. Plan indicativo: semana 0 arranque; semanas 1–4 Cumbre fase 1; 5�
 ## Oferta marco (`oferta-marco/`)
 
 `Oferta-Marco_CooWeb_Thraive.pdf`: una sola hoja, tono cercano, sin cabecera formal. Se genera desde
-`oferta-marco/oferta-marco.html` (marca CooWeb: azules 1145A8 y 2B86E8, Carlito/Calibri) con Chromium a
-tamaño carta. Agradece la confianza de Thiago, explica las dos líneas de perfiles de CooWeb y por qué
+`oferta-marco/oferta-marco.html` (azul CooWeb 1145A8 como único acento, Carlito/Calibri) con Chromium a
+tamaño carta. Diseño minimalista de consultora: sin bordes redondeados, sin franjas de color a la
+izquierda, sin degradados ni iconos; filetes finos, tabla comparativa de las tres modalidades y flechas
+de proceso para el MVP.
+
+`estilos/` guarda las tres alternativas que se compararon, con el mismo contenido (HTML y PDF de cada
+una, más `comparativa-estilos.png`):
+
+| Estilo | Idea | Tipografía |
+|---|---|---|
+| A · Suizo | Retícula con columna de etiquetas numeradas, filetes finos, todo alineado a la izquierda | Inter |
+| B · Consultora (**en uso**) | Tabla comparativa, KPIs con divisores, flechas de proceso | Carlito/Calibri |
+| C · Editorial | Titulares con serifa, columnas separadas por filetes verticales | Newsreader + Carlito | Agradece la confianza de Thiago, explica las dos líneas de perfiles de CooWeb y por qué
 recomendamos AI Native: los perfiles AI Native de CooWeb ya traen la IA en el core y hoy Luis los
 prefiere (margen de crecimiento, ambición, se autoretan). No se nombra a ningún perfil en particular.
 Trae una tira de trayectoria: más de 3 años con IA (proyectos con IA desde hace 2 y 3 años), 8 a 15
@@ -113,7 +124,8 @@ sigue como perfil dedicado. Metodología: ágil híbrido con dual track. Incluye
 USD sin impuestos, plazos sujetos a accesos del cliente, vigencia de 30 días).
 
 Para regenerar el PDF, abre `oferta-marco.html` en Chromium y exporta a PDF en tamaño carta sin márgenes
-(o usa Playwright `page.pdf({format: 'Letter', printBackground: true})`).
+(o usa Playwright `page.pdf({format: 'Letter', printBackground: true})`). Para cambiar de estilo, copia el
+HTML elegido de `estilos/` sobre `oferta-marco.html` (el estilo C necesita también `estilos/fonts/`).
 
 ## Supuestos y riesgos
 
