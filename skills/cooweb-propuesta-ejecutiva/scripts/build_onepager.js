@@ -102,6 +102,7 @@ h3 span small{font-size:8.5pt;color:var(--ink3);font-weight:400}
 .seg{display:flex}
 .seg b{border:1px solid var(--hair);padding:1px 9px;font-size:10pt;white-space:nowrap}
 .seg b+b{border-left:0}
+.seg b.on{background:var(--blue);border-color:var(--blue);color:#fff}
 .packs .pv{margin-left:auto;font-weight:700;font-size:11pt;white-space:nowrap}
 .packs .pv small{font-size:8.5pt;color:var(--ink3);font-weight:400}
 .adj{margin-top:4px;font-size:9pt;color:var(--ink2)}
@@ -169,7 +170,7 @@ function columna(c) {
   let h = `<h3>${md(c.titulo)}${c.precio ? `<span>${md(c.precio)}${c.unidad ? `<small> ${md(c.unidad)}</small>` : ''}</span>` : ''}</h3>`;
   if (c.texto) h += `<p class="muted">${md(c.texto)}</p>`;
   if (c.paquetes && c.paquetes.length) {
-    h += `<div class="packs"><span class="seg">${c.paquetes.map(p => `<b>${md(p)}</b>`).join('')}</span>` +
+    h += `<div class="packs"><span class="seg">${c.paquetes.map(p => `<b${p === c.paquete_destacado ? ' class="on"' : ''}>${md(p)}</b>`).join('')}</span>` +
       (c.paquetes_texto ? `<span class="muted">${md(c.paquetes_texto)}</span>` : '') +
       (c.paquetes_precio ? `<span class="pv">${md(c.paquetes_precio)}${c.paquetes_unidad ? `<small> ${md(c.paquetes_unidad)}</small>` : ''}</span>` : '') + '</div>';
   }

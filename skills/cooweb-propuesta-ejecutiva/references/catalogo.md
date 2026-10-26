@@ -56,6 +56,11 @@ que el brief nombre a alguien y pida presentarlo).
 
 Cuando sumes el Technical Lead a una modalidad, muestra el total "desde": 3.200 + 1.500 = **desde USD 4.700/mes**.
 
+**Squads y equipos mixtos.** Se arman con estas mismas piezas y, si el brief no trae precio, se suman
+las tarifas: 2 AI Native = USD 6.400/mes; 1 full-stack con experiencia + 1 AI Native = USD 7.400/mes.
+En la fila Perfil pon la composición ("2 AI Product Engineers · 1,5 a 2,5 años"). En el enfoque, lo que
+gana el cliente con varias personas ("dos frentes en paralelo").
+
 **MVP en 3 semanas, paso a paso** (bloque `proceso`):
 
 1. **Primero · Documentación exhaustiva.** Roadmap claro y preciso: calidad, velocidad y forma.
@@ -65,10 +70,17 @@ Cuando sumes el Technical Lead a una modalidad, muestra el total "desde": 3.200 
 
 El MVP no lleva cifra salvo que Luis la dé: escribe "Precio cerrado" y "Se cotiza según el objetivo y el alcance".
 
+El bloque `proceso` nació para el MVP, pero sirve para cualquier arranque con una secuencia real (por
+ejemplo, el arranque de un squad: documentación, base, primer release, mejora continua). Si las opciones
+no tienen un "cómo empezamos" claro, quítalo y gana espacio.
+
 ## 5. Technical Lead o CTO fractional
 
 - Lo ejerce **Luis**, part-time, en cualquier modalidad: producto, arquitectura, calidad y revisión semanal.
-- Bolsas de **16, 32 o 64 horas al mes**, **desde USD 1.500 / mes** (la de 16 h).
+- Bolsas de **16, 32 o 64 horas al mes**, **desde USD 1.500 / mes** (la de 16 h). Las de 32 y 64 h no
+  tienen precio publicado: se ajustan a la necesidad y a la responsabilidad. Si el brief propone una de
+  ellas sin precio, destácala (`paquete_destacado`), deja "desde USD 1.500" y los totales "desde" con
+  la de 16 h, y avisa a Luis en los supuestos para que confirme la cifra.
 - "La oferta se ajusta a la necesidad y al nivel de responsabilidad."
 - Usa el título "Technical Lead o CTO fractional · Luis". Si el cliente necesita a alguien que lleve la
   estrategia tecnológica, destaca CTO fractional.

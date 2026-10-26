@@ -12,7 +12,7 @@ en su carpeta, con su PoC, su video y todo lo necesario para regenerarlos.
 
 | Skill | Qué hace |
 |---|---|
-| [`skills/cooweb-propuesta-ejecutiva`](skills/cooweb-propuesta-ejecutiva/) | Oferta ejecutiva comercial de CooWeb en una hoja (PDF), estilo consultora: JSON de contenido → HTML → PDF carta, con control de que quepa en una página. Nació de la oferta marco para Thraive |
+| [`skills/cooweb-propuesta-ejecutiva`](skills/cooweb-propuesta-ejecutiva/) | Oferta ejecutiva comercial de CooWeb en una hoja (PDF), estilo consultora: JSON de contenido → HTML → PDF carta, con control de que quepa en una página. Nació de la oferta marco para Thraive. Para instalarlo en claude.ai, sube `skills/cooweb-propuesta-ejecutiva.skill` |
 
 ## Estructura de una propuesta
 
